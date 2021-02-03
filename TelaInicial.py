@@ -1,5 +1,6 @@
 from tkinter import *
 from TelaLogin import *
+from TelaCadastrarFunc import *
 
 #####################TELA PRINCIPAL DA APLICAÇÃO######################
 #Execute esse arquivo
@@ -37,15 +38,15 @@ class telaInicialWindow():
 
         # Cria instancias e botões para Logar e Cadastrar
         ltela = loginWindow()
-        #ctela = cadastrarWindow()
+        ctela = cadastrarWindow()
         #command=ltela.entrarTela, 
         botaoLogar = Button(command=lambda:[self.ApagaInicial(),ltela.entrarTela()], image=self.camLoginButton, bd=0, relief=GROOVE)
         #command=ctela.cadastrarTela,
-        #botaoCadastrar = Button(image=self.camCadastrarButton, bd=0, relief=GROOVE)
+        botaoCadastrar = Button(command=ctela.cadastrarTela, image=self.camCadastrarButton, bd=0, relief=GROOVE)
 
         # Posicionamento dos botões
         botaoLogar.place(relx=0.3, rely=0.7, anchor="s")
-        #botaoCadastrar.place(relx=0.7, rely=0.7, anchor="s")
+        botaoCadastrar.place(relx=0.7, rely=0.7, anchor="s")
 
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.tela_inicial.mainloop()
@@ -55,7 +56,15 @@ class telaInicialWindow():
         self.tela_inicial.destroy()
         
 
-x1 = telaInicialWindow()
-x1.telaInicial()
+#x1 = telaInicialWindow()
+#x1.telaInicial()
 
-    
+'''
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+self.tela_inicial.mainloop()
+
+e coloque o seguinte comando adaptado para poder executa-la
+#x1 = telaInicialWindow()
+#x1.telaInicial()
+''' 

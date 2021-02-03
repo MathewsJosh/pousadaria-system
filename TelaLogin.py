@@ -1,11 +1,10 @@
 from tkinter import *
-#from BD_usuariosCadastrados import *
-#from Tela_Cadastrar import *
-#from Tela_Chat import *
+
 
 #Variaveis Globais
 tam = "800x600"
 camIco = "Icones\Pousadaria.ico"
+
 
 class loginWindow():
   # Construtor para a classe
@@ -21,9 +20,6 @@ class loginWindow():
 
   # Método de gerenciamento da tela de login
   def entrarTela(self):
-
-    # Apaga a janela anterior
-    #ApagaInicial()
 
     # Cria uma janela e define suas principais configurações
     self.loginJanela = Tk()
@@ -53,6 +49,11 @@ class loginWindow():
     #, text="Entrar"
     self.botaoEntrar = Button(self.loginJanela, command=self.logarMetodo, image=self.camLoginButton, bd=0, relief=GROOVE)
     self.botaoEntrar.place(relx=0.5, rely=0.6, anchor="n")
+
+
+    ############TESTE
+    # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+    self.loginJanela.mainloop()
 
   # Verifica se os dados digitados pelo usuário batem com o que está cadastrado no BD
   def logarMetodo(self):
@@ -100,3 +101,5 @@ class loginWindow():
       auxiliar = chatWindow(self.nome)
       auxiliar.chatTela()
 '''
+# x3 = loginWindow()
+# x3.entrarTela()
