@@ -56,8 +56,8 @@ class telaInicialWindow():
         self.tela_inicial.destroy()
         
 
-#x1 = telaInicialWindow()
-#x1.telaInicial()
+x1 = telaInicialWindow()
+x1.telaInicial()
 
 '''
 OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela

@@ -114,7 +114,7 @@ class consultaQuartoWindow():
         self.textboxLazer = scrolledtext.ScrolledText(self.areasdisp, height=10, width=30, font=fontStyle)
         self.textboxLazer.grid(row=0, column=1, padx=10, pady=10)
         
-        # Função necessária para não permitir que o textbox seja editado
+        # Função necessária para não permitir que o textbox seja editado - Somente leitura
         self.textboxLazer.bind("<Key>", lambda e: "break")
 
 
