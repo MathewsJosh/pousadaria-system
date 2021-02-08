@@ -2,7 +2,7 @@ import sqlite3
 import os.path
 
 # Caminho do arquivo .db
-caminho = "BancosdeDados\Cache//funcionariosCadastrados.db"
+caminho = "BancosdeDados//funcionariosCadastrados.db"
 
 # Verifica se o arquivo funcionáriosCadastrados existe
 existe = os.path.exists(caminho)

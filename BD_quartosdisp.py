@@ -2,14 +2,14 @@ import sqlite3
 import os.path
 
 # Caminho do arquivo .db
-caminho = "BancosdeDados\Cache//QuartosDisponiveis.db"
+caminho = "BancosdeDados//quartosDisponiveis.db"
 
 # Verifica se o arquivo funcionáriosCadastrados existe
 existe = os.path.exists(caminho)
 
 # Deleta o arquivo de dados de chat se o mesmo existir
-# if existe:
-#    os.remove(caminho)
+if existe:
+    os.remove(caminho)
 
 
 # Cria o arquivo
@@ -26,11 +26,10 @@ class BD_Quartos():
 
     def criar_tabela(self):
         c.execute(
-            """CREATE TABLE IF NOT EXISTS dados (idQuarto text, disponibilidade INTEGER, tipo text, qtdCamas INTEGER, qtdComodos INTEGER, precoDia REAL, tempoDeLocação INTEGER, dataDeEntrada text, dataDeSaida text, cliente text, UNIQUE(idQuarto))""")
-        c.execute(
-            """INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('01', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')""")
+            """CREATE TABLE IF NOT EXISTS dados (idQuarto text, disponibilidade text, tipo text, qtdCamas INTEGER, qtdComodos INTEGER, precoDia REAL, tempoDeLocação INTEGER, dataDeEntrada text, dataDeSaida text, cliente text, UNIQUE(idQuarto))""")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('01', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
         c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('02', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('03', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('03', 'Ocupado', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
         c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('04', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
         c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('05', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
         c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('06', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
@@ -46,9 +45,24 @@ class BD_Quartos():
         c.execute('SELECT idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia FROM dados')
         data = c.fetchall()
         return data
-        # Testa impressão
-        #for linha in data:  
-            #print(linha[0])
+    
+    def leDadosCompletosQuarto(self):
+        c.execute('SELECT idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia, tempoDeLocação, dataDeEntrada, dataDeSaida, cliente FROM dados')
+        data = c.fetchall()
+        return data
+    
+    # # Método que retorna o nome e senha do usuário cadastrado
+    # def leDados(dataReserva,self):
+    #     sql = 'SELECT * FROM dados WHERE dataDeEntrada=?'
+    #     c.execute(sql, (dataReserva,))
+    #     data=c.fetchall()
+    #     return data
+        # for linha in c.execute(sql, (dataReserva,)):
+        #     if linha == "":
+        #         return False
+        #     else:
+        #         return True
+            
 
 #x10 = BD_Quartos()
 #x10.criar_tabela()

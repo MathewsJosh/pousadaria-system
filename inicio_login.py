@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from BancosdeDados.BD_CadastroFunc import *
+from BD_cadfuncionario import *
 
 #Variaveis Globais
 tam = "800x600"
@@ -27,7 +27,6 @@ class loginWindow():
   # Método de gerenciamento da tela de login
   def entrarTela(self):
     self.formataTelaLogin()
-    print("AAAAAAA")
     
     # Cria o botão entrar e chama o método para fazer o login
     self.botaoEntrar = Button(self.loginJanela, command=self.logarMetodo, image=self.camLoginButton, bd=0, relief=GROOVE)
@@ -38,7 +37,6 @@ class loginWindow():
 
   # Verifica se os dados digitados pelo usuário batem com o que está cadastrado no BD
   def logarMetodo(self):
-    print("BBBBBB")
     # Apaga qualquer aviso anterior
     self.aviso.destroy()
     self.aviso.forget()

@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from BancosdeDados.BD_CadastroFunc import *
+from BD_cadfuncionario import *
 
 '''
 import sys

@@ -1,9 +1,12 @@
 from tkinter import *
-from TelaLogin import *
-from TelaCadastrarFunc import *
+from inicio_login import *
+from inicio_cadfuncionario import *
 
 #####################TELA PRINCIPAL DA APLICAÇÃO######################
 #Execute esse arquivo
+
+# Bibliotecas a serem importadas nesse projeto:
+#pip install tkcalendar
 
 
 #Variaveis Globais
