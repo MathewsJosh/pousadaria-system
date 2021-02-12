@@ -11,7 +11,7 @@ from inicio_cadfuncionario import *
 
 #Variaveis Globais
 tam = "800x600"
-camIco = "Icones\Pousadaria.ico"
+camIco = "Images\Icones\Pousadaria2.ico"
 
 # Tela que da a opção de Logar ou cadastrar antes de entrar no chat
 class telaInicialWindow():
@@ -31,13 +31,13 @@ class telaInicialWindow():
         self.tela_inicial.geometry(tam)
 
         # Converte os pngs dos botões para imagem
-        self.camLoginButton = PhotoImage(file="Botões\Tela inicial//button_loginTI.png", master=self.tela_inicial)
-        self.camCadastrarButton = PhotoImage(file="Botões\Tela inicial//button_cadastrarTI.png", master=self.tela_inicial)
-        self.pousadaria = PhotoImage(file="Icones\Pousadaria-Logo.png", master=self.tela_inicial)
+        self.camLoginButton = PhotoImage(file="Images\Botões\inicio_login.png", master=self.tela_inicial)
+        self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png", master=self.tela_inicial)
+        self.pousadaria = PhotoImage(file="Images\Pousadaria-Logo.png", master=self.tela_inicial)
 
         # Coloca uma imagem em cima dos botões
         l1 = Label(image=self.pousadaria)
-        l1.place(relx=0.5, rely=0.25, anchor="n")
+        l1.place(relx=0.5, rely=0.1, anchor="n")
 
         # Cria instancias e botões para Logar e Cadastrar
         ltela = loginWindow()
@@ -48,8 +48,8 @@ class telaInicialWindow():
         botaoCadastrar = Button(command=ctela.cadastrarTela, image=self.camCadastrarButton, bd=0, relief=GROOVE)
 
         # Posicionamento dos botões
-        botaoLogar.place(relx=0.3, rely=0.7, anchor="s")
-        botaoCadastrar.place(relx=0.7, rely=0.7, anchor="s")
+        botaoLogar.place(relx=0.3, rely=0.9, anchor="s")
+        botaoCadastrar.place(relx=0.7, rely=0.9, anchor="s")
 
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.tela_inicial.mainloop()

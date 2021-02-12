@@ -4,7 +4,7 @@ from BD_cadfuncionario import *
 
 #Variaveis Globais
 tam = "800x600"
-camIco = "Icones\Pousadaria.ico"
+camIco = "Images\Icones\Pousadaria.ico"
 
 
 class loginWindow():
@@ -101,8 +101,8 @@ class loginWindow():
     self.passEntry.grid(row=1, column=1, pady=5, sticky=W)
 
     # Converte o png do botão para imagem
-    self.camLoginButton = PhotoImage(file="Botões\Tela inicial//button_loginTI.png", master=self.loginJanela)
-    self.camAbrirButton = PhotoImage(file="Botões\Tela inicial//button_abrirTI.png", master=self.loginJanela)
+    self.camLoginButton = PhotoImage(file="Images\Botões\inicio_login.png", master=self.loginJanela)
+    self.camAbrirButton = PhotoImage(file="Images\Botões\inicio_abrir.png", master=self.loginJanela)
 '''
   # Destroi a Tela de Login e cria a tela de chat
   def criaChat(self):

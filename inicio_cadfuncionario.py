@@ -11,7 +11,7 @@ sys.path.append('../')
 
 #Variaveis Globais
 tam = "800x600"
-camIco = "Icones\Pousadaria.ico"
+camIco = "Images\Icones\Pousadaria2.ico"
 
 class cadastrarWindow():
     # Construtor da Classe
@@ -137,8 +137,8 @@ class cadastrarWindow():
         self.funcaoEntry.grid(row=2, column=1, pady=5, sticky=E)
 
         # Converte os pngs dos botões para imagem
-        self.camCadastrarButton = PhotoImage(file="Botões\Tela inicial//button_cadastrarTI.png", master=self.cadastrarJanela)
-        self.camVoltarButton = PhotoImage(file="Botões\Tela inicial//button_voltarTI.png", master=self.cadastrarJanela)
+        self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png", master=self.cadastrarJanela)
+        self.camVoltarButton = PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.cadastrarJanela)
 
 
 

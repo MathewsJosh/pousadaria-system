@@ -8,8 +8,8 @@ caminho = "BancosdeDados//clientesCadastrados.db"
 existe = os.path.exists(caminho)
 
 # Deleta o arquivo de dados de chat se o mesmo existir
-#if existe:
-#    os.remove(caminho)
+if existe:
+    os.remove(caminho)
     
 
 # Cria o arquivo
@@ -27,9 +27,11 @@ class BD_user():
                 nome text,
                 cpf text,
                 telefone text,
-                enderecoCobranca text,
+                email text,
+                tipo text,
+                
+                endereco text,
                 diasReservados INTEGER,
-                senha text,
                 autorizacao text,
                 UNIQUE(nome, login)
                 )""")
