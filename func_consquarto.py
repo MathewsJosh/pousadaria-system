@@ -169,7 +169,6 @@ class consultaQuartoWindow():
         self.quartosdisp.place(relx=0.26, rely=0.23, anchor="n")
         
         # Cria um textbox com os detalhes do quarto
-       
         self.textboxQuarto = scrolledtext.ScrolledText(self.quartosdisp, height=20, width=50, font=fontStyle)
         self.textboxQuarto.grid(row=0, column=1, padx=10, pady=10)
         

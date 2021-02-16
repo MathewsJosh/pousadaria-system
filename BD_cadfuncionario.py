@@ -103,9 +103,3 @@ def fechaConexao():
     c.close()
     connection.close()
 
-
-'''
-OBS: 
-1 - Somente as funções Recepçao e gerencia tem acesso ao sistema
-2 - Somente adms podem cadastrar usuários
-'''
