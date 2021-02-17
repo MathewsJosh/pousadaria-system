@@ -23,15 +23,4 @@ class BD_user():
     #def __init__(self):
     def criar_tabela():
         c.execute(
-            """CREATE TABLE IF NOT EXISTS dados (
-                nome text,
-                cpf text,
-                telefone text,
-                email text,
-                tipo text,
-                
-                endereco text,
-                diasReservados INTEGER,
-                autorizacao text,
-                UNIQUE(nome, login)
-                )""")
+            """CREATE TABLE IF NOT EXISTS dados (nome text,cpf text,telefone text,email text,tipo text,endereco text,diasReservados INTEGER,autorizacao text,UNIQUE(nome, login))""")

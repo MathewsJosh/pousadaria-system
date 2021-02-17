@@ -21,15 +21,14 @@ class Reclamacao():
         # Auxiliares das conversões de imagem
         self.cambotaoConsReclama = 0
         self.cambotaoInserir = 0
-        self.cambotaoRemover = 0
         self.cambotaoProximo = 0
         self.cambotaoVoltar = 0
+        self.cambotaoSelecionar = 0
         self.cambotaoAtualizar = 0
         self.cambotaoDeletar = 0
         # Botões
         self.botaoConsReclamacao = 0
         self.botaoInserir = 0
-        self.botaoDeletar = 0
         self.botaoProximo = 0
         self.botaoVoltar = 0
         self.botaoSelecionar = 0
@@ -81,7 +80,6 @@ class Reclamacao():
         # Converte as imagens em PhotoImage para serem usadas como botões
         self.cambotaoConsReclama = PhotoImage(file="Images\Botões\inicio_consultar.png", master=self.telaReclamacao)
         self.cambotaoInserir = PhotoImage(file="Images\Botões\inicio_inserir.png", master=self.telaReclamacao)
-        self.cambotaoRemover = PhotoImage(file="Images\Botões\menu_reclamacoes.png", master=self.telaReclamacao)
         self.cambotaoProximo = PhotoImage(file="Images\Botões\inicio_proximo.png", master=self.telaReclamacao)
         self.cambotaoVoltar = PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.telaReclamacao)
         self.cambotaoSelecionar = PhotoImage(file="Images\Botões\inicio_selecionar.png", master=self.telaReclamacao)
@@ -92,7 +90,6 @@ class Reclamacao():
         fontfamilylist = list(tkFont.families())
         fontindex = 20
         self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
-        
         
         #---------------------------------------------------Frame - Filtro de reclamações------------------------------------------------------#
         # Cria um frame para a entrada de filtros
@@ -122,11 +119,11 @@ class Reclamacao():
         # Cria e posiciona uma label de aviso
         self.aviso = Label(self.telaReclamacao, foreground='red', font=self.fontStyle)
         self.aviso.place(relx=0.5, rely=0.9)
-        
-        
+             
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.telaReclamacao.mainloop()
-        
+    
+    # Método de controle de opções de filtragem do crud reclamações
     def controleCRUD(self):
         self.opcoesClientes = []
         self.auxOpcClientes()
@@ -151,6 +148,8 @@ class Reclamacao():
             self.apagaConsulta()
         if self.atualizasim == 1:
             self.apagaAtualiza()
+        if self.deletasim == 1:
+            self.apagaDelete()
             
         # Cria um frame para a entrada de reclamacões
         self.insereframe = LabelFrame(self.telaReclamacao, text = "Insira a reclamação", padx=10)
@@ -182,7 +181,7 @@ class Reclamacao():
         self.botaoInserir = Button(self.telaReclamacao, image=self.cambotaoInserir, command=self.insereReclamacao, bd=0, relief=GROOVE)
         self.botaoInserir.place(relx=0.8, rely=0.5, anchor="n")
 
-        
+    # Método que salva a reclamação no banco de dados
     def insereReclamacao(self):
         self.textReclamacao = self.textboxInsere.get("1.0",'end-1c')
         # Verifica se algo escrito antes de salvar no banco de dados
@@ -200,7 +199,7 @@ class Reclamacao():
             self.aviso = Label(self.telaReclamacao,text="Reclamação/Sugestão registrada!", foreground='green', font=12)
             self.aviso.place(relx=0.4, rely=0.9)
             
-    
+    # Método que destroy os frames de Inserção
     def apagaInsercao(self):
         self.insereframe.destroy()
         self.botaoInserir.destroy()
@@ -211,12 +210,13 @@ class Reclamacao():
     #--------------------------------------------------- Consulta reclamações------------------------------------------------------#     
     # Exibe as reclamações na tela
     def formataConsultaReclamacao(self):
-        self.consultasim == 1
         # Apaga outras telas que ja foram criadas
         if self.inseresim == 1:
             self.apagaInsercao()
         if self.atualizasim == 1:
             self.apagaAtualiza()
+        if self.deletasim == 1:
+            self.apagaDelete()
             
         # Cria um frame para exibir detalhes de uma reclamação
         self.consultaframe = LabelFrame(self.telaReclamacao, text = "Consulta de reclamações", padx=10)
@@ -261,7 +261,8 @@ class Reclamacao():
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Não foi encontrada reclamação para esse cliente!", foreground='red', font=12)
             self.aviso.place(relx=0.3, rely=0.9)    
-            
+    
+    # Método que destroy os frames de consulta
     def apagaConsulta(self):
         self.consultaframe.destroy()
         self.botaoConsultar.destroy()
@@ -273,12 +274,13 @@ class Reclamacao():
     #---------------------------------------------------Atualiza reclamações------------------------------------------------------#    
     # Exibe as reclamações na tela
     def atualizaReclamacao(self):
-        self.atualizasim == 1
         # Apaga outras telas que ja foram criadas
         if self.inseresim == 1:
             self.apagaInsercao()
         if self.consultasim == 1:
             self.apagaConsulta()
+        if self.deletasim == 1:
+            self.apagaDelete()
             
         #---------------------------------------------------Frame - Seleciona Cliente------------------------------------------------------#
         # Cria um frame de seleção de clientes e ids
@@ -352,7 +354,8 @@ class Reclamacao():
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Reclamação atualizada no banco de dados!", foreground='Green', font=12)
             self.aviso.place(relx=0.4, rely=0.9) 
-            
+    
+    # Método que destroy os frames de atualização
     def apagaAtualiza(self):
         self.atualizaframe.destroy()
         self.clienteframe.destroy()
@@ -390,8 +393,29 @@ class Reclamacao():
         self.botaoDeletar = Button(self.clienteframe, command=self.deletaRecBD, image=self.cambotaoDeletar, bd=0, relief=GROOVE)
         self.botaoDeletar.grid(row=1, column=0, padx=5, pady= 10, columnspan = 2)
     
+    # Deleta a reclamação do cliente do banco de dados
     def deletaRecBD(self):
-        self.rec.deletaRec(str(self.clienteCombobox.get()))
+        self.dadosLidosRec = self.rec.leDadosRec()
+        contador=0
+        for x in self.dadosLidosRec:
+            if x[1] == self.clienteCombobox.get():
+                self.rec.deletaRec(str(self.clienteCombobox.get()))
+                contador+=1
+        
+        self.aviso.destroy()
+        if(contador==0):
+            # Cria e posiciona uma label de aviso
+            self.aviso = Label(self.telaReclamacao,text="Não há nenhuma reclamação desse cliente no banco de dados!", foreground='red', font=12)
+            self.aviso.place(relx=0.4, rely=0.9) 
+        else:
+            # Cria e posiciona uma label de aviso
+            self.aviso = Label(self.telaReclamacao,text="Reclamação do cliente deletada do banco de dados com sucesso!", foreground='Green', font=12)
+            self.aviso.place(relx=0.4, rely=0.9) 
+    
+    # Destroy a tela de Delete
+    def apagaDelete(self):
+        self.clienteframe.destroy()
+        self.aviso.destroy()
     
 
     #---------------------------------------------------Funções Auxiliares------------------------------------------------------# 
@@ -400,13 +424,6 @@ class Reclamacao():
         dadosLidosRec = self.rec.leDadosRec()
         for x in dadosLidosRec:
             self.opcoesClientes.append(x[1])
-        #.split(" ")
-    
-    # Método que atualiza as opções de IDS
-    def auxOpcIDs(self):
-        dadosLidosRec = self.rec.leDadosRec()
-        for x in dadosLidosRec:
-            self.IDsRecs.append(x[0])
         #.split(" ")
 
     # Método que apaga a janela atual
@@ -418,7 +435,6 @@ class Reclamacao():
 x6 = Reclamacao()
 x6.selecionaCRUDReclamacao()
 
-
 '''
 OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
@@ -428,94 +444,3 @@ e coloque o seguinte comando adaptado para poder executa-la
 #x1 = telaInicialWindow()
 #x1.telaInicial()
 ''' 
-
-
-''' BACKUP
-        # Cria uma listbox com os quartos disponíveis
-        #listaQuartos = Listbox(self.quartosdisp)
-        #listaQuartos.grid(row=0, column=0, pady=10)
-
-        #nomes = ['Quarto 1','pedro','bailarina']
-        #for z in nomes:
-            #listaQuartos.insert(END,z)
-        #print(listaQuartos.get())
-'''
-
-'''
-        # Cria e posiciona as labels e entrys dentro do self.filtroframe
-        lb1 = Label(self.filtroframe, text="Data da Reserva: ", width=15)
-        self.Date1Entry = DateEntry(self.filtroframe, width=15, date_pattern='dd/mm/yyyy')
-        lb1.grid(row=0, column=0, pady=10)
-        self.Date1Entry.grid(row=0, column=1, pady=10)
-'''
-
-'''BACKUP
-        #self.aviso = Label(self.telaReclamacao, text="Da", foreground='red')
-        # Apaga qualquer aviso anterior
-        #self.aviso.destroy()
-        #self.aviso.forget()
-        # Posiciona a label de aviso
-        #self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
-        
-        
-        #self.datadeSaida = datetime.strptime(self.Date2Entry.get(), '%d/%m/%Y').date()
-        #print(self.datadeSaida, type(self.datadeSaida))
-        #print("data_hoje < data_passada", self.data_hoje <= self.datadeEntrada)
-        #Verifica se alguma das datas selecionadas é invalida (Passado)
-        
-        
-        
-        #print(data_hoje, type(data_hoje))
-        #data_hoje = str(datetime.now().date().strftime("%d/%m/%Y"))                         # Pega a data atual e converte para string
-        #date_hojeDatetime = datetime.strptime(data_hoje, '%d/%m/%Y').date()                 # Converte a data para dateTime
-        print(date_hojeDatetime, type(date_hojeDatetime))
-        
-        
-        #Testa uma data anterior
-        #data_passada = datetime.strptime("06/02/2021", '%d/%m/%Y').date()
-        print(data_passada, type(data_passada))
-        '''
-        
-'''      
-        #data_final = datetime.strptime(self.datadeSaida, "%dd/%mm/%yyyy")
-        #if data_inicial <= data_modificacao <= data_final:
-           # print('data_modificacao está entre o período selecionado')
-       # else:
-            #print('data_modificacao está fora do período selecionado')
-'''
-
-'''
-        # Pego a data de hoje
-        self.data_hoje = datetime.now().date()
-        #SOMA DATAS
-        #print(self.data_hoje + timedelta(days=10))
-        
-        # Converte a data selecionada no formulário para datetime
-        self.datadeEntrada = datetime.strptime(self.Date1Entry.get(), '%d/%m/%Y').date()
-        
-        # Converter todas as datas do self.dadosQuarto (Data de entrada 8 e saida 9) para datetime e armazenar na mesma posição
-        for x in self.dadosQuarto:
-            if x[8] != None and x[9] != None:
-                x[8] = datetime.strptime(x[8], '%d/%m/%Y').date()
-                x[9] = datetime.strptime(x[9], '%d/%m/%Y').date()
-                #print(x[8],type(x[8]))
-            
-        
-        # Verificar se está ocupado naquela data
-        for x in self.dadosQuarto:
-            if x[8] != None and x[9] != None:
-                self.aviso = Label(self.telaReclamacao,text="Sem informação dessa data no BD", foreground='red')
-                self.aviso.place(relx=0.5, rely=0.9, anchor="n")
-                print("Sem informação dessa data no BD")
-            elif self.datadeEntrada > x[8] and self.datadeEntrada < self.x[9]:
-                print("Data dentro da reserva, quarto ocupado")
-                self.textboxLazer.delete(1.0, END)
-                self.textboxLazer.insert(INSERT, "Nenhum Quarto disponível para essa data para esse filtro!")
-                
-'''
-
-'''
-#from datetime import datetime,timedelta
-#from tkinter.filedialog import askopenfilename
-#from tkcalendar import *
-'''
