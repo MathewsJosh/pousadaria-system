@@ -3,13 +3,6 @@ from tkinter import ttk
 import re 
 from BD_cadcliente import *
 
-'''
-import sys
-sys.path.append('../')
-
-#https://qastack.com.br/programming/4383571/importing-files-from-different-folder
-'''
-
 #Variaveis Globais
 tam = "1200x720"
 camIco = "Images\Icones\Pousadaria.ico"
@@ -35,12 +28,18 @@ class cadastrarWindow():
         self.bairroEntry = 0
         self.cidadeEntry = 0
         self.estadoEntry = 0
+        # Instanciamento de classes
+        self.bdcadCliente = BD_cadCliente()
+        #Botões
+        self.botaoCadastrar = 0
+        self.botaoVoltar = 0
         # Frames
         self.cadastrarFrame = 0
         self.enderecoFrame = 0
         # Outros
         self.aviso = 0
-        self.botaoCadastrar = 0
+        self.dadosCadCliente = 0
+        
         
         
     # Método de Gerencia da tela cadastrar cliente
@@ -48,8 +47,12 @@ class cadastrarWindow():
         self.formataTelaCadastro()
         
         # Cria um botão Cadastrar nessa tela e verifica se é possivel cadastrar o usuario
-        self.botaoCadastrar = Button(self.cadastrarJanela, text="Cadastrar!", command=self.cadastrarMetodo, image=self.camCadastrarButton, bd=0, relief=GROOVE)
-        self.botaoCadastrar.place(relx=0.5, rely=0.8, anchor="n")
+        self.botaoCadastrar = Button(self.cadastrarJanela, command=self.cadastrarMetodo, image=self.camCadastrarButton, bd=0, relief=GROOVE)
+        self.botaoCadastrar.place(relx=0.9, rely=0.9, anchor="n")
+        
+        self.botaoVoltar = Button(self.cadastrarJanela, command=self.cadastrarMetodo, image=self.camVoltarButton, bd=0, relief=GROOVE)
+        self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
+        
 
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.cadastrarJanela.mainloop()
@@ -79,33 +82,10 @@ class cadastrarWindow():
             self.aviso = Label(self.cadastrarJanela, text="Dados cadastrados com sucesso!", foreground='green', font=('Helvetica', 10, 'bold'))
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             self.enderecoEntry = str(self.RuaEntry.get()) + ", " + str(self.NumEntry.get()) + " - " + str(self.bairroEntry.get()) + " - " + str(self.cidadeEntry.get()) + ", " + str(self.estadoEntry.get())
-            print(self.enderecoEntry,type(self.enderecoEntry))
-        
-        # elif not leAutorizacao(self.AutorizacaoEntry.get()):
-        #     # Avisa que o cadastro deu errado
-        #     self.aviso = Label(self.cadastrarJanela, text="Erro ao realizar o cadastro, verifique o codigo de autorização", foreground='red', font=('Helvetica', 10, 'bold'))
-        #     self.AutorizacaoEntry.delete(0, 'end')
-        #     self.AutorizacaoEntry.focus_force()
-        #     self.aviso.place(relx=0.5, rely=0.7, anchor="n")
-        #     #return 0
-        # else:
-        #     # Adiciona os dados inseridos ao banco de dados
-        #     entradaDados(self.nomeEntry.get(), self.cpfEntry.get(), self.funcaoEntry.get(), self.salarioEntry.get(), self.loginEntry.get(), self.senhaEntry.get(), self.AutorizacaoEntry.get())
-
-        #     # Avisa que o cadastro deu certo
-        #     self.aviso = Label(self.cadastrarJanela, text="Cadastro efetuado com sucesso!", foreground='green', font=('Helvetica', 10, 'bold'))
-            
-        #     # Altera o botão cadastrar para "Voltar"
-        #     self.botaoCadastrar.destroy()
-        #     self.botaoCadastrar.forget()
-        #     self.botaoCadastrar = Button(self.cadastrarJanela, command=self.destroiTela, image=self.camVoltarButton, bd=0, relief=GROOVE)
-        #     self.botaoCadastrar.place(relx=0.5, rely=0.8, anchor="n")
+            self.bdcadCliente.entradaDados(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.tipoEntry.get(), self.enderecoEntry)
             
             
-            ######self.cadastrarJanela.mainloop()
-        
-        # Posiciona a label de aviso
-        #self.aviso.place(relx=0.5, rely=0.7, anchor="n")
+ 
 
     def formataTelaCadastro(self):
         # Cria uma janela e define suas principais configurações
@@ -190,13 +170,13 @@ class cadastrarWindow():
         self.cidadeEntry.grid(row=3, column=1, pady=5, sticky=E)
         self.estadoEntry.grid(row=4, column=1, pady=5, sticky=E)
         
-        
-        
+
         # Cria e posiciona uma Label de Aviso
         self.aviso = Label()
         self.aviso.place(relx=0.5, rely=0.7, anchor="n")
         
 
+    #---------------------------------------------------Funções Auxiliares------------------------------------------------------#
     # Verifica se o telefone digitado é válido
     def checaTelefone(self, telefone):
         regex = "^\(?[1-9]{2}\)? ?9?[0-9]{4}\-?[0-9]{4}$"

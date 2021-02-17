@@ -75,7 +75,7 @@ class MenuRecepcaoWindow():
         
         #---------------------------------------------------Frame - Outros Botões------------------------------------------------------#
         # Cria um frame só para os botões do menu
-        self.outrosframe = LabelFrame(self.menuRecepcaoJanela, text = "Outras Opções", padx=50)
+        self.outrosframe = LabelFrame(self.menuRecepcaoJanela, text = "Administração", padx=50)
         self.outrosframe.place(relx=0.7, rely=0.4, anchor="n")
         
         # Cria os botões em outra frame e os posiciona
