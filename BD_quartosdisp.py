@@ -5,11 +5,11 @@ import os.path
 caminho = "BancosdeDados//quartosDisponiveis.db"
 
 # Verifica se o arquivo funcionáriosCadastrados existe
-existe = os.path.exists(caminho)
+#existe = os.path.exists(caminho)
 
 # Deleta o arquivo de dados de chat se o mesmo existir
-if existe:
-    os.remove(caminho)
+#if existe:
+#    os.remove(caminho)
 
 
 # Cria o arquivo
@@ -25,69 +25,48 @@ class BD_Quartos():
         self.criar_tabela()
 
     def criar_tabela(self):
-        c.execute(
-            """CREATE TABLE IF NOT EXISTS dados (idQuarto text, disponibilidade text, tipo text, qtdCamas INTEGER, qtdComodos INTEGER, precoDia REAL, tempoDeLocação INTEGER, dataDeEntrada text, dataDeSaida text, cliente text, UNIQUE(idQuarto))""")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('01', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('02', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('03', 'Ocupado', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('04', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('05', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('06', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('07', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('08', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('09', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('10', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('11', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
+        sql = "CREATE TABLE IF NOT EXISTS dados (idQuarto text, nome text, status text, tipo text, qtdCamas INTEGER, qtdComodos INTEGER, precoDia REAL, tempoDeLocação INTEGER, dataDeEntrada text, dataDeSaida text, cliente text, UNIQUE(idQuarto))"
+        c.execute(sql)
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('01', 'Suíte 01', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('02', 'Suíte 02', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('03', 'Suíte 03', 'Ocupado', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('04', 'Suíte 04', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('05', 'Solteiro 01', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('06', 'Solteiro 02', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('07', 'Solteiro 03', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('08', 'Solteiro 04', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('09', 'Chalé 01', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('10', 'Chalé 02', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
+        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('11', 'Chalé 03', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
         connection.commit()
 
 
     def leDadosBasicosQuarto(self):
-        c.execute('SELECT idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia FROM dados')
+        c.execute('SELECT idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia FROM dados')
         data = c.fetchall()
         return data
     
     def leDadosCompletosQuarto(self):
-        c.execute('SELECT idQuarto, disponibilidade, tipo, qtdCamas, qtdComodos, precoDia, tempoDeLocação, dataDeEntrada, dataDeSaida, cliente FROM dados')
+        c.execute('SELECT idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia, tempoDeLocação, dataDeEntrada, dataDeSaida, cliente FROM dados')
         data = c.fetchall()
         return data
     
-    # # Método que retorna o nome e senha do usuário cadastrado
-    # def leDados(dataReserva,self):
-    #     sql = 'SELECT * FROM dados WHERE dataDeEntrada=?'
-    #     c.execute(sql, (dataReserva,))
-    #     data=c.fetchall()
-    #     return data
-        # for linha in c.execute(sql, (dataReserva,)):
-        #     if linha == "":
-        #         return False
-        #     else:
-        #         return True
-            
-
-#x10 = BD_Quartos()
-#x10.criar_tabela()
-#data2 = x10.leDadosBasicosQuarto()
-
-#print(data2)
-#print(data2[0])
-#print(data2[0][0])
-
-    # Método auxiliar de entrada de dados e criação de tabela
-    #def entradaauxiliar(self):
-        #self.criar_tabela()
-        #connection.commit()
-
-
-    # Método de entrada dos dados do usuário para o cadastramento
-    #def entradaDados(nome, cpf, funcao, salario, login, senha, autorizacao, self):
-        #self.criar_tabela()
-        #if not existe:
-            #self.entradaauxiliar()
-        #c.execute("INSERT OR IGNORE INTO dados (nome, senha, autorizacao) VALUES ('admin', 'admin', 'admin')")
-        #c.execute("INSERT OR IGNORE INTO dados (nome, senha, autorizacao) VALUES ('adm', 'adm', 'adm')")
-        # Se autorização estiver correta, verifica se é funcionário da gerencia para adicionar nova autorizaçao, senão, só adiciona o novo funcionário mesmo
-        #if self.leAutorizacao(autorizacao):
-            #if funcao == "1 - Gerência":
-                #c.execute("INSERT OR REPLACE INTO dados (nome, cpf, funcao, salario, login, senha, autorizacao) VALUES ('" +nome+"','"+cpf+"','"+funcao+"','"+salario+"','"+login+"','"+senha+"','"+autorizacao+"')")
-            #c.execute("INSERT OR REPLACE INTO dados (nome, cpf, funcao, salario, login, senha) VALUES ('" +nome+"','"+cpf+"','"+funcao+"','"+salario+"','"+login+"','"+senha+"')")
-        #connection.commit()
+    def atualizaStatusQuarto(self, status, nome):
+        sql = "UPDATE dados SET status=? WHERE nome=?"
+        dado = (status, nome)
+        c.execute(sql,dado)
+        connection.commit()
+    
+    def buscaQuartosDisponiveis(self, status):
+        sql='SELECT nome FROM dados WHERE status=?'
+        dado = (status,)
+        c.execute(sql,dado)
+        data = c.fetchall()
+        return data
+    
+    def buscaPrecosQuartos(self):
+        sql='SELECT nome, precoDia FROM dados'
+        c.execute(sql)
+        data = c.fetchall()
+        return data
+    

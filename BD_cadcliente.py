@@ -29,9 +29,18 @@ class BD_cadCliente():
     # Método que Insere os quartos e/ou areas alugadas
     def insereQA(self, quartos, areas):
         #len(quartos)
-        sql ="INSERT OR REPLACE INTO dados (quartosReservados, AreasReservadas) VALUES ('"+quartos+"','"+areas+"')"
+        sql = "UPDATE dados SET status=? WHERE status=?"
+        #sql ="INSERT OR REPLACE INTO dados (quartosReservados, AreasReservadas) VALUES ('"+quartos+"','"+areas+"')"
         c.execute(sql)
         connection.commit() 
+        
+    #, cliente, id
+    def leNomeCliente(self): 
+        sql = 'SELECT nome FROM dados'
+        c.execute(sql)
+        data = c.fetchall()
+        return data    
+    
 
 #Armazenar qtd de quartos alugados?
 #Armazenas datas de entrada e saída dos clientes?

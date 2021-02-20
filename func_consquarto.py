@@ -124,7 +124,7 @@ class consultaQuartoWindow():
         auxConsulta = BD_Quartos()
         self.dadosQuarto=auxConsulta.leDadosCompletosQuarto()
         
-        auxConsultaLazer = BD_Areas()
+        auxConsultaLazer = BD_Lazer()
         self.dadosLazer=auxConsultaLazer.leDadosCompletosArea()
         
         
