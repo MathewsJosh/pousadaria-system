@@ -1,9 +1,7 @@
 from tkinter import *
 from tkinter import ttk
-import re 
-import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
-from datetime import datetime,timedelta
+from datetime import datetime
 from tkcalendar import *
 
 #Importações de arquivos locais
@@ -24,19 +22,19 @@ class ReservarWindow():
         self.camReservarButton = 0
         self.camVoltarButton = 0
         self.camSelecionarButton = 0
-        self.camCalcularButton = 0
-        self.campousadaria = 0
+        self.camNotaFiscal = 0
         #Botões
         self.botaoReservar = 0
         self.botaoSelecionar = 0
-        self.botaoCalcular = 0
         self.botaoVoltar = 0
+        self.botaoNota = 0
         # Entradas de dados
         self.dataEntrada = 0
         self.dataSaida = 0
         # Datetimes
         self.entradaDatetime = 0
         self.saidaDatetime = 0
+        self.diasDEstadia = 0
         # Comboboxes
         self.clienteCombobox = 0
         # CheckButtons
@@ -47,18 +45,17 @@ class ReservarWindow():
         self.bdQuartos = BD_Quartos()
         self.bdLazer = BD_Lazer()
         # Dados das classes
-        self.dadoscliente = 0
         self.nomecliente = 0
         self.dadosQuartos = 0
         self.dadosLazer = 0
         # Calculos
         self.totalquartos = 0
-        self.totalareas = 0
-        self.totaltotal = self.totalquartos + self.totalareas
+        self.totalLazer = 0
+        self.estadiaTotal = self.totalquartos + self.totalLazer
         # Exibe calculos
         self.precoAreaEntry = 0
         self.precoQuartoEntry = 0
-        self.totalEntry = 0
+        self.precoTotalEntry = 0
         # Frames
         self.reservarFrame = 0
         self.clienteFrame = 0
@@ -72,26 +69,20 @@ class ReservarWindow():
         self.aviso = 0
         self.fontStyle = 0
         self.quartosMarcados = []
-        
-        
+        self.lazerMarcados = []
         
         
     # Método de Gerencia da tela Reservar cliente
     def ReservarTela(self):
-        self.formataTelaCadastro()
-        
-        # Cria um botão Reservar nessa tela e verifica se é possivel Reservar o usuario
-        self.botaoReservar = Button(self.ReservarJanela, command=self.reservarMetodo, image=self.camReservarButton, bd=0, relief=GROOVE)
-        self.botaoReservar.place(relx=0.9, rely=0.9, anchor="n")
+        self.formataTelaReservar()
         
         self.botaoVoltar = Button(self.ReservarJanela, command=self.reservarMetodo, image=self.camVoltarButton, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
-
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.ReservarJanela.mainloop()
    
-    def formataTelaCadastro(self):
+    def formataTelaReservar(self):
         # Cria uma janela e define suas principais configurações
         self.ReservarJanela = Tk()
         self.ReservarJanela.title("Recepção - Reservar quartos e áreas de lazer")
@@ -103,64 +94,105 @@ class ReservarWindow():
         self.camReservarButton = PhotoImage(file="Images\Botões\inicio_reservar.png", master=self.ReservarJanela)
         self.camVoltarButton = PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.ReservarJanela)
         self.camSelecionarButton = PhotoImage(file="Images\Botões\inicio_selecionar.png", master=self.ReservarJanela)
-        self.camCalcularButton = PhotoImage(file="Images\Botões\inicio_calcular.png", master=self.ReservarJanela)
-        self.campousadaria = PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.ReservarJanela)
+        self.camNotaFiscal = PhotoImage(file="Images\Botões\inicio_emitirNota.png", master=self.ReservarJanela)
         
         # Define as fontes para caixas de texto
         fontfamilylist = list(tkFont.families())
         fontindex = 20
         self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
         
-
-        #---------------------------------------------------Frame - Seleciona Cliente------------------------------------------------------#
-        # Cria o Frame de cadastro
-        self.clienteFrame = LabelFrame(self.ReservarJanela, text = "Selecione um cliente", padx=20, pady=20)
-        self.clienteFrame.place(relx=0.15, rely=0.15, anchor="n")
-        
-        # Cria os campos necessários para o cadastro
-        lb1 = Label(self.clienteFrame, text="Nomes:")
-        lb2 = Label(self.clienteFrame, text="Data de entrada:")
-        lb3 = Label(self.clienteFrame, text="Data de saída:")
-        
-        # Posiciona as Labels e entradas de dados
-        lb1.grid(row=0, column=0, pady=5, sticky=W)
-        lb2.grid(row=1, column=0, pady=5, sticky=W)
-        lb3.grid(row=2, column=0, pady=5, sticky=W)
-        
-        # Cria e posiciona a combobox de seleção de clientes cadastrados
         self.nomecliente = self.bdClientes.leNomeCliente()
-        self.clienteCombobox = ttk.Combobox(self.clienteFrame, value=self.nomecliente, width=15, state="readonly")
-        self.clienteCombobox.current(0)
-        self.clienteCombobox.grid(row=0, column=1, pady=5, sticky=W)
+        if len(self.nomecliente)>0:
+            #---------------------------------------------------Frame - Seleciona Cliente------------------------------------------------------#
+            # Cria o Frame de cadastro
+            self.clienteFrame = LabelFrame(self.ReservarJanela, text = "Selecione um cliente", padx=20, pady=20)
+            self.clienteFrame.place(relx=0.15, rely=0.15, anchor="n")
+            
+            # Cria os campos necessários para o cadastro
+            lb1 = Label(self.clienteFrame, text="Nomes:")
+            lb2 = Label(self.clienteFrame, text="Data de entrada:")
+            lb3 = Label(self.clienteFrame, text="Data de saída:")
+            
+            # Posiciona as Labels e entradas de dados
+            lb1.grid(row=0, column=0, pady=5, sticky=W)
+            lb2.grid(row=1, column=0, pady=5, sticky=W)
+            lb3.grid(row=2, column=0, pady=5, sticky=W)
+            
+            # Cria e posiciona a combobox de seleção de clientes cadastrados
+            self.clienteCombobox = ttk.Combobox(self.clienteFrame, value=self.nomecliente, width=15, state="readonly")
+            self.clienteCombobox.current(0)
+            self.clienteCombobox.grid(row=0, column=1, pady=5, sticky=W)
+            
+            # Cria e posiciona a entry de datas de entrada e saida
+            self.dataEntrada = DateEntry(self.clienteFrame, width=15, date_pattern='dd/mm/yyyy', state="readonly")
+            self.dataEntrada.grid(row=1, column=1, pady=10, sticky=W)
         
-        # Cria e posiciona a entry de datas de entrada e saida
-        self.dataEntrada = DateEntry(self.clienteFrame, width=15, date_pattern='dd/mm/yyyy', state="readonly")
-        self.dataEntrada.grid(row=1, column=1, pady=10, sticky=W)
-    
-        self.dataSaida = DateEntry(self.clienteFrame, width=15, date_pattern='dd/mm/yyyy', state="readonly")
-        self.dataSaida.grid(row=2, column=1, pady=10, sticky=W)
+            self.dataSaida = DateEntry(self.clienteFrame, width=15, date_pattern='dd/mm/yyyy', state="readonly")
+            self.dataSaida.grid(row=2, column=1, pady=10, sticky=W)
+            
+            # Cria um botão Reservar nessa tela e verifica se é possivel Reservar o usuario
+            self.botaoSelecionar = Button(self.clienteFrame,command=lambda: self.checaDatas(self.dataEntrada.get(),self.dataSaida.get()), image=self.camSelecionarButton, bd=0, relief=GROOVE)
+            self.botaoSelecionar.grid(row=3, column=0, pady=10, columnspan = 2)
+            
+            # Cria e posiciona uma Label de Aviso
+            self.aviso = Label()
+            self.aviso.place(relx=0.5, rely=0.7, anchor="n")
+            
+        else:
+            self.aviso = Label(self.ReservarJanela, text="ERRO - Não há clientes cadastrados no BD, tente novamente!",foreground='red', font=self.fontStyle)
+            self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
         
-        # Cria um botão Reservar nessa tela e verifica se é possivel Reservar o usuario
-        self.botaoSelecionar = Button(self.clienteFrame,command=lambda: self.checaDatas(self.dataEntrada.get(),self.dataSaida.get()), image=self.camSelecionarButton, bd=0, relief=GROOVE)
-        self.botaoSelecionar.grid(row=3, column=0, pady=10, columnspan = 2)
         
-        # Cria e posiciona uma Label de Aviso
-        self.aviso = Label()
-        self.aviso.place(relx=0.5, rely=0.7, anchor="n")
-        
-        
+    # Verifica se a data digitada é válida
+    def checaDatas(self, dEnt, dSai):
+        now = datetime.now().date()
+        self.entradaDatetime = datetime.strptime(dEnt, '%d/%m/%Y').date()
+        self.saidaDatetime = datetime.strptime(dSai, '%d/%m/%Y').date()
+        if self.entradaDatetime<self.saidaDatetime and now<=self.entradaDatetime and now<self.saidaDatetime:
+            if (self.aviso != 0):
+                self.aviso.destroy()
+            # Calcula e salva a quantidade de dias selecionados para reserva
+            self.entradaDatetime = datetime.strptime(dEnt, '%d/%m/%Y').date()
+            self.saidaDatetime = datetime.strptime(dSai, '%d/%m/%Y').date()
+            self.diasDEstadia = self.saidaDatetime - self.entradaDatetime
+            self.diasDEstadia = self.diasDEstadia.days
+            if(self.reservarFrame!=0):
+                self.reservarFrame.destroy()
+            self.reservarMetodo()
+            
+        else:
+            self.aviso.destroy()
+            if self.entradaDatetime>self.saidaDatetime:
+                self.aviso = Label(self.ReservarJanela, text="ERRO - A data de entrada é depois da data saída!",foreground='red', font=self.fontStyle)
+                self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
+                
+            elif now>=self.saidaDatetime:
+                self.aviso = Label(self.ReservarJanela, text="ERRO - A data de saída deve ser futura!",foreground='red', font=self.fontStyle)
+                self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
+                
+            elif now>self.entradaDatetime:
+                self.aviso = Label(self.ReservarJanela, text="ERRO - A data de entrada deve ser futura!",foreground='red', font=self.fontStyle)
+                self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
+                
+            if(self.areaFrame != 0):
+                self.reservarFrame.destroy()
+
+
+    # Método principal da tela de reserva que cuida de toda a formatação e seleção de quartos
     def reservarMetodo(self):
+        # Zera os valores exibidos e as listas selecionadas se o botão selecionar for pressionado novamente
+        self.zeraValoresEListas()
+        
         self.aviso = Label(self.ReservarJanela, text = "", foreground='red', font=self.fontStyle)
         self.aviso.place(relx=0.5, rely=0.9, anchor="n")
         
-        #---------------------------------------------------Frame - Seleciona Quartos e Areas de Lazer------------------------------------------------------#
+        #---------------------------------------------------Frame - Reservar------------------------------------------------------#
         # Cria o Frame de reserva
         self.reservarFrame = LabelFrame(self.ReservarJanela, text = "Selecione os quartos/areas desejadas", padx=20, pady=20)
-        self.reservarFrame.place(relx=0.5, rely=0.05, anchor="n")
+        self.reservarFrame.place(relx=0.6, rely=0.1, anchor="n")
         
         # Busca os quartos e areas disponíveis no bd, se não houver nenhum, exibe uma msg de erro na tela
         self.buscaValidaBD()
-        
         
         #---------------------------------------------------Frame - Seleciona Quartos------------------------------------------------------#
         # Cria um frame só para exibir os quartos disponíveis em checkbuttons
@@ -173,7 +205,6 @@ class ReservarWindow():
             self.listaQuartos[-1].set(0)
             self.quartoCheck = Checkbutton(self.quartoframe, text=self.dadosQuartos[x][0], command=lambda x=x: self.criaLista(x), variable=self.listaQuartos[-1], onvalue=self.dadosQuartos[x][0], offvalue=0)
             self.quartoCheck.grid(row=x, column=0, sticky=W)
-            #command=lambda x=x: self.marcaQuartos(x)
         
        
         #---------------------------------------------------Frame - Seleciona Areas de Lazer------------------------------------------------------#
@@ -185,11 +216,10 @@ class ReservarWindow():
         for x in range(len(self.dadosLazer)):
             self.listAreas.append(StringVar())
             self.listAreas[-1].set(0)
-            self.quartoCheck = Checkbutton(self.areaFrame,text=self.dadosLazer[x][0], variable=self.listAreas[-1], onvalue = self.dadosLazer[x])
-            self.quartoCheck.grid(row=x, column=0, sticky=W)
+            self.lazerCheck = Checkbutton(self.areaFrame,text=self.dadosLazer[x][0], command=lambda x=x: self.criaListaLazer(x), variable=self.listAreas[-1], onvalue = self.dadosLazer[x][0], offvalue=0)
+            self.lazerCheck.grid(row=x, column=0, sticky=W)
             
-        
-        
+            
         #---------------------------------------------------Posiciona o resto do frame reservar------------------------------------------------------#
         # Cria e posiciona label e entry com o valor total calculado dos quartos selecionados
         lb1 = Label(self.reservarFrame, text="Somatório quartos:")
@@ -200,104 +230,153 @@ class ReservarWindow():
         # Cria e posiciona label e entry com o valor total calculado das areas de lazer selecionadas
         lb2 = Label(self.reservarFrame, text="Somatório áreas:")
         lb2.grid(row=1, column=2, pady=10, sticky=E)
-        self.precoAreaEntry = Label(self.reservarFrame, text=self.totalareas)
+        self.precoAreaEntry = Label(self.reservarFrame, text=self.totalLazer)
         self.precoAreaEntry.grid(row=1, column=3, pady=10, sticky=W)
-            
-        #---------------------------------------------------Frame - Preços reserva------------------------------------------------------#
-        # Cria o Frame de reserva
-        #self.valoresFrame = LabelFrame(self.ReservarJanela, text = "Valores da reserva:", padx=20, pady=20)
-        #self.valoresFrame.place(relx=0.85, rely=0.15, anchor="n")
-        """
+                  
         # Cria e posiciona label e entry com o valor total calculado dos quartos selecionados
-        lb1 = Label(self.valoresFrame, text="Somatório quartos:")
-        lb1.grid(row=0, column=0, pady=10, sticky=W)
-        self.precoQuartoEntry = Label(self.valoresFrame, text=self.totalareas)
-        self.precoQuartoEntry.grid(row=0, column=1, pady=10, sticky=W)
+        lb3 = Label(self.reservarFrame, text="Valor da reserva para "+str(self.diasDEstadia)+" dias: ")
+        lb3.grid(row=2, column=1, pady=10, sticky=E)
+        self.precoTotalEntry = Label(self.reservarFrame, text=self.totalquartos)
+        self.precoTotalEntry.grid(row=2, column=2, pady=10, sticky=W)
+
+        # Cria um botão Reservar nessa tela e realizaReserva
+        self.botaoReservar = Button(self.ReservarJanela, command=self.realizaReserva, image=self.camReservarButton, bd=0, relief=GROOVE)
+        self.botaoReservar.place(relx=0.9, rely=0.9, anchor="n")
         
         
-        # Cria e posiciona label e entry com o valor total calculado das areas de lazer selecionadas
-        lb2 = Label(self.valoresFrame, text="Somatório áreas:")
-        lb2.grid(row=1, column=0, pady=10, sticky=W)
-        self.precoAreaEntry = Entry(self.valoresFrame, width=20)
-        self.precoAreaEntry.grid(row=1, column=1, pady=10, sticky=W)
+    # Método de "Update" da tela reserva, nesse momento que finalmente será efetuado o salvamento das informações de reserva no banco de dados 
+    def realizaReserva(self):
+        self.aviso.destroy()
+        #Atualizar status dos quartos/areas de lazer no banco de dados
+        if len(self.quartosMarcados) > 0:
+            for x in range(len(self.quartosMarcados)):
+                self.bdQuartos.atualizaReservaQuarto(self.quartosMarcados[x], "Ocupado", self.diasDEstadia, self.dataEntrada.get(), self.dataSaida.get(),self.clienteCombobox.get())
+            
+            self.aviso = Label(self.ReservarJanela, text = "Quartos reservados com sucesso!", foreground='green', font=self.fontStyle)
+            self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
+            
+        if len(self.lazerMarcados) > 0:
+            for x in range(len(self.lazerMarcados)):
+                self.bdLazer.atualizaReservaLazer(self.lazerMarcados[x], "Ocupado", self.diasDEstadia, self.dataEntrada.get(), self.dataSaida.get(),self.clienteCombobox.get())
+            self.aviso = Label(self.ReservarJanela, text = "Áreas de lazer reservadas com sucesso!", foreground='green', font=self.fontStyle)
+            self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
+
+        if len(self.quartosMarcados) > 0 and len(self.lazerMarcados) > 0:
+            self.aviso = Label(self.ReservarJanela, text = "Quartos e dependências reservadas com sucesso!", foreground='green', font=self.fontStyle)
+            self.aviso.place(relx=0.5, rely=0.9, anchor="n")    
         
+        #Atualiza dados cliente
+        if len(self.quartosMarcados) > 0 or len(self.lazerMarcados) > 0:
+            self.bdClientes.atualizaReserva(str(self.quartosMarcados), str(self.lazerMarcados), self.diasDEstadia, self.dataEntrada.get(), self.dataSaida.get(),self.clienteCombobox.get())
+            
+            # Destroi o botão reservar e cria o botao emitir nota fiscal
+            self.botaoReservar.destroy()
+            self.botaoNota = Button(self.ReservarJanela, command=self.emiteNotaFiscal, image=self.camNotaFiscal, bd=0, relief=GROOVE)
+            self.botaoNota.place(relx=0.9, rely=0.9, anchor="n")
+            
+    # Escreve em um arquivo txt os dados da reserva, servindo assim de nota fiscal
+    def emiteNotaFiscal(self):
+        tudoCliente = self.bdClientes.leTudoCliente(self.clienteCombobox.get())
+                
+        now = datetime.now().date()
+        #Textos Nota Fiscal
+        dadosPousadaria = "DADOS DO EMITENTE:\nNome: Pousadaria \nTelefone: (xx) xxxx-xxxx\nEndereço: Rua dos bobos, 0\nCNPJ: xx.xxx.xxx/xxxx-xx"
+        separador = " \n_______________________________________________________________________________________________________________________\n\n"
+        dadoscliente = "DADOS DO CLIENTE:\nNome: " + str(tudoCliente[0][0]) + "\nCPF: " + str(tudoCliente[0][1]) + "\nTelefone: " + str(tudoCliente[0][2]) + "\nE-mail: " + str(tudoCliente[0][3]) + "\nTipo: " + str(tudoCliente[0][4]) + "\nEndereço: " + str(tudoCliente[0][5]) + "\nQuartos Alugados: " + str(tudoCliente[0][6]) + "\nÁreas de lazer alugadas:" + str(tudoCliente[0][7]) + "\nTempo de estadia: " + str(tudoCliente[0][8]) + "\nData de Entrada: " + str(tudoCliente[0][9]) + "\nData de Saída: " + str(tudoCliente[0][10])
+        dadosNota = "Data de emissão: " + str(now) + "                       " + "Valor: " + str(self.estadiaTotal)
         
-        # Cria e posiciona label com preço final
-        lb3 = Label(self.valoresFrame, text="Somatório áreas:")
-        lb3.grid(row=2, column=0, pady=10, sticky=W)
-        self.totalEntry = Entry(self.valoresFrame, width=20)
-        self.totalEntry.grid(row=2, column=1, pady=10, sticky=W)
+        # Abre o arquivo e escreve as linhas no mesmo
+        caminhoNota = "NotasFiscais/" + self.clienteCombobox.get() + ".txt."
+        arquivo = open(caminhoNota, "w")
+        arquivo.writelines(dadosPousadaria)
+        arquivo.writelines(separador)
+        arquivo.writelines(dadoscliente)
+        arquivo.writelines(separador)
+        arquivo.writelines(dadosNota)
+        arquivo.close()
         
-        
-        #self.botaoCalcular = Button(self.valoresFrame, command = self.calcTotalQuartos, image=self.camCalcularButton, bd=0, relief=GROOVE)
-        #self.botaoCalcular.grid(row=3, column=1, pady=10)
-        """
-        
-        
-        
-        
+        self.botaoNota.destroy()
+        self.aviso.destroy()
+        self.aviso = Label(self.ReservarJanela, text = "Nota Fiscal emitida com sucesso!", foreground='green', font=self.fontStyle)
+        self.aviso.place(relx=0.5, rely=0.9, anchor="n")  
+
+    
     #---------------------------------------------------Funções Auxiliares------------------------------------------------------#    
+    # Criar uma lista de elementos marcados na checkbutton, no caso, uma lista de quartos selecionados
+    def criaLista(self,i):
+        if self.quartosMarcados.count(self.listaQuartos[i].get())==0 and self.listaQuartos[i].get() != "0":
+            self.quartosMarcados.append(self.listaQuartos[i].get())  
+        else:
+            self.quartosMarcados.remove(str(self.dadosQuartos[i][0]))
+        self.calcTotalQuartos()
+        
+    # Criar uma lista de elementos marcados na checkbutton, no caso, uma lista de areas de lazer selecionadas
+    def criaListaLazer(self, i):   
+        if self.lazerMarcados.count(self.listAreas[i].get())==0 and self.listAreas[i].get() != "0":
+            self.lazerMarcados.append(self.listAreas[i].get())  
+        else:
+            self.lazerMarcados.remove(str(self.dadosLazer[i][0]))
+        self.calcTotalLazer()
+    
+    # Busca o nome dos quartos e areas disponiveis no BD para criar os checkbuttons
     def buscaValidaBD(self):
         # Busca os nomes dos quartos no BD
-        self.dadosQuartos = self.bdQuartos.buscaQuartosDisponiveis("Disponível")
-        self.dadosLazer = self.bdLazer.buscaAreasDisponiveis("Disponível")
+        self.dadosQuartos = self.bdQuartos.buscaQuartosDisponiveis(str(self.dataEntrada.get()), str(self.dataSaida.get()))
+        self.dadosLazer = self.bdLazer.buscaAreasDisponiveis(str(self.dataEntrada.get()), str(self.dataSaida.get()))
         
         if len(self.dadosQuartos) == 0:
             self.aviso = Label(self.ReservarJanela, text = "Não há quartos disponíveis!", foreground='red', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.9, anchor="n")
         if len(self.dadosLazer) == 0:
-            self.aviso = Label(self.ReservarJanela, text = "Não há areas de lazer disponíveis!", foreground='red', font=self.fontStyle)
+            self.aviso = Label(self.ReservarJanela, text = "Não há áreas de lazer disponíveis!", foreground='red', font=self.fontStyle)
+            self.aviso.place(relx=0.5, rely=0.9, anchor="n")
+        if len(self.dadosQuartos) == 0 and len(self.dadosLazer) == 0:
+            self.aviso = Label(self.ReservarJanela, text = "Não há Quartos nem Áreas de lazer disponíveis!", foreground='red', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.9, anchor="n")
             
-            
-    # Vai Criar uma lista de elementos marcados na checkbutton
-    def criaLista(self,i):
-        if self.quartosMarcados.count(self.listaQuartos[i].get())==0 and self.listaQuartos[i].get() != "0":
-            self.quartosMarcados.append(self.listaQuartos[i].get())  
-        else:
-            self.quartosMarcados.pop(i)
-        self.calcTotalQuartos()
+    # Método necessário para zerar os dados das listas todas as vezes que o botão selecionar for clicado
+    def zeraValoresEListas(self):
+        self.quartosMarcados = 0
+        self.quartosMarcados = []
+        self.listaQuartos = 0
+        self.listaQuartos = []
+        self.totalquartos = 0
         
-                
-    # Calcula somatorio do valor dos quartos selecionados
+        self.listAreas = 0
+        self.listAreas = []
+        self.lazerMarcados = 0
+        self.lazerMarcados = []
+        self.totalLazer = 0
+        
+        
+    #---------------------------------------------------Funções Auxiliares - Calculos------------------------------------------------------#
+    # Calcula o somatorio do valor dos quartos selecionados e exibe na tela
     def calcTotalQuartos(self):
-        self.dadosQuartos = self.bdQuartos.buscaPrecosQuartos()
         self.totalquartos = 0
         for x in range(len(self.dadosQuartos)):
             for y in range(len(self.quartosMarcados)):
                 if self.quartosMarcados[y] == self.dadosQuartos[x][0]:
                     self.totalquartos += float(self.dadosQuartos[x][1])
-                    
+ 
         self.precoQuartoEntry["text"] = self.totalquartos
-
-
-        
-        
+        self.calculaValorTotal()
     
-
-    # Verifica se a data digitado é válida
-    def checaDatas(self, dEnt, dSai):
-        now = datetime.now().date()
-        self.entradaDatetime = datetime.strptime(dEnt, '%d/%m/%Y').date()
-        self.saidaDatetime = datetime.strptime(dSai, '%d/%m/%Y').date()
-        if self.entradaDatetime<=self.saidaDatetime and now<=self.entradaDatetime and now<=self.saidaDatetime:
-            if (self.aviso != 0):
-                self.aviso.destroy()
-            self.reservarMetodo()
-        else:
-            self.aviso.destroy()
-            # Cria e posiciona uma Label de Aviso
-            self.aviso = Label(self.ReservarJanela, text="A data informada é inválida!",foreground='red', font=self.fontStyle)
-            self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
-            if(self.areaFrame != 0):
-                self.deletaFramesQA()
-                
-            
-    def deletaFramesQA(self):
-        self.reservarFrame.destroy()
-        self.botaoCalcular.destroy()
-
-
+    # Calcula o somatorio do valor das areas de lazer selecionadas e exibe na tela
+    def calcTotalLazer(self):
+        self.totalLazer = 0
+        for x in range(len(self.dadosLazer)):
+            for y in range(len(self.lazerMarcados)):
+                if self.lazerMarcados[y] == self.dadosLazer[x][0]:
+                    self.totalLazer += float(self.dadosLazer[x][1])
+                    
+        self.precoAreaEntry["text"] = self.totalLazer
+        self.calculaValorTotal()
+    
+    # Calcula o valor total da estadia e exibe na tela
+    def calculaValorTotal(self):
+        self.estadiaTotal = self.diasDEstadia*(self.totalquartos + self.totalLazer) 
+        self.precoTotalEntry["text"] = self.estadiaTotal
+    
     # Destroi a janela atual
     def destroiTela(self):
         self.ReservarJanela.destroy()
