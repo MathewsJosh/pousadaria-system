@@ -1,6 +1,4 @@
-BancosdeDados
-NotasDevolucao
-NotasFiscais
-
+__pycache__
 *.db
-.txt
+*.txt
+*.pyc
