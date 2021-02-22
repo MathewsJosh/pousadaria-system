@@ -1,5 +1,4 @@
 import sqlite3
-#import os.path
 
 # Caminho do arquivo .db
 caminho = "BancosdeDados//cadClientes.db"
@@ -29,14 +28,14 @@ class BD_cadCliente():
         c.execute(sql)
         connection.commit()
 
-
+    # Método de leitura dos nomes de clientes
     def leNomeCliente(self): 
         sql = 'SELECT nome FROM dados'
         c.execute(sql)
         data = c.fetchall()
         return data    
     
-    
+    # Método de leitura de todos os dados dos clientes
     def leTudoCliente(self, nome): 
         sql = 'SELECT nome, cpf, telefone, email, tipo, endereco, quartosReservados, AreasReservadas, tempoDeLocacao, dataDeEntrada, dataDeSaida FROM dados where nome=?'
         dados = (nome, )
@@ -44,9 +43,16 @@ class BD_cadCliente():
         data = c.fetchall()
         return data   
     
-    
+    # Método de Update do cliente, quando ele faz a reserva, salva alguns dados no bd
     def atualizaReserva(self, quartosReservados, AreasReservadas, tempoDeLocacao, dataDeEntrada, dataDeSaida, nome ):
         sql = "UPDATE dados SET quartosReservados=?, AreasReservadas=?, tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=? WHERE nome=?"
         dado = (quartosReservados, AreasReservadas, tempoDeLocacao, dataDeEntrada, dataDeSaida, nome)
+        c.execute(sql,dado)
+        connection.commit()
+    
+    # Método de Update do cliente, quando ele faz a reserva, apaga os dados que ele armazenou quando reservou o quarto
+    def desfazReserva(self, nome ):
+        sql = "UPDATE dados SET quartosReservados=?, AreasReservadas=?, tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=? WHERE nome=?"
+        dado = (None, None, None, None, None, nome)
         c.execute(sql,dado)
         connection.commit()

@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
-from datetime import datetime,timedelta
 from tkcalendar import *
 
 # Importações de outras classes locais

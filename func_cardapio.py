@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
-from datetime import datetime,timedelta
 from tkcalendar import *
 
 # Importações de outras classes locais
@@ -124,6 +123,7 @@ class Cardapio():
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.telaCardapio.mainloop()
         
+    # Método de controle do CRUD Cardapio
     def controleCRUD(self):
         #self.opcoesClientes = []
         #self.auxOpcClientes()
@@ -171,7 +171,7 @@ class Cardapio():
         self.botaoInserir = Button(self.telaCardapio, image=self.cambotaoInserir, command=self.insereCardapio, bd=0, relief=GROOVE)
         self.botaoInserir.place(relx=0.9, rely=0.9, anchor="n")
 
-        
+    # Método de inserção do cardapio no banco de dados
     def insereCardapio(self):
         self.textCardapio = self.textboxInsere.get("1.0",'end-1c')
         # Verifica se algo escrito antes de salvar no banco de dados
@@ -187,7 +187,7 @@ class Cardapio():
             self.aviso = Label(self.telaCardapio,text="Cardapio registrado!", foreground='green', font=12)
             self.aviso.place(relx=0.4, rely=0.9)
             
-    
+    # Apaga frame de inserção
     def apagaInsercao(self):
         self.insereframe.destroy()
         self.botaoInserir.destroy()
@@ -250,7 +250,8 @@ class Cardapio():
             self.aviso.destroy()
             self.aviso = Label(self.telaCardapio,text="Não foi encontrado Cardápio para essa data", foreground='red', font=12)
             self.aviso.place(relx=0.3, rely=0.9)    
-            
+    
+    # Apaga o frame de consulta
     def apagaConsulta(self):
         self.consultaframe.destroy()
         self.botaoConsultar.destroy()
@@ -331,7 +332,8 @@ class Cardapio():
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaCardapio,text="Cardápio atualizado no banco de dados!", foreground='Green', font=12)
             self.aviso.place(relx=0.4, rely=0.9) 
-            
+    
+    # Apaga o frame de atualização
     def apagaAtualiza(self):
         self.atualizaframe.destroy()
         self.dataFrame.destroy()
@@ -386,30 +388,16 @@ class Cardapio():
             self.aviso = Label(self.telaCardapio,text="Cardápio deletado do banco de dados com sucesso!", foreground='Green', font=12)
             
             self.aviso.place(relx=0.4, rely=0.9) 
-        
-        
+             
     # Destroy a tela de Delete
     def apagaDelete(self):
         self.dataFrame.destroy()
         self.aviso.destroy()
-
-    #---------------------------------------------------Funções Auxiliares------------------------------------------------------# 
     
     # Método que apaga a janela atual
     def ApagatelaCardapio(self):
         print("Apagou Cardapio")
         self.telaCardapio.destroy()
         
-
 x6 = Cardapio()
 x6.selecionaCRUDCardapio()
-
-'''
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
-# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
-self.telaCardapio.mainloop()
-
-e coloque o seguinte comando adaptado para poder executa-la
-#x1 = telaInicialWindow()
-#x1.telaInicial()
-''' 

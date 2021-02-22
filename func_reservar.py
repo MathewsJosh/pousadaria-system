@@ -82,6 +82,7 @@ class ReservarWindow():
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.ReservarJanela.mainloop()
    
+    # Método de formatação da tela reservar
     def formataTelaReservar(self):
         # Cria uma janela e define suas principais configurações
         self.ReservarJanela = Tk()
@@ -280,6 +281,7 @@ class ReservarWindow():
                 
         now = datetime.now().date()
         #Textos Nota Fiscal
+        titulo = "#---------------------------------------------------Nota De Devolução------------------------------------------------------# \n\n"
         dadosPousadaria = "DADOS DO EMITENTE:\nNome: Pousadaria \nTelefone: (xx) xxxx-xxxx\nEndereço: Rua dos bobos, 0\nCNPJ: xx.xxx.xxx/xxxx-xx"
         separador = " \n_______________________________________________________________________________________________________________________\n\n"
         dadoscliente = "DADOS DO CLIENTE:\nNome: " + str(tudoCliente[0][0]) + "\nCPF: " + str(tudoCliente[0][1]) + "\nTelefone: " + str(tudoCliente[0][2]) + "\nE-mail: " + str(tudoCliente[0][3]) + "\nTipo: " + str(tudoCliente[0][4]) + "\nEndereço: " + str(tudoCliente[0][5]) + "\nQuartos Alugados: " + str(tudoCliente[0][6]) + "\nÁreas de lazer alugadas:" + str(tudoCliente[0][7]) + "\nTempo de estadia: " + str(tudoCliente[0][8]) + "\nData de Entrada: " + str(tudoCliente[0][9]) + "\nData de Saída: " + str(tudoCliente[0][10])
@@ -288,6 +290,7 @@ class ReservarWindow():
         # Abre o arquivo e escreve as linhas no mesmo
         caminhoNota = "NotasFiscais/" + self.clienteCombobox.get() + ".txt."
         arquivo = open(caminhoNota, "w")
+        arquivo.writelines(titulo)
         arquivo.writelines(dadosPousadaria)
         arquivo.writelines(separador)
         arquivo.writelines(dadoscliente)

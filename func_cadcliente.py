@@ -41,8 +41,7 @@ class cadastrarWindow():
         self.dadosCadCliente = 0
         
         
-        
-    # Método de Gerencia da tela cadastrar cliente
+    # Método de Gerência da tela cadastrar cliente
     def cadastrarTela(self):
         self.formataTelaCadastro()
         
@@ -53,10 +52,10 @@ class cadastrarWindow():
         self.botaoVoltar = Button(self.cadastrarJanela, command=self.cadastrarMetodo, image=self.camVoltarButton, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
-
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.cadastrarJanela.mainloop()
 
+    # Método principal da tela cadastrar cliente
     def cadastrarMetodo(self):
         # Apaga qualquer aviso anterior
         self.aviso.destroy()
@@ -84,9 +83,7 @@ class cadastrarWindow():
             self.enderecoEntry = str(self.RuaEntry.get()) + ", " + str(self.NumEntry.get()) + " - " + str(self.bairroEntry.get()) + " - " + str(self.cidadeEntry.get()) + ", " + str(self.estadoEntry.get())
             self.bdcadCliente.entradaDados(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.tipoEntry.get(), self.enderecoEntry)
             
-            
- 
-
+    # Método de formatação da tela de cadastro de clientes
     def formataTelaCadastro(self):
         # Cria uma janela e define suas principais configurações
         self.cadastrarJanela = Tk()
@@ -133,13 +130,11 @@ class cadastrarWindow():
         self.emailEntry.grid(row=2, column=1, pady=5, sticky=E)
         self.telefoneEntry.grid(row=3, column=1, pady=5, sticky=E)
         
-        
         # Cria e posiciona a combobox de função - Irá definir o nível de acesso do funcionário ao sistema
         opcoes = ["Pessoa Física", "Pessoa Jurídica"]
         self.tipoEntry = ttk.Combobox(self.cadastrarFrame, value=opcoes, width=17, state="readonly")
         self.tipoEntry.current(0)
         self.tipoEntry.grid(row=4, column=1, pady=5, sticky=W)
-
         
         #---------------------------------------------------Frame - Endereço de cobrança------------------------------------------------------#
         # Cria o Frame de cadastro
@@ -170,12 +165,10 @@ class cadastrarWindow():
         self.cidadeEntry.grid(row=3, column=1, pady=5, sticky=E)
         self.estadoEntry.grid(row=4, column=1, pady=5, sticky=E)
         
-
         # Cria e posiciona uma Label de Aviso
         self.aviso = Label()
         self.aviso.place(relx=0.5, rely=0.7, anchor="n")
         
-
     #---------------------------------------------------Funções Auxiliares------------------------------------------------------#
     # Verifica se o telefone digitado é válido
     def checaTelefone(self, telefone):
@@ -186,7 +179,6 @@ class cadastrarWindow():
         else: 
             # Caso seja inválido  
             return False
-        
         
     # Verifica se o email digitado é valido
     def checaEmail(self, email):

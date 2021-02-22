@@ -7,7 +7,7 @@ from inicio_cadfuncionario import *
 
 # Bibliotecas a serem importadas nesse projeto:
 #pip install tkcalendar
-
+#pip install tk
 
 #Variaveis Globais
 tam = "800x600"

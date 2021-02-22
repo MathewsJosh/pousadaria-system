@@ -33,6 +33,7 @@ class MenuRecepcaoWindow():
         self.recepframe = 0
         self.outrosframe = 0
 
+    # Método de exibição do menu principal
     def menuRecepcao(self):
         # Cria uma janela e define suas principais configurações
         self.menuRecepcaoJanela = Tk()
@@ -86,24 +87,12 @@ class MenuRecepcaoWindow():
         self.botaoEstoque.grid(row=1, column=0, pady=20)
         self.botaoTarefas.grid(row=2, column=0, pady=20)
 
-
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.menuRecepcaoJanela.mainloop()
 
     def ApagaInicial(self):
         print("Apagou tela inicial")
         self.menuRecepcaoJanela.destroy()
-        
 
 x4 = MenuRecepcaoWindow()
 x4.menuRecepcao()
-
-'''
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
-# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
-self.menuRecepcaoJanela.mainloop()
-
-e coloque o seguinte comando adaptado para poder executa-la
-#x1 = telaInicialWindow()
-#x1.telaInicial()
-''' 

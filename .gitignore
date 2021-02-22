@@ -1,2 +1,6 @@
 BancosdeDados
+NotasDevolucao
+NotasFiscais
+
 *.db
+.txt

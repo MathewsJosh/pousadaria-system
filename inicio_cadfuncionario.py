@@ -26,7 +26,7 @@ class cadastrarWindow():
         self.botaoCadastrar = 0
         self.botaoVoltar = 0
         # Instanciamentos de classes
-        self.CadFunc = BD_cadFunc()
+        self.CadFunc = BD_cadFunc(True)
         # Frames
         self.cadastrarFrame = 0
         # Outros
@@ -40,7 +40,7 @@ class cadastrarWindow():
         
         # Cria um botão Cadastrar nessa tela e verifica se é possivel cadastrar o usuario
         self.botaoCadastrar = Button(self.cadastrarJanela, text="Cadastrar!", command=self.cadastrarMetodo, image=self.camCadastrarButton, bd=0, relief=GROOVE)
-        self.botaoCadastrar.place(relx=0.9, rely=0.9, anchor="n")
+        self.botaoCadastrar.place(relx=0.85, rely=0.9, anchor="n")
         
         # Cria um botão Voltar para voltar para a tela de início
         self.botaoVoltar = Button(self.cadastrarJanela, command=self.destroiTela, image=self.camVoltarButton, bd=0, relief=GROOVE)

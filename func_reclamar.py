@@ -2,8 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
-from datetime import datetime,timedelta
-import time;
+from datetime import datetime
 
 # Importações de outras classes locais
 from BD_reclamacoes import *
@@ -68,7 +67,7 @@ class Reclamacao():
         self.IDsRecs = []
         
 
-    
+    # Método de seleção do Crud reclamações
     def selecionaCRUDReclamacao(self):
         # Cria uma janela e define suas principais configurações
         self.telaReclamacao = Tk()
@@ -431,16 +430,6 @@ class Reclamacao():
         print("Apagou Reclamação")
         self.telaReclamacao.destroy()
         
-
 x6 = Reclamacao()
 x6.selecionaCRUDReclamacao()
 
-'''
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
-# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
-self.telaReclamacao.mainloop()
-
-e coloque o seguinte comando adaptado para poder executa-la
-#x1 = telaInicialWindow()
-#x1.telaInicial()
-''' 

@@ -1,17 +1,8 @@
 import sqlite3
 from datetime import datetime
-import os.path
 
 # Caminho do arquivo .db
 caminho = "BancosdeDados//quartosDisponiveis.db"
-
-# Verifica se o arquivo funcionáriosCadastrados existe
-#existe = os.path.exists(caminho)
-
-# Deleta o arquivo de dados de chat se o mesmo existir
-#if existe:
-#    os.remove(caminho)
-
 
 # Cria o arquivo
 connection = sqlite3.connect(caminho)
@@ -19,12 +10,12 @@ connection = sqlite3.connect(caminho)
 # Navega pelo arquivo
 c = connection.cursor()
 
-
 class BD_Quartos():
     # Inicializadores
     def __init__(self):
         self.criar_tabela()
 
+    # Método que cria o banco de dados
     def criar_tabela(self):
         sql = "CREATE TABLE IF NOT EXISTS dados (idQuarto text, nome text, status text, tipo text, qtdCamas INTEGER, qtdComodos INTEGER, precoDia REAL, tempoDeLocacao INTEGER, dataDeEntrada text, dataDeSaida text, cliente text, UNIQUE(idQuarto))"
         c.execute(sql)
@@ -41,24 +32,26 @@ class BD_Quartos():
         c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('11', 'Chalé 03', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
         connection.commit()
 
-
+    # Método de leitura basica dos quartos
     def leDadosBasicosQuarto(self):
         c.execute('SELECT idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia FROM dados')
         data = c.fetchall()
         return data
     
+    # Método de leitura completa dos quartos
     def leDadosCompletosQuarto(self):
         c.execute('SELECT idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente FROM dados')
         data = c.fetchall()
         return data
     
-    def atualizaStatusQuarto(self, status, nome):
-        sql = "UPDATE dados SET status=? WHERE nome=?"
-        dado = (status, nome)
+    # Método de atualização de status do quarto
+    def atualizaStatusQuarto(self, nome):
+        sql = "UPDATE dados SET status=?,tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=?, cliente=? WHERE nome=?"
+        dado = (None, None, None, None, None, nome)
         c.execute(sql,dado)
         connection.commit()
     
-    
+    # Método de busca das quartos disponiveis para datas especificas
     def buscaQuartosDisponiveis(self, entrada, saida):
         sql='SELECT nome, precoDia, dataDeEntrada, dataDeSaida FROM dados'
         c.execute(sql)
@@ -78,10 +71,20 @@ class BD_Quartos():
                     aux.append(data[x])
         return aux
     
-    
+    # Método de atualização de status e outros dados dos quartos
     def atualizaReservaQuarto(self, nome, status, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente):
         sql = "UPDATE dados SET status=?, tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=?, cliente=? WHERE nome=?"
         dado = (status, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente, nome)
         c.execute(sql,dado)
         connection.commit()
+    
+    # Método de busca dos quartos ocupados para clientes especificos
+    def buscaQuartosOcupadosCliente(self, cliente):
+        sql='SELECT nome FROM dados WHERE cliente=?'
+        dado = (cliente,)
+        c.execute(sql,dado)
+        data = c.fetchall()
+        return data
+
+    
 

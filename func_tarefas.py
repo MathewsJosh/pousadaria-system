@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
-from datetime import datetime,timedelta
 from tkcalendar import *
 
 # Importações de outras classes Prioridades
@@ -118,7 +117,8 @@ class Tarefas():
         
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.telaTarefas.mainloop()
-        
+    
+    # Método de controle do Crud da tela Tarefas
     def controleCRUD(self):
         if self.crudCombobox.get() == "Inserir":
             if self.consultasim == 1:
@@ -182,7 +182,7 @@ class Tarefas():
         self.botaoInserir = Button(self.telaTarefas, image=self.cambotaoInserir, command=self.insereTarefas, bd=0, relief=GROOVE)
         self.botaoInserir.place(relx=0.9, rely=0.9, anchor="n")
 
-        
+    # Método de inserção de novas tarefas
     def insereTarefas(self):
         self.textTarefas = self.textboxInsere.get("1.0",'end-1c')
         # Verifica se algo escrito antes de salvar no banco de dados
@@ -199,7 +199,7 @@ class Tarefas():
             self.aviso = Label(self.telaTarefas,text="Tarefa registrada!", foreground='green', font=12)
             self.aviso.place(relx=0.4, rely=0.9)
             
-    
+    # Método de remoção da tela de inserção
     def apagaInsercao(self):
         self.insereframe.destroy()
         self.botaoInserir.destroy()
@@ -255,7 +255,8 @@ class Tarefas():
             self.aviso.destroy()
             self.aviso = Label(self.telaTarefas,text="Não foram encontradas tarefas para essa prioridade!", foreground='red', font=12)
             self.aviso.place(relx=0.35, rely=0.9)    
-            
+    
+    # Método de remoção da tela de consulta
     def apagaConsulta(self):
         self.consultaframe.destroy()
         self.botaoConsultar.destroy()
@@ -263,9 +264,7 @@ class Tarefas():
         
     #---------------------------------------------------Fim - Consulta Tarefas------------------------------------------------------#     
         
-        
-        
-        
+         
     #---------------------------------------------------Atualiza Tarefas------------------------------------------------------#    
     # Exibe o Tarefas na tela
     def atualizaTarefas(self):
@@ -341,7 +340,8 @@ class Tarefas():
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaTarefas,text="Tarefas atualizadas no banco de dados!", foreground='Green', font=12)
             self.aviso.place(relx=0.3, rely=0.9) 
-            
+    
+    # Método de remoção da tela de atualização
     def apagaAtualiza(self):
         self.atualizaframe.destroy()
         self.prioridadeFrame.destroy()
@@ -390,29 +390,16 @@ class Tarefas():
             self.aviso = Label(self.telaTarefas,text="Tarefas da prioridade selecionada foram deletadas com sucesso!", foreground='Green', font=12)
             self.aviso.place(relx=0.4, rely=0.9) 
         
-        
     # Destroy a tela de Delete
     def apagaDelete(self):
         self.prioridadeFrame.destroy()
         self.aviso.destroy()
-
-    #---------------------------------------------------Funções Auxiliares------------------------------------------------------# 
     
     # Método que apaga a janela atual
     def ApagatelaTarefas(self):
         print("Apagou Tarefas")
         self.telaTarefas.destroy()
         
-
 x11 = Tarefas()
 x11.selecionaCRUDTarefas()
 
-'''
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
-# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
-self.telaTarefas.mainloop()
-
-e coloque o seguinte comando adaptado para poder executa-la
-#x1 = telaInicialWindow()
-#x1.telaInicial()
-''' 

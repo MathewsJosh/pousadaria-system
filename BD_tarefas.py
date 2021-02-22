@@ -1,5 +1,4 @@
 import sqlite3
-import os.path
 
 # Caminho do arquivo .db
 caminho = "BancosdeDados//listaTarefas.db"
@@ -18,6 +17,7 @@ class BD_TarefasCRUD():
     # Método de criação da tabela do banco de dados
     def criartabela(self):
         c.execute("CREATE TABLE IF NOT EXISTS dados (prioridade text, listaTarefas text, UNIQUE(prioridade))")
+        c.execute("INSERT OR IGNORE INTO dados (prioridade, listaTarefas) VALUES ('Urgente', 'Limpeza da piscina')")
         connection.commit()
     
     # Método de escrita no banco de dados
