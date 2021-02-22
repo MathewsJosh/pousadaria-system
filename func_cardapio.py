@@ -80,7 +80,6 @@ class Cardapio():
         self.cambotaoInserir = PhotoImage(file="Images\Botões\inicio_inserir.png", master=self.telaCardapio)
         self.cambotaoProximo = PhotoImage(file="Images\Botões\inicio_proximo.png", master=self.telaCardapio)
         self.cambotaoVoltar = PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.telaCardapio)
-        #self.cambotaoSelecionar = PhotoImage(file="Images\Botões\inicio_selecionar.png", master=self.telaCardapio)
         self.cambotaoAtualizar = PhotoImage(file="Images\Botões\inicio_atualizar.png", master=self.telaCardapio)
         self.cambotaoDeletar = PhotoImage(file="Images\Botões\inicio_deletar.png", master=self.telaCardapio)
         
@@ -125,18 +124,40 @@ class Cardapio():
         
     # Método de controle do CRUD Cardapio
     def controleCRUD(self):
-        #self.opcoesClientes = []
-        #self.auxOpcClientes()
         if self.crudCombobox.get() == "Inserir":
+            if self.consultasim == 1:
+                self.apagaConsulta()
+            if self.atualizasim == 1:
+                self.apagaAtualiza()
+            if self.deletasim == 1:
+                self.apagaDelete()
             self.inseresim = 1
             self.formataInsereCardapio()
         if self.crudCombobox.get() == "Consultar":
+            if self.inseresim == 1:
+                self.apagaInsercao()
+            if self.atualizasim == 1:
+                self.apagaAtualiza()
+            if self.deletasim == 1:
+                self.apagaDelete()
             self.consultasim = 1
             self.formataConsultaCardapio()
         if self.crudCombobox.get() == "Atualizar":
+            if self.inseresim == 1:
+                self.apagaInsercao()
+            if self.consultasim == 1:
+                self.apagaConsulta()
+            if self.deletasim == 1:
+                self.apagaDelete()
             self.atualizasim = 1
             self.atualizaCardapio()
         if self.crudCombobox.get() == "Deletar":
+            if self.inseresim == 1:
+                self.apagaInsercao()
+            if self.consultasim == 1:
+                self.apagaConsulta()
+            if self.atualizasim == 1:
+                self.apagaAtualiza()
             self.deletasim = 1
             self.deletaCardapio()
 
