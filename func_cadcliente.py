@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import re 
 from BD_cadcliente import *
+import tkinter
 
 #Variaveis Globais
 tam = "1200x720"
@@ -49,11 +50,11 @@ class cadastrarWindow():
         self.botaoCadastrar = Button(self.cadastrarJanela, command=self.cadastrarMetodo, image=self.camCadastrarButton, bd=0, relief=GROOVE)
         self.botaoCadastrar.place(relx=0.9, rely=0.9, anchor="n")
         
-        self.botaoVoltar = Button(self.cadastrarJanela, command=self.cadastrarMetodo, image=self.camVoltarButton, bd=0, relief=GROOVE)
+        self.botaoVoltar = Button(self.cadastrarJanela,command=self.ApagaTelaCadC, image=self.camVoltarButton, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
-        self.cadastrarJanela.mainloop()
+        #self.cadastrarJanela.mainloop()
 
     # Método principal da tela cadastrar cliente
     def cadastrarMetodo(self):
@@ -86,20 +87,22 @@ class cadastrarWindow():
     # Método de formatação da tela de cadastro de clientes
     def formataTelaCadastro(self):
         # Cria uma janela e define suas principais configurações
-        self.cadastrarJanela = Tk()
+        self.cadastrarJanela = Toplevel()
         self.cadastrarJanela.title("Cadastre-se no sistema")
         self.cadastrarJanela.wm_iconbitmap(camIco)
         self.cadastrarJanela.focus_force()
         self.cadastrarJanela.geometry(tam)
         
+        
         # Converte os pngs dos botões para imagem
         self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png", master=self.cadastrarJanela)
         self.camVoltarButton = PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.cadastrarJanela)
         self.campousadaria = PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.cadastrarJanela)
-
+        
         # Coloca uma imagem em cima dos botões
-        l1 = Label(image=self.campousadaria)
+        l1 = Label(self.cadastrarJanela, image=self.campousadaria)
         l1.place(relx=0.5, rely=0.03, anchor="n")
+        
         
         #---------------------------------------------------Frame - Cadastro de Cliente------------------------------------------------------#
         # Cria o Frame de cadastro
@@ -197,8 +200,15 @@ class cadastrarWindow():
         return False
 
     # Destroi a janela atual
-    def destroiTela(self):
+    def ApagaTelaCadC(self):
         self.cadastrarJanela.destroy()
 
-x2 = cadastrarWindow()
-x2.cadastrarTela()
+
+'''
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+#self.tela_inicial.mainloop()
+
+x5 = cadastrarWindow()
+x5.cadastrarTela()
+'''

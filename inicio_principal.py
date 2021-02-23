@@ -11,7 +11,7 @@ from inicio_cadfuncionario import *
 
 #Variaveis Globais
 tam = "800x600"
-camIco = "Images\Icones\Pousadaria2.ico"
+camIco = "Images\Icones\Pousadaria.ico"
 
 # Tela que da a opção de Logar ou cadastrar antes de entrar no chat
 class telaInicialWindow():
@@ -20,7 +20,10 @@ class telaInicialWindow():
         self.camLoginButton = 0
         self.camCadastrarButton = 0
         self.pousadaria = 0
-        self.bFrame = 0
+        #Instanciamento de classes
+        self.LoginTela = loginWindow()
+        self.CadastrarTela = cadastrarWindow()
+
 
     def telaInicial(self):
         # Cria uma janela e define suas principais configurações
@@ -39,13 +42,9 @@ class telaInicialWindow():
         l1 = Label(image=self.pousadaria)
         l1.place(relx=0.5, rely=0.1, anchor="n")
 
-        # Cria instancias e botões para Logar e Cadastrar
-        ltela = loginWindow()
-        ctela = cadastrarWindow()
-        #command=ltela.entrarTela, 
-        botaoLogar = Button(command=lambda:[self.ApagaInicial(),ltela.entrarTela()], image=self.camLoginButton, bd=0, relief=GROOVE)
-        #command=ctela.cadastrarTela,
-        botaoCadastrar = Button(command=ctela.cadastrarTela, image=self.camCadastrarButton, bd=0, relief=GROOVE)
+        # Cria botões para Logar e Cadastrar
+        botaoLogar = Button(command=lambda:[self.ApagaInicial(),self.LoginTela.entrarTela()], image=self.camLoginButton, bd=0, relief=GROOVE)
+        botaoCadastrar = Button(command=lambda:[self.ApagaInicial(),self.CadastrarTela.cadastrarTela()], image=self.camCadastrarButton, bd=0, relief=GROOVE)
 
         # Posicionamento dos botões
         botaoLogar.place(relx=0.3, rely=0.9, anchor="s")
@@ -55,7 +54,6 @@ class telaInicialWindow():
         self.tela_inicial.mainloop()
 
     def ApagaInicial(self):
-        print("Apagou tela inicial")
         self.tela_inicial.destroy()
         
 

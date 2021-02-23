@@ -112,7 +112,7 @@ class Reclamacao():
         self.botaoProximo.place(relx=0.6, rely=0.07, anchor="n")
         
         #, command= tela anterior (menu)
-        self.botaoVoltar = Button(self.telaReclamacao, image=self.cambotaoVoltar, bd=0, relief=GROOVE)
+        self.botaoVoltar = Button(self.telaReclamacao, image=self.cambotaoVoltar, command = self.ApagaTelaReclamacao, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
         # Cria e posiciona uma label de aviso
@@ -427,9 +427,13 @@ class Reclamacao():
 
     # Método que apaga a janela atual
     def ApagaTelaReclamacao(self):
-        print("Apagou Reclamação")
         self.telaReclamacao.destroy()
-        
-x6 = Reclamacao()
-x6.selecionaCRUDReclamacao()
 
+''' 
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+#self.tela_inicial.mainloop()
+
+x9 = Reclamacao()
+x9.selecionaCRUDReclamacao()
+'''

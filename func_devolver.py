@@ -61,7 +61,7 @@ class DevolverWindow():
     def DevolverTela(self):
         self.formataTelaDevolver()
         
-        self.botaoVoltar = Button(self.DevolverJanela, command=self.DevolverMetodo, image=self.camVoltarButton, bd=0, relief=GROOVE)
+        self.botaoVoltar = Button(self.DevolverJanela, command=self.ApagaTelaDevolver, image=self.camVoltarButton, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
@@ -271,8 +271,14 @@ class DevolverWindow():
             self.lazerMarcados = []
     
     # Destroi a janela atual
-    def destroiTela(self):
+    def ApagaTelaDevolver(self):
         self.DevolverJanela.destroy()
+        
+'''
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+#self.tela_inicial.mainloop()
 
-x2 = DevolverWindow()
-x2.DevolverTela()
+x8 = DevolverWindow()
+x8.DevolverTela()
+'''

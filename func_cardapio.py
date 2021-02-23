@@ -111,7 +111,7 @@ class Cardapio():
         self.botaoProximo.place(relx=0.6, rely=0.07, anchor="n")
         
         #, command= tela anterior (menu)
-        self.botaoVoltar = Button(self.telaCardapio, image=self.cambotaoVoltar, bd=0, relief=GROOVE)
+        self.botaoVoltar = Button(self.telaCardapio, image=self.cambotaoVoltar, command=self.ApagatelaCardapio, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
         # Cria e posiciona uma label de aviso
@@ -419,6 +419,12 @@ class Cardapio():
     def ApagatelaCardapio(self):
         print("Apagou Cardapio")
         self.telaCardapio.destroy()
-        
-x6 = Cardapio()
-x6.selecionaCRUDCardapio()
+
+'''
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+#self.tela_inicial.mainloop()
+  
+x10 = Cardapio()
+x10.selecionaCRUDCardapio()
+'''

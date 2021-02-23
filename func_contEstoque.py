@@ -111,7 +111,7 @@ class ContEstoque():
         self.botaoProximo.place(relx=0.6, rely=0.07, anchor="n")
         
         #, command= tela anterior (menu)
-        self.botaoVoltar = Button(self.telaEstoque, image=self.cambotaoVoltar, bd=0, relief=GROOVE)
+        self.botaoVoltar = Button(self.telaEstoque, image=self.cambotaoVoltar, command=self.ApagaTelaEstoque, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
         # Cria e posiciona uma label de aviso
@@ -400,20 +400,15 @@ class ContEstoque():
     #---------------------------------------------------Funções Auxiliares------------------------------------------------------# 
     
     # Método que apaga a janela atual
-    def ApagatelaEstoque(self):
+    def ApagaTelaEstoque(self):
         print("Apagou Estoque")
         self.telaEstoque.destroy()
         
-
-x11 = ContEstoque()
-x11.selecionaCRUDEstoque()
-
 '''
 OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
-self.telaEstoque.mainloop()
+#self.telaEstoque.mainloop()
 
-e coloque o seguinte comando adaptado para poder executa-la
-#x1 = telaInicialWindow()
-#x1.telaInicial()
+x11 = ContEstoque()
+x11.selecionaCRUDEstoque()
 ''' 

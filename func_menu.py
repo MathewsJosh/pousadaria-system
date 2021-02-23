@@ -1,15 +1,34 @@
 from tkinter import *
 
+# Importações de outras classes locais
+from func_cadcliente import *
+from func_cardapio import *
+from func_consquarto import *
+from func_contEstoque import *
+from func_devolver import *
+from func_reclamar import *
+from func_reservar import *
+from func_tarefas import *
+
 #Variaveis Globais
 tam = "1200x720"
-camIco = "Images\Icones\Pousadaria2.ico"
+camIco = "Images\Icones\Pousadaria.ico"
 
 # Tela que da a opção de Logar ou cadastrar antes de entrar no chat
 class MenuRecepcaoWindow():
     # Inicializadores
     def __init__(self):
         # Janela
-        self.menuRecepcaoJanela = 0
+        self.menuJanela = 0
+        # Instanciamentos de classes
+        self.chamaCad = 0
+        self.chamaCard = 0
+        self.chamaCons = 0
+        self.chamaCont = 0
+        self.chamaDev = 0
+        self.chamaRec = 0
+        self.chamaRes = 0
+        self.chamaTar = 0
         # Auxiliares das conversões de imagem
         self.camCadastrar = 0
         self.camConsultarQuarto = 0
@@ -36,63 +55,91 @@ class MenuRecepcaoWindow():
     # Método de exibição do menu principal
     def menuRecepcao(self):
         # Cria uma janela e define suas principais configurações
-        self.menuRecepcaoJanela = Tk()
-        self.menuRecepcaoJanela.title("Recepção - Escolha uma Opção")
-        self.menuRecepcaoJanela.wm_iconbitmap(camIco)
-        self.menuRecepcaoJanela.focus_force()
-        self.menuRecepcaoJanela.geometry(tam)
+        self.menuJanela = Tk()
+        self.menuJanela.title("Menu Pousadaria - Escolha uma Opção")
+        self.menuJanela.wm_iconbitmap(camIco)
+        self.menuJanela.focus_force()
+        self.menuJanela.geometry(tam)
 
         # Converte os pngs dos botões para imagem
-        self.camCadastrar = PhotoImage(file="Images\Botões\menu_cadCliente.png", master=self.menuRecepcaoJanela)
-        self.camConsultarQuarto = PhotoImage(file="Images\Botões\menu_consultar.png", master=self.menuRecepcaoJanela)
-        self.camReservarQuarto = PhotoImage(file="Images\Botões\menu_reservar.png", master=self.menuRecepcaoJanela)
-        self.camDevolverQuarto = PhotoImage(file="Images\Botões\menu_devolver.png", master=self.menuRecepcaoJanela)
-        self.camReclamacao = PhotoImage(file="Images\Botões\menu_reclamacoes.png", master=self.menuRecepcaoJanela)
-        self.camEstoque = PhotoImage(file="Images\Botões\menu_estoque.png", master=self.menuRecepcaoJanela)
-        self.camCardapio = PhotoImage(file="Images\Botões\menu_cardapio.png", master=self.menuRecepcaoJanela)
-        self.camTarefas =  PhotoImage(file="Images\Botões\menu_tarefas.png", master=self.menuRecepcaoJanela)
-        self.campousadaria = PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.menuRecepcaoJanela)
-
+        self.camCadastrar = PhotoImage(file="Images\Botões\menu_cadCliente.png", master=self.menuJanela)
+        self.camConsultarQuarto = PhotoImage(file="Images\Botões\menu_consultar.png", master=self.menuJanela)
+        self.camReservarQuarto = PhotoImage(file="Images\Botões\menu_reservar.png", master=self.menuJanela)
+        self.camDevolverQuarto = PhotoImage(file="Images\Botões\menu_devolver.png", master=self.menuJanela)
+        self.camReclamacao = PhotoImage(file="Images\Botões\menu_reclamacoes.png", master=self.menuJanela)
+        self.camEstoque = PhotoImage(file="Images\Botões\menu_estoque.png", master=self.menuJanela)
+        self.camCardapio = PhotoImage(file="Images\Botões\menu_cardapio.png", master=self.menuJanela)
+        self.camTarefas =  PhotoImage(file="Images\Botões\menu_tarefas.png", master=self.menuJanela)
+        self.campousadaria = PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.menuJanela)
+        
+        self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png")
+        '''
+        self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png", master=self.cadastrarJanela)
+        self.camVoltarButton = tkinter.PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.cadastrarJanela)
+        self.campousadaria = tkinter.PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.cadastrarJanela)
+        '''
         # Coloca uma imagem em cima dos botões
         l1 = Label(image=self.campousadaria)
         l1.place(relx=0.5, rely=0.03, anchor="n")
         
         #---------------------------------------------------Frame - Botões Recepção------------------------------------------------------#
         # Cria um frame só para os botões do menu
-        self.recepframe = LabelFrame(self.menuRecepcaoJanela, text = "Recepção", padx=50)
+        self.recepframe = LabelFrame(self.menuJanela, text = "Recepção", padx=50)
         self.recepframe.place(relx=0.3, rely=0.3, anchor="n")
 
+        self.chamaCad = cadastrarWindow()
+        self.chamaCons = consultaQuartoWindow()
+        self.chamaDev = DevolverWindow()
+        self.chamaRec = Reclamacao()
+        self.chamaRes = ReservarWindow()
+        self.chamaCard = Cardapio()
+        self.chamaCont = ContEstoque()
+        self.chamaTar = Tarefas()
+        
+        #, command=,
         # Cria os Botões e os posiciona
-        self.botaoCadastrar = Button(self.recepframe, image=self.camCadastrar, bd=0, relief=GROOVE)
-        self.botaoConsultar = Button(self.recepframe, image=self.camConsultarQuarto, bd=0, relief=GROOVE)
-        self.botaoReservar = Button(self.recepframe, image=self.camReservarQuarto, bd=0, relief=GROOVE)
-        self.botaoDevolver = Button(self.recepframe, image=self.camDevolverQuarto, bd=0, relief=GROOVE)
-        self.botaoReclamar = Button(self.recepframe, image=self.camReclamacao, bd=0, relief=GROOVE)
+        self.botaoCadastrar = Button(self.recepframe, command=self.chamaCad.cadastrarTela, image=self.camCadastrar, bd=0, relief=GROOVE)
         self.botaoCadastrar.grid(row=1, column=0, pady=20)
+        self.botaoConsultar = Button(self.recepframe, command=self.chamaCons.consultaQuarto, image=self.camConsultarQuarto, bd=0, relief=GROOVE)
         self.botaoConsultar.grid(row=2, column=0, pady=20)
+        self.botaoReservar = Button(self.recepframe, command=self.chamaRes.ReservarTela, image=self.camReservarQuarto, bd=0, relief=GROOVE)
         self.botaoReservar.grid(row=3, column=0, pady=20)
+        self.botaoDevolver = Button(self.recepframe, command=self.chamaDev.DevolverTela, image=self.camDevolverQuarto, bd=0, relief=GROOVE)
         self.botaoDevolver.grid(row=4, column=0, pady=20)
+        self.botaoReclamar = Button(self.recepframe, command=self.chamaRec.selecionaCRUDReclamacao, image=self.camReclamacao, bd=0, relief=GROOVE)
         self.botaoReclamar.grid(row=5, column=0, pady=20)
         
         #---------------------------------------------------Frame - Outros Botões------------------------------------------------------#
         # Cria um frame só para os botões do menu
-        self.outrosframe = LabelFrame(self.menuRecepcaoJanela, text = "Administração", padx=50)
+        self.outrosframe = LabelFrame(self.menuJanela, text = "Administração", padx=50)
         self.outrosframe.place(relx=0.7, rely=0.4, anchor="n")
         
         # Cria os botões em outra frame e os posiciona
-        self.botaoCardapio = Button(self.outrosframe, image=self.camCardapio, bd=0, relief=GROOVE)
-        self.botaoEstoque = Button(self.outrosframe, image=self.camEstoque, bd=0, relief=GROOVE)
-        self.botaoTarefas = Button(self.outrosframe, image=self.camTarefas, bd=0, relief=GROOVE)
+        self.botaoCardapio = Button(self.outrosframe, command=self.chamaCard.selecionaCRUDCardapio, image=self.camCardapio, bd=0, relief=GROOVE)
+        self.botaoEstoque = Button(self.outrosframe, command=self.chamaCont.selecionaCRUDEstoque, image=self.camEstoque, bd=0, relief=GROOVE)
+        self.botaoTarefas = Button(self.outrosframe, command=self.chamaTar.selecionaCRUDTarefas, image=self.camTarefas, bd=0, relief=GROOVE)
         self.botaoCardapio.grid(row=0, column=0, pady=20)
         self.botaoEstoque.grid(row=1, column=0, pady=20)
         self.botaoTarefas.grid(row=2, column=0, pady=20)
 
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
-        self.menuRecepcaoJanela.mainloop()
-
-    def ApagaInicial(self):
+        self.menuJanela.mainloop()
+    
+    def esconderTela(self):
+        self.menuJanela.withdraw()
+    
+    def mostrarTela(self):
+        self.menuJanela.deiconify() 
+    
+    def ApagaMenu(self):
         print("Apagou tela inicial")
-        self.menuRecepcaoJanela.destroy()
+        self.menuJanela.destroy()
+        
+'''
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+self.tela_inicial.mainloop()
 
 x4 = MenuRecepcaoWindow()
 x4.menuRecepcao()
+'''

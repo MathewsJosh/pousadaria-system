@@ -76,7 +76,7 @@ class ReservarWindow():
     def ReservarTela(self):
         self.formataTelaReservar()
         
-        self.botaoVoltar = Button(self.ReservarJanela, command=self.reservarMetodo, image=self.camVoltarButton, bd=0, relief=GROOVE)
+        self.botaoVoltar = Button(self.ReservarJanela, command=self.ApagaTelaReservar, image=self.camVoltarButton, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
@@ -381,8 +381,14 @@ class ReservarWindow():
         self.precoTotalEntry["text"] = self.estadiaTotal
     
     # Destroi a janela atual
-    def destroiTela(self):
+    def ApagaTelaReservar(self):
         self.ReservarJanela.destroy()
 
-x2 = ReservarWindow()
-x2.ReservarTela()
+'''
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+#self.tela_inicial.mainloop()
+
+x7 = ReservarWindow()
+x7.ReservarTela()
+'''

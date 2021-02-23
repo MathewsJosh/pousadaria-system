@@ -1,5 +1,9 @@
 from tkinter import *
+
+# Importações locais
 from BD_cadfuncionario import *
+from func_menu import *
+#from inicio_principal import ApagaInicial
 
 #Variaveis Globais
 tam = "800x600"
@@ -13,8 +17,13 @@ class loginWindow():
         # Auxiliares das conversões de imagem
         self.camLoginButton = 0
         self.camAbrirButton = 0
-        # Instanciamento de BD
+        # Botões
+        self.botaoAbrir = 0
+        self.botaoEntrar = 0
+        self.botaoVoltar = 0
+        # Instanciamento de classes
         self.dadosFunc = BD_cadFunc(False)
+        self.chamMenu = MenuRecepcaoWindow()
         # Entradas de dados
         self.userEntry = 0
         self.passEntry = 0
@@ -30,7 +39,14 @@ class loginWindow():
         
         # Cria o botão entrar e chama o método para fazer o login
         self.botaoEntrar = Button(self.loginJanela, command=self.logarMetodo, image=self.camLoginButton, bd=0, relief=GROOVE)
-        self.botaoEntrar.place(relx=0.5, rely=0.7, anchor="n")
+        self.botaoEntrar.place(relx=0.9, rely=0.9, anchor="n")
+        
+        # Cria um botão Voltar para voltar para a tela de início
+        self.botaoVoltar = Button(self.loginJanela, command=self.destroiTela, image=self.camVoltarButton, bd=0, relief=GROOVE)
+        self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
+        
+        
+        
 
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.loginJanela.mainloop()
@@ -48,27 +64,16 @@ class loginWindow():
         elif self.dadosFunc.leDados(self.userEntry.get(), self.passEntry.get()):
         # Avisa sobre o sucesso no login
             self.aviso = Label(self.loginJanela, text="Usuario Logado! Você já pode usar o sistema!", foreground='green')
+            self.botaoEntrar.destroy()
+            self.botaoEntrar.forget()
             
-            # Abre a janela da gerencia ou recepcao
-            # pesquisa no banco de dados se é gerencia ou recepcao
-            # if else
-            '''
-            self.loginJanela.destroy()
-            auxiliar = recepcaoTela()
-            ou
-            auxiliar = gerenciaTela()
-            '''
-            #if()
-            
-            # Muda o botão entrar para "Abrir sistema"
-            #self.botaoEntrar.destroy()
-            #self.botaoEntrar.forget()
-            #self.botaoEntrar = Button(self.loginJanela, command=self.criasistema, image=self.camAbrirButton, bd=0, relief=GROOVE)
-            #self.botaoEntrar.place(relx=0.5, rely=0.6, anchor="n")
-            
+            # Cria um botão Voltar para voltar para a tela de início
+            self.botaoAbrir = Button(self.loginJanela, command=lambda:[self.destroiTela(),self.chamMenu.menuRecepcao()], image=self.camAbrirButton, bd=0, relief=GROOVE)
+            self.botaoAbrir.place(relx=0.9, rely=0.9, anchor="n")
+                       
         else:
             # Avisa ao usuário que ele errou a senha ou nome
-            self.aviso = Label(self.loginJanela, text="Usuário e/ou senha inválidos!", foreground='red')
+            self.aviso = Label(self.loginJanela, text="Usuário e/ou senha inválidos!\nRealize o cadastro antes do login!", foreground='red')
             
         # Posiciona a label de aviso
         self.aviso.place(relx=0.5, rely=0.6, anchor="n")
@@ -77,7 +82,7 @@ class loginWindow():
     def formataTelaLogin(self):
         # Cria uma janela e define suas principais configurações
         self.loginJanela = Tk()
-        self.loginJanela.title("Entre com os seus dados de Login!")
+        self.loginJanela.title("Início - Login de Funcionário!")
         self.loginJanela.wm_iconbitmap(camIco)
         self.loginJanela.focus_force()
         self.loginJanela.geometry(tam)
@@ -103,12 +108,19 @@ class loginWindow():
         # Converte o png do botão para imagem
         self.camLoginButton = PhotoImage(file="Images\Botões\inicio_login.png", master=self.loginJanela)
         self.camAbrirButton = PhotoImage(file="Images\Botões\inicio_abrir.png", master=self.loginJanela)
-    '''
-    # Destroi a Tela de Login e cria a tela de sistema
-    def criasistema(self):
+        self.camVoltarButton = PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.loginJanela)
+        
+        
+    # Destroi a janela atual
+    def destroiTela(self):
         self.loginJanela.destroy()
-        auxiliar = sistemaWindow(self.nome)
-        auxiliar.sistemaTela()
-    '''
+    
+
+"""
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+self.tela_inicial.mainloop()
+
 x3 = loginWindow()
 x3.entrarTela()
+"""

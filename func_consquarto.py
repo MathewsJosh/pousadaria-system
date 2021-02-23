@@ -1,7 +1,11 @@
 from tkinter import *
+import tkinter
 from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
+from PIL import ImageTk
+from PIL import Image as PilImage
+
 
 # Importações de outras classes locais
 from BD_quartosdisp import *
@@ -48,8 +52,8 @@ class consultaQuartoWindow():
         self.formataTelaConsultaQuarto()
         
         # Cria os Botões e os posiciona
-        self.botaoConsultarQuarto = Button(command=self.consultaExibe, image=self.camConsultarQuarto, bd=0, relief=GROOVE)
-        self.botaoConsultarQuarto.place(relx=0.9, rely=0.9, anchor="n")
+        botaoConsultarQuarto = Button(self.consultaQuartoJanela,command=self.consultaExibe, image=self.camConsultarQuarto, bd=0, relief=GROOVE)
+        botaoConsultarQuarto.place(relx=0.9, rely=0.9, anchor="n")
         
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.consultaQuartoJanela.mainloop()
@@ -129,11 +133,13 @@ class consultaQuartoWindow():
     # Método para formatar a tela principal de consulta    
     def formataTelaConsultaQuarto(self):
         # Cria uma janela e define suas principais configurações
-        self.consultaQuartoJanela = Tk()
-        self.consultaQuartoJanela.title("Recepção - Escolha uma Opção")
+        self.consultaQuartoJanela = Toplevel()
+        self.consultaQuartoJanela.title("Recepção - Consulta de Quartos")
         self.consultaQuartoJanela.wm_iconbitmap(camIco)
         self.consultaQuartoJanela.focus_force()
         self.consultaQuartoJanela.geometry(tam)
+        self.consultaQuartoJanela.withdraw()
+        self.consultaQuartoJanela.deiconify()
 
         # Define as fontes para caixas de texto
         fontfamilylist = list(tkFont.families())
@@ -141,12 +147,12 @@ class consultaQuartoWindow():
         fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
         
         # Converte os pngs dos botões para imagem
-        self.camConsultarQuarto = PhotoImage(file="Images\Botões\inicio_consultar.png", master=self.consultaQuartoJanela)
-        self.camVoltar = PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.consultaQuartoJanela)
+        self.camConsultarQuarto = tkinter.PhotoImage(file="Images\Botões\inicio_consultar.png")
+        self.camVoltar = tkinter.PhotoImage(file="Images\Botões\inicio_voltar.png")
 
         # Cria o botão voltar e o posiciona
-        self.botaoVoltar = Button(image=self.camVoltar, bd=0, relief=GROOVE)
-        self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
+        botaoVoltar = Button(self.consultaQuartoJanela,image=self.camVoltar, command=self.ApagaTelaConsulta, bd=0, relief=GROOVE)
+        botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
 
         #---------------------------------------------------Frame - Entrada de datas e Filtro de quartos------------------------------------------------------#
         # Cria um frame para a entrada de datas
@@ -188,8 +194,13 @@ class consultaQuartoWindow():
 
     # Método que apaga a janela atual
     def ApagaTelaConsulta(self):
-        print("Apagou Consulta")
         self.consultaQuartoJanela.destroy()
-        
+
+'''
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+#self.tela_inicial.mainloop()
+
 x6 = consultaQuartoWindow()
 x6.consultaQuarto()
+'''

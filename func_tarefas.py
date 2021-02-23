@@ -107,7 +107,7 @@ class Tarefas():
         self.botaoProximo.place(relx=0.6, rely=0.07, anchor="n")
         
         #, command= tela anterior (menu)
-        self.botaoVoltar = Button(self.telaTarefas, image=self.cambotaoVoltar, bd=0, relief=GROOVE)
+        self.botaoVoltar = Button(self.telaTarefas, image=self.cambotaoVoltar, command=self.ApagaTelaTarefas, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
         # Cria e posiciona uma label de aviso
@@ -396,10 +396,16 @@ class Tarefas():
         self.aviso.destroy()
     
     # Método que apaga a janela atual
-    def ApagatelaTarefas(self):
+    def ApagaTelaTarefas(self):
         print("Apagou Tarefas")
         self.telaTarefas.destroy()
-        
+
+
+'''
+OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+#self.telaEstoque.mainloop()
+      
 x11 = Tarefas()
 x11.selecionaCRUDTarefas()
-
+'''
