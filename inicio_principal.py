@@ -9,6 +9,7 @@ from inicio_cadfuncionario import *
 #pip install tkcalendar
 #pip install tk
 
+
 #Variaveis Globais
 tam = "800x600"
 camIco = "Images\Icones\Pousadaria.ico"
