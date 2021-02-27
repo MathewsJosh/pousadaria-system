@@ -68,7 +68,7 @@ class ContEstoque():
     # Método de controle da tela Estoque
     def selecionaCRUDEstoque(self):
         # Cria uma janela e define suas principais configurações
-        self.telaEstoque = Tk()
+        self.telaEstoque = Toplevel()
         self.telaEstoque.title("Administração - Estoque")
         self.telaEstoque.wm_iconbitmap(camIco)
         self.telaEstoque.focus_force()
@@ -401,7 +401,6 @@ class ContEstoque():
     
     # Método que apaga a janela atual
     def ApagaTelaEstoque(self):
-        print("Apagou Estoque")
         self.telaEstoque.destroy()
         
 '''

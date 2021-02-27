@@ -73,11 +73,7 @@ class MenuRecepcaoWindow():
         self.campousadaria = PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.menuJanela)
         
         self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png")
-        '''
-        self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png", master=self.cadastrarJanela)
-        self.camVoltarButton = tkinter.PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.cadastrarJanela)
-        self.campousadaria = tkinter.PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.cadastrarJanela)
-        '''
+
         # Coloca uma imagem em cima dos botões
         l1 = Label(image=self.campousadaria)
         l1.place(relx=0.5, rely=0.03, anchor="n")
@@ -132,14 +128,13 @@ class MenuRecepcaoWindow():
         self.menuJanela.deiconify() 
     
     def ApagaMenu(self):
-        print("Apagou tela inicial")
         self.menuJanela.destroy()
         
-'''
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
-# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
-self.tela_inicial.mainloop()
 
+#OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+# Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+#self.tela_inicial.mainloop()
+'''
 x4 = MenuRecepcaoWindow()
 x4.menuRecepcao()
 '''

@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+import tkinter.font as tkFont
 from BD_cadfuncionario import *
 
 
@@ -37,6 +38,11 @@ class cadastrarWindow():
         
     # Criar a janela principal de inserção de dados cadastrais
     def cadastrarTela(self):
+        # Define as fontes para caixas de texto
+        fontfamilylist = list(tkFont.families())
+        fontindex = 20
+        self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
+        
         self.formataTelaCadastro()
         
         # Cria um botão Cadastrar nessa tela e verifica se é possivel cadastrar o usuario
@@ -58,7 +64,7 @@ class cadastrarWindow():
         
         if self.verificaCampos():
             # Avisa que existe algum campo vazio
-            self.aviso = Label(self.cadastrarJanela, text="Existem campos vazios, tente novamente!", foreground='red', font=('Helvetica', 10, 'bold'))
+            self.aviso = Label(self.cadastrarJanela, text="Existem campos vazios, tente novamente!", foreground='red', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             #return 0
         else:
@@ -66,15 +72,15 @@ class cadastrarWindow():
             self.CadFunc.entradaDados(self.nomeEntry.get(), self.cpfEntry.get(), self.funcaoEntry.get(), self.salarioEntry.get(), self.loginEntry.get(), self.senhaEntry.get())
 
             # Avisa que o cadastro deu certo
-            self.aviso = Label(self.cadastrarJanela, text="Cadastro efetuado com sucesso!", foreground='green', font=('Helvetica', 10, 'bold'))
+            self.aviso = Label(self.cadastrarJanela, text="Cadastro efetuado com sucesso!", foreground='green', font=self.fontStyle)
         
         # Posiciona a label de aviso
-        self.aviso.place(relx=0.5, rely=0.7, anchor="n")
+        self.aviso.place(relx=0.5, rely=0.7, anchor="n", font=self.fontStyle)
 
     # Método que Formata a tela de cadastro
     def formataTelaCadastro(self):
         # Cria uma janela e define suas principais configurações
-        self.cadastrarJanela = Tk()
+        self.cadastrarJanela = Toplevel()
         self.cadastrarJanela.title("Início - Cadastro de funcionário")
         self.cadastrarJanela.wm_iconbitmap(camIco)
         self.cadastrarJanela.focus_force()
@@ -90,17 +96,17 @@ class cadastrarWindow():
         self.cadastrarFrame.place(relx=0.5, rely=0.2, anchor="n")
 
         # Cria os campos necessários para o cadastro
-        lb1 = Label(self.cadastrarFrame, text="Nome: ")
-        lb2 = Label(self.cadastrarFrame, text="CPF:")
-        lb3 = Label(self.cadastrarFrame, text="Função:")
-        lb4 = Label(self.cadastrarFrame, text="Salario:")
-        lb5 = Label(self.cadastrarFrame, text="Login:")
-        lb6 = Label(self.cadastrarFrame, text="Senha:")
-        self.nomeEntry = Entry(self.cadastrarFrame, width=20)
-        self.cpfEntry = Entry(self.cadastrarFrame, width=20)
-        self.salarioEntry = Entry(self.cadastrarFrame, width=20)
-        self.loginEntry = Entry(self.cadastrarFrame, width=20)
-        self.senhaEntry = Entry(self.cadastrarFrame, width=20, show='*')
+        lb1 = Label(self.cadastrarFrame, text="Nome: ", font=self.fontStyle)
+        lb2 = Label(self.cadastrarFrame, text="CPF:", font=self.fontStyle)
+        lb3 = Label(self.cadastrarFrame, text="Função:", font=self.fontStyle)
+        lb4 = Label(self.cadastrarFrame, text="Salario:", font=self.fontStyle)
+        lb5 = Label(self.cadastrarFrame, text="Login:", font=self.fontStyle)
+        lb6 = Label(self.cadastrarFrame, text="Senha:", font=self.fontStyle)
+        self.nomeEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
+        self.cpfEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
+        self.salarioEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
+        self.loginEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
+        self.senhaEntry = Entry(self.cadastrarFrame, width=20, show='*', font=self.fontStyle)
 
         # Posiciona as Labels e entradas de dados
         lb1.grid(row=0, column=0, pady=5, sticky=W)
@@ -116,7 +122,7 @@ class cadastrarWindow():
         self.senhaEntry.grid(row=5, column=1, pady=5, sticky=E)
 
         # Cria e posiciona a combobox de função - Permite selecionar a função do funcionário
-        self.funcaoEntry = ttk.Combobox(self.cadastrarFrame, value=self.funcoes, width=17, state="readonly")
+        self.funcaoEntry = ttk.Combobox(self.cadastrarFrame, value=self.funcoes, width=18, state="readonly", font=self.fontStyle)
         self.funcaoEntry.current(0)
         self.funcaoEntry.grid(row=2, column=1, pady=5, sticky=E)
         

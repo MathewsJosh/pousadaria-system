@@ -21,9 +21,8 @@ class telaInicialWindow():
         self.camLoginButton = 0
         self.camCadastrarButton = 0
         self.pousadaria = 0
-        #Instanciamento de classes
-        self.LoginTela = loginWindow()
-        self.CadastrarTela = cadastrarWindow()
+        
+        #self.ApagaInicial
 
 
     def telaInicial(self):
@@ -43,9 +42,13 @@ class telaInicialWindow():
         l1 = Label(image=self.pousadaria)
         l1.place(relx=0.5, rely=0.1, anchor="n")
 
+        #Instanciamento de classes
+        self.LoginTela = loginWindow(self.tela_inicial)
+        self.CadastrarTela = cadastrarWindow()
+        
         # Cria botões para Logar e Cadastrar
-        botaoLogar = Button(command=lambda:[self.ApagaInicial(),self.LoginTela.entrarTela()], image=self.camLoginButton, bd=0, relief=GROOVE)
-        botaoCadastrar = Button(command=lambda:[self.ApagaInicial(),self.CadastrarTela.cadastrarTela()], image=self.camCadastrarButton, bd=0, relief=GROOVE)
+        botaoLogar = Button(command=lambda:[self.LoginTela.entrarTela()], image=self.camLoginButton, bd=0, relief=GROOVE)
+        botaoCadastrar = Button(command=lambda:[self.CadastrarTela.cadastrarTela()], image=self.camCadastrarButton, bd=0, relief=GROOVE)
 
         # Posicionamento dos botões
         botaoLogar.place(relx=0.3, rely=0.9, anchor="s")

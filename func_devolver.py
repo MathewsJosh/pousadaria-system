@@ -70,7 +70,7 @@ class DevolverWindow():
     # Método de formatação da tela devolução
     def formataTelaDevolver(self):
         # Cria uma janela e define suas principais configurações
-        self.DevolverJanela = Tk()
+        self.DevolverJanela = Toplevel()
         self.DevolverJanela.title("Recepção - Devolver quartos e áreas de lazer")
         self.DevolverJanela.wm_iconbitmap(camIco)
         self.DevolverJanela.focus_force()
@@ -202,12 +202,12 @@ class DevolverWindow():
         titulo = "#---------------------------------------------------Nota De Devolução------------------------------------------------------# \n\n"
         dadosPousadaria = "DADOS DO EMITENTE:\nNome: Pousadaria \nTelefone: (xx) xxxx-xxxx\nEndereço: Rua dos bobos, 0\nCNPJ: xx.xxx.xxx/xxxx-xx"
         separador = " \n_______________________________________________________________________________________________________________________\n\n"
-        dadoscliente = "DADOS DO CLIENTE:\nNome: " + str(tudoCliente[0][0]) + "\nCPF: " + str(tudoCliente[0][1]) + "\nTelefone: " + str(tudoCliente[0][2]) + "\nE-mail: " + str(tudoCliente[0][3]) + "\nTipo: " + str(tudoCliente[0][4]) + "\nEndereço: " + str(tudoCliente[0][5]) + "\nQuartos Alugados: " + str(tudoCliente[0][6]) + "\nÁreas de lazer alugadas:" + str(tudoCliente[0][7]) + "\nTempo de estadia: " + str(tudoCliente[0][8]) + "\nData de Entrada: " + str(tudoCliente[0][9]) + "\nData de Saída: " + str(tudoCliente[0][10])
+        dadoscliente = "DADOS DO CLIENTE:\nNome: " + str(tudoCliente[0][0]) + "\nCPF: " + str(tudoCliente[0][1]) + "\nTelefone: " + str(tudoCliente[0][2]) + "\nE-mail: " + str(tudoCliente[0][3]) + "\nTipo: " + str(tudoCliente[0][4]) + "\nEndereço: " + str(tudoCliente[0][5]) + "\nQuartos Devolvidos: " + str(self.quartosMarcados) + "\nÁreas de lazer devolvidas:" + str(self.lazerMarcados)
         dadosNota = "Data de emissão: " + str(now) + "                       "
         
         # Abre o arquivo e escreve as linhas no mesmo
         caminhoNota = "NotasDevolucao/" + self.clienteCombobox.get() + ".txt."
-        arquivo = open(caminhoNota, "a")
+        arquivo = open(caminhoNota, "w")
         arquivo.writelines(titulo)
         arquivo.writelines(dadosPousadaria)
         arquivo.writelines(separador)
@@ -224,7 +224,7 @@ class DevolverWindow():
     #---------------------------------------------------Funções Auxiliares------------------------------------------------------#    
     # Criar uma lista de elementos marcados na checkbutton, no caso, uma lista de quartos selecionados
     def criaLista(self,i):
-        print("")
+        #print("")
         if self.quartosMarcados.count(self.listaQuartos[i].get())==0 and self.listaQuartos[i].get() != "0":
             self.quartosMarcados.append(self.listaQuartos[i].get())  
         else:
@@ -232,7 +232,7 @@ class DevolverWindow():
                 
     # Criar uma lista de elementos marcados na checkbutton, no caso, uma lista de areas de lazer selecionadas
     def criaListaLazer(self, i): 
-        print("")  
+        #print("")  
         if self.lazerMarcados.count(self.listAreas[i].get())==0 and self.listAreas[i].get() != "0":
             self.lazerMarcados.append(self.listAreas[i].get())  
         else:

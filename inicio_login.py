@@ -1,9 +1,9 @@
 from tkinter import *
+import tkinter.font as tkFont
 
 # Importações locais
 from BD_cadfuncionario import *
 from func_menu import *
-#from inicio_principal import ApagaInicial
 
 #Variaveis Globais
 tam = "800x600"
@@ -11,7 +11,8 @@ camIco = "Images\Icones\Pousadaria.ico"
 
 class loginWindow():
     # Construtor para a classe
-    def __init__(self):
+    def __init__(self, telaiInicial):
+        self.telaiInicial = telaiInicial
         # Janela
         self.loginJanela = 0
         # Auxiliares das conversões de imagem
@@ -32,9 +33,15 @@ class loginWindow():
         # Outros
         self.aviso = 0
         self.botaoEntrar = 0
+        self.fontStyle = 0
 
     # Método de gerenciamento da tela de login
     def entrarTela(self):
+        # Define as fontes para caixas de texto
+        fontfamilylist = list(tkFont.families())
+        fontindex = 20
+        self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
+        
         self.formataTelaLogin()
         
         # Cria o botão entrar e chama o método para fazer o login
@@ -45,9 +52,6 @@ class loginWindow():
         self.botaoVoltar = Button(self.loginJanela, command=self.destroiTela, image=self.camVoltarButton, bd=0, relief=GROOVE)
         self.botaoVoltar.place(relx=0.1, rely=0.9, anchor="n")
         
-        
-        
-
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.loginJanela.mainloop()
 
@@ -59,21 +63,21 @@ class loginWindow():
 
         if self.userEntry.get() == '' or self.passEntry.get() == '':
         # Avisa que faltam dados para fazer o login
-            self.aviso = Label(self.loginJanela, text="Digite um nome de usuário e/ou senha!", foreground='red')
+            self.aviso = Label(self.loginJanela, text="Digite um nome de usuário e/ou senha!", foreground='red', font=self.fontStyle)
         
         elif self.dadosFunc.leDados(self.userEntry.get(), self.passEntry.get()):
         # Avisa sobre o sucesso no login
-            self.aviso = Label(self.loginJanela, text="Usuario Logado! Você já pode usar o sistema!", foreground='green')
+            self.aviso = Label(self.loginJanela, text="Usuario Logado! Você já pode usar o sistema!", foreground='green', font=self.fontStyle)
             self.botaoEntrar.destroy()
             self.botaoEntrar.forget()
             
             # Cria um botão Voltar para voltar para a tela de início
-            self.botaoAbrir = Button(self.loginJanela, command=lambda:[self.destroiTela(),self.chamMenu.menuRecepcao()], image=self.camAbrirButton, bd=0, relief=GROOVE)
+            self.botaoAbrir = Button(self.loginJanela, command=lambda:[self.destroiTela(),self.destroiTelaInicial(),self.chamMenu.menuRecepcao()], image=self.camAbrirButton, bd=0, relief=GROOVE)
             self.botaoAbrir.place(relx=0.9, rely=0.9, anchor="n")
                        
         else:
             # Avisa ao usuário que ele errou a senha ou nome
-            self.aviso = Label(self.loginJanela, text="Usuário e/ou senha inválidos!\nRealize o cadastro antes do login!", foreground='red')
+            self.aviso = Label(self.loginJanela, text="Usuário e/ou senha inválidos!\nRealize o cadastro antes do login!", foreground='red', font=self.fontStyle)
             
         # Posiciona a label de aviso
         self.aviso.place(relx=0.5, rely=0.6, anchor="n")
@@ -81,7 +85,7 @@ class loginWindow():
     # Método de Formatação da tela Login
     def formataTelaLogin(self):
         # Cria uma janela e define suas principais configurações
-        self.loginJanela = Tk()
+        self.loginJanela = Toplevel()
         self.loginJanela.title("Início - Login de Funcionário!")
         self.loginJanela.wm_iconbitmap(camIco)
         self.loginJanela.focus_force()
@@ -93,15 +97,15 @@ class loginWindow():
         self.loginFrame.place(relx=0.5, rely=0.2, anchor="n")
         
         # Labels, entradas de texto e botões
-        lb1 = Label(self.loginFrame, text="Login: ", width=5)
-        lb2 = Label(self.loginFrame, text="Senha: ", width=5)
-        self.aviso = Label(self.loginFrame)
-        self.userEntry = Entry(self.loginFrame, width=15)
-        self.passEntry = Entry(self.loginFrame, width=15, show='*')
+        lb1 = Label(self.loginFrame, text="Login: ", width=5, font=self.fontStyle)
+        lb2 = Label(self.loginFrame, text="Senha: ", width=5, font=self.fontStyle)
+        self.aviso = Label(self.loginFrame, font=self.fontStyle)
+        self.userEntry = Entry(self.loginFrame, width=15, font=self.fontStyle)
+        self.passEntry = Entry(self.loginFrame, width=15, show='*', font=self.fontStyle)
 
         # Posicionamento dos elementos
-        lb1.grid(row=0, column=0, pady=5, sticky=W)
-        lb2.grid(row=1, column=0, pady=5, sticky=W)
+        lb1.grid(row=0, column=0, pady=10, sticky=W)
+        lb2.grid(row=1, column=0, pady=10, sticky=W)
         self.userEntry.grid(row=0, column=1, pady=5, sticky=W)
         self.passEntry.grid(row=1, column=1, pady=5, sticky=W)
 
@@ -110,6 +114,8 @@ class loginWindow():
         self.camAbrirButton = PhotoImage(file="Images\Botões\inicio_abrir.png", master=self.loginJanela)
         self.camVoltarButton = PhotoImage(file="Images\Botões\inicio_voltar.png", master=self.loginJanela)
         
+    def destroiTelaInicial(self):
+        self.telaiInicial.destroy()
         
     # Destroi a janela atual
     def destroiTela(self):

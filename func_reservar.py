@@ -85,7 +85,7 @@ class ReservarWindow():
     # Método de formatação da tela reservar
     def formataTelaReservar(self):
         # Cria uma janela e define suas principais configurações
-        self.ReservarJanela = Tk()
+        self.ReservarJanela = Toplevel()
         self.ReservarJanela.title("Recepção - Reservar quartos e áreas de lazer")
         self.ReservarJanela.wm_iconbitmap(camIco)
         self.ReservarJanela.focus_force()
@@ -132,7 +132,7 @@ class ReservarWindow():
             self.dataSaida.grid(row=2, column=1, pady=10, sticky=W)
             
             # Cria um botão Reservar nessa tela e verifica se é possivel Reservar o usuario
-            self.botaoSelecionar = Button(self.clienteFrame,command=lambda: self.checaDatas(self.dataEntrada.get(),self.dataSaida.get()), image=self.camSelecionarButton, bd=0, relief=GROOVE)
+            self.botaoSelecionar = Button(self.clienteFrame,command=lambda: [self.checaDatas(self.dataEntrada.get(),self.dataSaida.get())], image=self.camSelecionarButton, bd=0, relief=GROOVE)
             self.botaoSelecionar.grid(row=3, column=0, pady=10, columnspan = 2)
             
             # Cria e posiciona uma Label de Aviso
@@ -146,6 +146,11 @@ class ReservarWindow():
         
     # Verifica se a data digitada é válida
     def checaDatas(self, dEnt, dSai):
+        if(self.botaoReservar!=0):
+            self.botaoReservar.destroy()
+        if(self.botaoNota != 0):
+            self.botaoNota.destroy()
+        
         now = datetime.now().date()
         self.entradaDatetime = datetime.strptime(dEnt, '%d/%m/%Y').date()
         self.saidaDatetime = datetime.strptime(dSai, '%d/%m/%Y').date()
@@ -248,6 +253,7 @@ class ReservarWindow():
     # Método de "Update" da tela reserva, nesse momento que finalmente será efetuado o salvamento das informações de reserva no banco de dados 
     def realizaReserva(self):
         self.aviso.destroy()
+        
         #Atualizar status dos quartos/areas de lazer no banco de dados
         if len(self.quartosMarcados) > 0:
             for x in range(len(self.quartosMarcados)):
@@ -278,10 +284,12 @@ class ReservarWindow():
     # Escreve em um arquivo txt os dados da reserva, servindo assim de nota fiscal
     def emiteNotaFiscal(self):
         tudoCliente = self.bdClientes.leTudoCliente(self.clienteCombobox.get())
+        if self.aviso!=0:
+            self.aviso.destroy()
                 
         now = datetime.now().date()
         #Textos Nota Fiscal
-        titulo = "#---------------------------------------------------Nota De Devolução------------------------------------------------------# \n\n"
+        titulo = "#---------------------------------------------------Nota De Fiscal------------------------------------------------------# \n\n"
         dadosPousadaria = "DADOS DO EMITENTE:\nNome: Pousadaria \nTelefone: (xx) xxxx-xxxx\nEndereço: Rua dos bobos, 0\nCNPJ: xx.xxx.xxx/xxxx-xx"
         separador = " \n_______________________________________________________________________________________________________________________\n\n"
         dadoscliente = "DADOS DO CLIENTE:\nNome: " + str(tudoCliente[0][0]) + "\nCPF: " + str(tudoCliente[0][1]) + "\nTelefone: " + str(tudoCliente[0][2]) + "\nE-mail: " + str(tudoCliente[0][3]) + "\nTipo: " + str(tudoCliente[0][4]) + "\nEndereço: " + str(tudoCliente[0][5]) + "\nQuartos Alugados: " + str(tudoCliente[0][6]) + "\nÁreas de lazer alugadas:" + str(tudoCliente[0][7]) + "\nTempo de estadia: " + str(tudoCliente[0][8]) + "\nData de Entrada: " + str(tudoCliente[0][9]) + "\nData de Saída: " + str(tudoCliente[0][10])
@@ -384,11 +392,11 @@ class ReservarWindow():
     def ApagaTelaReservar(self):
         self.ReservarJanela.destroy()
 
-'''
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+
+#OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
-
+"""
 x7 = ReservarWindow()
 x7.ReservarTela()
-'''
+"""

@@ -69,7 +69,7 @@ class Cardapio():
     # Método de controle da tela cardapio
     def selecionaCRUDCardapio(self):
         # Cria uma janela e define suas principais configurações
-        self.telaCardapio = Tk()
+        self.telaCardapio = Toplevel()
         self.telaCardapio.title("Administração - Cardápio")
         self.telaCardapio.wm_iconbitmap(camIco)
         self.telaCardapio.focus_force()
@@ -417,7 +417,6 @@ class Cardapio():
     
     # Método que apaga a janela atual
     def ApagatelaCardapio(self):
-        print("Apagou Cardapio")
         self.telaCardapio.destroy()
 
 '''

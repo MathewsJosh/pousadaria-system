@@ -65,7 +65,7 @@ class Tarefas():
     # Método de controle da tela Tarefas
     def selecionaCRUDTarefas(self):
         # Cria uma janela e define suas principais configurações
-        self.telaTarefas = Tk()
+        self.telaTarefas = Toplevel()
         self.telaTarefas.title("Administração - Tarefas")
         self.telaTarefas.wm_iconbitmap(camIco)
         self.telaTarefas.focus_force()
@@ -397,7 +397,6 @@ class Tarefas():
     
     # Método que apaga a janela atual
     def ApagaTelaTarefas(self):
-        print("Apagou Tarefas")
         self.telaTarefas.destroy()
 
 

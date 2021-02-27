@@ -1,8 +1,10 @@
 from tkinter import *
 from tkinter import ttk
+import tkinter.font as tkFont
 import re 
+
+# Importações locais
 from BD_cadcliente import *
-import tkinter
 
 #Variaveis Globais
 tam = "1200x720"
@@ -44,6 +46,11 @@ class cadastrarWindow():
         
     # Método de Gerência da tela cadastrar cliente
     def cadastrarTela(self):
+        # Define as fontes para caixas de texto
+        fontfamilylist = list(tkFont.families())
+        fontindex = 20
+        self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
+        
         self.formataTelaCadastro()
         
         # Cria um botão Cadastrar nessa tela e verifica se é possivel cadastrar o usuario
@@ -63,23 +70,23 @@ class cadastrarWindow():
         self.aviso.forget()
         
         if self.verificaCampos():
-            self.aviso = Label(self.cadastrarJanela, text="Existem campos vazios, tente novamente!", foreground='red', font=('Helvetica', 10, 'bold'))
+            self.aviso = Label(self.cadastrarJanela, text="Existem campos vazios, tente novamente!", foreground='red', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
         
         elif not(self.checaEmail(self.emailEntry.get())) and not(self.checaTelefone(self.telefoneEntry.get())):
-            self.aviso = Label(self.cadastrarJanela, text="Telefone e email inválido, tente novamente!", foreground='red', font=('Helvetica', 10, 'bold'))
+            self.aviso = Label(self.cadastrarJanela, text="Telefone e email inválido, tente novamente!", foreground='red', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
                
         elif not(self.checaEmail(self.emailEntry.get())):
-            self.aviso = Label(self.cadastrarJanela, text="Email inválido, tente novamente!", foreground='red', font=('Helvetica', 10, 'bold'))
+            self.aviso = Label(self.cadastrarJanela, text="Email inválido, tente novamente!", foreground='red', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             
         elif not(self.checaTelefone(self.telefoneEntry.get())):
-            self.aviso = Label(self.cadastrarJanela, text="Telefone inválido, tente novamente!", foreground='red', font=('Helvetica', 10, 'bold'))
+            self.aviso = Label(self.cadastrarJanela, text="Telefone inválido, tente novamente!", foreground='red', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
                  
         else:
-            self.aviso = Label(self.cadastrarJanela, text="Dados cadastrados com sucesso!", foreground='green', font=('Helvetica', 10, 'bold'))
+            self.aviso = Label(self.cadastrarJanela, text="Dados cadastrados com sucesso!", foreground='green', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             self.enderecoEntry = str(self.RuaEntry.get()) + ", " + str(self.NumEntry.get()) + " - " + str(self.bairroEntry.get()) + " - " + str(self.cidadeEntry.get()) + ", " + str(self.estadoEntry.get())
             self.bdcadCliente.entradaDados(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.tipoEntry.get(), self.enderecoEntry)
@@ -100,27 +107,27 @@ class cadastrarWindow():
         self.campousadaria = PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.cadastrarJanela)
         
         # Coloca uma imagem em cima dos botões
-        l1 = Label(self.cadastrarJanela, image=self.campousadaria)
+        l1 = Label(self.cadastrarJanela, image=self.campousadaria, font=self.fontStyle)
         l1.place(relx=0.5, rely=0.03, anchor="n")
         
         
         #---------------------------------------------------Frame - Cadastro de Cliente------------------------------------------------------#
         # Cria o Frame de cadastro
-        self.cadastrarFrame = LabelFrame(self.cadastrarJanela, text = "Dados do Cliente", padx=20, pady=20)
+        self.cadastrarFrame = LabelFrame(self.cadastrarJanela, text = "Dados do Cliente", padx=20, pady=20, font=self.fontStyle)
         self.cadastrarFrame.place(relx=0.3, rely=0.3, anchor="n")
 
         # Cria os campos necessários para o cadastro
-        lb1 = Label(self.cadastrarFrame, text="Nome:")
-        lb2 = Label(self.cadastrarFrame, text="CPF:")
-        lb3 = Label(self.cadastrarFrame, text="E-mail:")
-        lb4 = Label(self.cadastrarFrame, text="Telefone:")
-        lb5 = Label(self.cadastrarFrame, text="Tipo:")
+        lb1 = Label(self.cadastrarFrame, text="Nome:", font=self.fontStyle)
+        lb2 = Label(self.cadastrarFrame, text="CPF:", font=self.fontStyle)
+        lb3 = Label(self.cadastrarFrame, text="E-mail:", font=self.fontStyle)
+        lb4 = Label(self.cadastrarFrame, text="Telefone:", font=self.fontStyle)
+        lb5 = Label(self.cadastrarFrame, text="Tipo:", font=self.fontStyle)
         
-        self.nomeEntry = Entry(self.cadastrarFrame, width=20)
-        self.cpfEntry = Entry(self.cadastrarFrame, width=20)
-        self.emailEntry = Entry(self.cadastrarFrame, width=20)
-        self.telefoneEntry = Entry(self.cadastrarFrame, width=20)
-        self.pagamentoEntry = Entry(self.cadastrarFrame, width=20)
+        self.nomeEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
+        self.cpfEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
+        self.emailEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
+        self.telefoneEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
+        self.pagamentoEntry = Entry(self.cadastrarFrame, width=20, font=self.fontStyle)
 
         # Posiciona as Labels e entradas de dados
         lb1.grid(row=0, column=0, pady=5, sticky=W)
@@ -135,7 +142,7 @@ class cadastrarWindow():
         
         # Cria e posiciona a combobox de função - Irá definir o nível de acesso do funcionário ao sistema
         opcoes = ["Pessoa Física", "Pessoa Jurídica"]
-        self.tipoEntry = ttk.Combobox(self.cadastrarFrame, value=opcoes, width=17, state="readonly")
+        self.tipoEntry = ttk.Combobox(self.cadastrarFrame, value=opcoes, width=18, state="readonly", font=self.fontStyle)
         self.tipoEntry.current(0)
         self.tipoEntry.grid(row=4, column=1, pady=5, sticky=W)
         
@@ -145,16 +152,16 @@ class cadastrarWindow():
         self.enderecoFrame.place(relx=0.7, rely=0.3, anchor="n")
         
         # Cria as labels e Entrys do frame endereço
-        lb6 = Label(self.enderecoFrame, text="Rua:", width=10, anchor=W)
-        lb7 = Label(self.enderecoFrame, text="Numero:", width=10, anchor=W)
-        lb8 = Label(self.enderecoFrame, text="Bairro:", width=10, anchor=W)
-        lb9 = Label(self.enderecoFrame, text="Cidade:", width=10, anchor=W)
-        lb10 = Label(self.enderecoFrame, text="Estado:", width=10, anchor=W)
-        self.RuaEntry = Entry(self.enderecoFrame)
-        self.NumEntry = Entry(self.enderecoFrame, width=20)
-        self.bairroEntry = Entry(self.enderecoFrame, width=20)
-        self.cidadeEntry = Entry(self.enderecoFrame, width=20)
-        self.estadoEntry = Entry(self.enderecoFrame, width=20)
+        lb6 = Label(self.enderecoFrame, text="Rua:", width=10, anchor=W, font=self.fontStyle)
+        lb7 = Label(self.enderecoFrame, text="Numero:", width=10, anchor=W, font=self.fontStyle)
+        lb8 = Label(self.enderecoFrame, text="Bairro:", width=10, anchor=W, font=self.fontStyle)
+        lb9 = Label(self.enderecoFrame, text="Cidade:", width=10, anchor=W, font=self.fontStyle)
+        lb10 = Label(self.enderecoFrame, text="Estado:", width=10, anchor=W, font=self.fontStyle)
+        self.RuaEntry = Entry(self.enderecoFrame, font=self.fontStyle)
+        self.NumEntry = Entry(self.enderecoFrame, width=20, font=self.fontStyle)
+        self.bairroEntry = Entry(self.enderecoFrame, width=20, font=self.fontStyle)
+        self.cidadeEntry = Entry(self.enderecoFrame, width=20, font=self.fontStyle)
+        self.estadoEntry = Entry(self.enderecoFrame, width=20, font=self.fontStyle)
         
         #Posiciona as Labels e Entrys
         lb6.grid(row=0, column=0, pady=5, sticky=W)

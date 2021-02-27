@@ -3,9 +3,6 @@ import tkinter
 from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
-from PIL import ImageTk
-from PIL import Image as PilImage
-
 
 # Importações de outras classes locais
 from BD_quartosdisp import *
@@ -72,20 +69,14 @@ class consultaQuartoWindow():
         # Consulta os Status do quartos e os imprime 
         for x in self.dadosQuarto:
         
-            if x[1] == self.filtrobox.get() and self.filtrobox.get() == "Disponível":
-                self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + x[0] + "<====\nStatus: " + x[1] + "\nTipo: " + x[2] + "\nCamas: " + x[3] + "\nCômodos: " + x[4] + "\nDiária: ")
-                self.textboxQuarto.insert(INSERT, x[5])
+            if x[2] == self.filtrobox.get() and self.filtrobox.get() == "Disponível":
+                self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + x[0] + "<====\nNome: " + x[1] + "\nStatus: " + x[2] + "\nTipo: " + x[3] + "\nQTD Camas: " + x[4]+ "\nQTD Cômodos: " + x[5] + "\nDiária: " + str(x[6]))
                 self.textboxQuarto.insert(INSERT, "\n\n")
                 contador-=1
               
-            elif x[1] == self.filtrobox.get() and self.filtrobox.get() == "Ocupado":
-                self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + x[0] + "<====\nStatus: " + x[1] + "\nTipo: " + x[2] + "\nCamas: " + x[3] + "\nCômodos: " + x[4] + "\nDiária: ")
-                self.textboxQuarto.insert(INSERT, x[5])
-                self.textboxQuarto.insert(INSERT, "\nTempo de Locação: " + str(x[6]) + "\nData de Entrada: " + str(x[7]) + "\nData de Saída: " + str(x[8]) + "\nLocador: " + str(x[9]) + "\n\n")
-                contador-=1
-                
-            elif x[1] == self.filtrobox.get() and self.filtrobox.get() == "Manutenção":    
-                self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + x[0] + "<====\nStatus: " + x[1] + "\nTipo: " + x[2])
+            elif x[2] == self.filtrobox.get() and self.filtrobox.get() == "Ocupado":
+                self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + x[0] + "<====\nNome: " + x[1] + "\nStatus: " + x[2] + "\nTipo: " + x[3] + "\nQTD Camas: " + x[4]+ "\nQTD Cômodos: " + x[5] + "\nDiária: "+ str(x[6]))
+                self.textboxQuarto.insert(INSERT, "\nTempo de Locação: " + str(x[7]) + "\nData de Entrada: " + str(x[8]) + "\nData de Saída: " + str(x[9]) + "\nLocador: " + str(x[10]) + "\n\n")
                 contador-=1
                 
             else:
@@ -100,17 +91,12 @@ class consultaQuartoWindow():
         for x in self.dadosLazer:
         
             if x[1] == self.filtrobox.get() and self.filtrobox.get() == "Disponível":
-                self.textboxLazer.insert(INSERT, "====>IDArea: " + x[0] + " - " + x[2] + "<====\nStatus: " + x[1]+ "\nDiária: " + str(x[3]) + "\n\n")
-                #self.textboxLazer.insert(INSERT, "\nTempo de Reserva: " + str(x[4]) + "\nData de Entrada: " + str(x[5]) + "\nData de Saída: " + str(x[6]) + "\n\n")
+                self.textboxLazer.insert(INSERT, "====>IDArea: " + x[0] + " - " + x[2] + "<====\nTipo: " + x[1]+ "\nDiária: " + str(x[3]) + "\n\n")
                 contador2-=1
               
             elif x[1] == self.filtrobox.get() and self.filtrobox.get() == "Ocupado":
-                self.textboxLazer.insert(INSERT, "====>IDArea: " + x[0] + " - " + x[2] + "<====\nStatus: " + x[1]+ "\nDiária: " + str(x[3]) + "\nTempo de Reserva: " + str(x[4]))
+                self.textboxLazer.insert(INSERT, "====>IDArea: " + x[0] + " - " + x[2] + "<====\nTipo: " + x[1]+ "\nDiária: " + str(x[3]) + "\nTempo de Reserva: " + str(x[4]))
                 self.textboxLazer.insert(INSERT, "\nData de Entrada: " + str(x[5]) + "\nData de Saída: " + str(x[6]) + "\nLocador: " + str(x[7]) + "\n\n")
-                contador2-=1
-                
-            elif x[1] == self.filtrobox.get() and self.filtrobox.get() == "Manutenção":    
-                self.textboxLazer.insert(INSERT, "====>IDArea: " + x[0] + "<====\nStatus: " + x[1] + "\nTipo: " + x[2])
                 contador2-=1
                 
             else:
@@ -124,10 +110,10 @@ class consultaQuartoWindow():
     def iniciaBDs(self):
         # Importa banco de dados
         auxConsulta = BD_Quartos()
-        self.dadosQuarto=auxConsulta.leDadosCompletosQuarto()
+        self.dadosQuarto = auxConsulta.leDadosCompletosQuarto()
         
         auxConsultaLazer = BD_Lazer()
-        self.dadosLazer=auxConsultaLazer.leDadosCompletosArea()
+        self.dadosLazer = auxConsultaLazer.leDadosCompletosArea()
         
         
     # Método para formatar a tela principal de consulta    
@@ -162,7 +148,7 @@ class consultaQuartoWindow():
         # Cria e posiciona a combobox que irá permitir filtrar os quartos
         lb2 = Label(self.filtroframe, text="Status: ", width=8)
         lb2.grid(row=1, column=0, pady=10)
-        opcoesStatus = ["Disponível", "Ocupado", "Manutenção"]
+        opcoesStatus = ["Disponível", "Ocupado"]
         self.filtrobox = ttk.Combobox(self.filtroframe, value=opcoesStatus, width=15, state="readonly")
         self.filtrobox.current(0)
         self.filtrobox.grid(row=1, column=1, pady=5, sticky=E)
@@ -196,11 +182,11 @@ class consultaQuartoWindow():
     def ApagaTelaConsulta(self):
         self.consultaQuartoJanela.destroy()
 
-'''
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+
+#OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
-
+"""
 x6 = consultaQuartoWindow()
 x6.consultaQuarto()
-'''
+"""

@@ -18,16 +18,18 @@ class BD_cadFunc():
         
     # Método de criação da tabela do banco de dados
     def criartabela(self):
-        sql ="CREATE TABLE IF NOT EXISTS dados (nome text, cpf text, funcao text, salario REAL, login text, senha text, UNIQUE(nome, cpf, login))"
+        sql ="CREATE TABLE IF NOT EXISTS dados (nome text, cpf text, funcao text, salario text, login text, senha text, UNIQUE(nome, login))"
         c.execute(sql)
+        c.execute("INSERT OR IGNORE INTO dados (nome, cpf, funcao, salario, login, senha) VALUES ('admin', 'admin', 'admin', 'admin', 'admin', 'admin')")
+        c.execute("INSERT OR IGNORE INTO dados (nome, cpf, funcao, salario, login, senha) VALUES ('adm', 'adm', 'adm', 'adm','adm', 'adm')")
         connection.commit()
-        self.insereAux()
+        #self.insereAux()
         
     # Método auxiliar de inserção
     def insereAux(self):
         if self.cont==True and self.controle==True:
-            c.execute("INSERT OR REPLACE INTO dados (login, senha) VALUES ('admin', 'admin')")
-            c.execute("INSERT OR REPLACE INTO dados (login, senha) VALUES ('adm', 'adm')")
+            c.execute("INSERT OR IGNORE INTO dados (login, senha) VALUES ('admin', 'admin')")
+            c.execute("INSERT OR IGNORE INTO dados (login, senha) VALUES ('adm', 'adm')")
             connection.commit()
         self.cont=False
 

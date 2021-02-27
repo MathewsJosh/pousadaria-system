@@ -3,6 +3,7 @@ from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
 from datetime import datetime
+from BD_cadcliente import *
 
 # Importações de outras classes locais
 from BD_reclamacoes import *
@@ -52,6 +53,9 @@ class Reclamacao():
         self.textboxConsulta = 0
         # Instancia de reclamacoes
         self.rec = BD_ReclamaSugest() 
+        self.bdclientes = BD_cadCliente()
+        # Armazena BD
+        self.nomecliente = ""
         # Booleanos
         self.inseresim = 0
         self.consultasim = 0
@@ -65,12 +69,14 @@ class Reclamacao():
         self.textReclamacao = 0
         self.opcoesClientes = []
         self.IDsRecs = []
+        self.opcoesFiltros = ["Inserir", "Consultar", "Atualizar", "Deletar"]
+        self.opcoesStatus = ["Resolvida", "Em aberto", "Outros"]
         
 
     # Método de seleção do Crud reclamações
     def selecionaCRUDReclamacao(self):
         # Cria uma janela e define suas principais configurações
-        self.telaReclamacao = Tk()
+        self.telaReclamacao = Toplevel()
         self.telaReclamacao.title("Administração - Reclamações ou Sugestões")
         self.telaReclamacao.wm_iconbitmap(camIco)
         self.telaReclamacao.focus_force()
@@ -100,8 +106,8 @@ class Reclamacao():
         lb1.grid(row=0, column=0, padx=5, sticky=W)
         
         # Cria e posiciona a combobox de escolha do CRUD
-        opcoesFiltros = ["Inserir", "Consultar", "Atualizar", "Deletar"]
-        self.crudCombobox = ttk.Combobox(self.filtroframe, value=opcoesFiltros, width=10, state="readonly")
+        
+        self.crudCombobox = ttk.Combobox(self.filtroframe, value=self.opcoesFiltros, width=10, state="readonly")
         self.crudCombobox.current(0)
         self.crudCombobox.grid(row=0, column=1, sticky=E, padx=5, pady=10)
         
@@ -124,6 +130,9 @@ class Reclamacao():
     
     # Método de controle de opções de filtragem do crud reclamações
     def controleCRUD(self):
+        self.nomecliente = self.bdclientes.leNomeCliente()
+        if self.aviso!= 0:
+            self.aviso.destroy()
         self.opcoesClientes = []
         self.auxOpcClientes()
         if self.crudCombobox.get() == "Inserir":
@@ -149,7 +158,7 @@ class Reclamacao():
             self.apagaAtualiza()
         if self.deletasim == 1:
             self.apagaDelete()
-            
+        
         # Cria um frame para a entrada de reclamacões
         self.insereframe = LabelFrame(self.telaReclamacao, text = "Insira a reclamação", padx=10)
         self.insereframe.place(relx=0.35, rely=0.25, anchor="n")
@@ -165,14 +174,13 @@ class Reclamacao():
         lb3.grid(row=1, column=2, padx=0, sticky=E)
         
         # Cria e posiciona a combobox que irá permitir filtrar os quartos
-        opcoesClientes = ["ADMIN", "PEDRO", "MANU"]
-        self.clienteCombobox = ttk.Combobox(self.insereframe, value=opcoesClientes, width=10, state="readonly")
+        self.clienteCombobox = ttk.Combobox(self.insereframe, value=self.nomecliente, width=20, state="readonly")
         self.clienteCombobox.current(0)
         self.clienteCombobox.grid(row=1, column=1, padx=5, pady=10, sticky=W, )
         
         # Cria e posiciona a combobox de escolha do status da reclamação
-        opcoesStatus = ["Resolvida", "Em aberto", "Outros"]
-        self.statusCombobox = ttk.Combobox(self.insereframe, value=opcoesStatus, width=10, state="readonly")
+        
+        self.statusCombobox = ttk.Combobox(self.insereframe, value=self.opcoesStatus, width=10, state="readonly")
         self.statusCombobox.current(0)
         self.statusCombobox.grid(row=1, column=3, padx=5, pady=10, sticky=W)
         
@@ -227,7 +235,7 @@ class Reclamacao():
         
         
         # Cria e posiciona a combobox que irá permitir filtrar os clientes
-        self.clienteCombobox = ttk.Combobox(self.consultaframe, value=self.opcoesClientes, width=10, state="readonly")
+        self.clienteCombobox = ttk.Combobox(self.consultaframe, value=self.nomecliente, width=10, state="readonly")
         self.clienteCombobox.current(0)
         self.clienteCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
@@ -259,7 +267,7 @@ class Reclamacao():
         else:
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Não foi encontrada reclamação para esse cliente!", foreground='red', font=12)
-            self.aviso.place(relx=0.3, rely=0.9)    
+            self.aviso.place(relx=0.35, rely=0.9)    
     
     # Método que destroy os frames de consulta
     def apagaConsulta(self):
@@ -291,7 +299,7 @@ class Reclamacao():
         lb5.grid(row=0, column=0, padx=0, sticky=E) 
 
         # Cria e posiciona a combobox que irá filtrar os clientes
-        self.clienteCombobox = ttk.Combobox(self.clienteframe, value=self.opcoesClientes, width=10, state="readonly")
+        self.clienteCombobox = ttk.Combobox(self.clienteframe, value=self.nomecliente, width=10, state="readonly")
         self.clienteCombobox.current(0)
         self.clienteCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
@@ -309,8 +317,7 @@ class Reclamacao():
         lb5.grid(row=0, column=0, padx=0, sticky=E)
         
         # Cria e posiciona a combobox de escolha do status da reclamação
-        opcoesStatus = ["Resolvida", "Em aberto", "Outros"]
-        self.statusCombobox = ttk.Combobox(self.atualizaframe, value=opcoesStatus, width=10, state="readonly")
+        self.statusCombobox = ttk.Combobox(self.atualizaframe, value=self.opcoesStatus, width=10, state="readonly")
         self.statusCombobox.current(0)
         self.statusCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
@@ -336,7 +343,7 @@ class Reclamacao():
         if(cont==0):
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Não foi encontrada reclamação para esse cliente!", foreground='red', font=12)
-            self.aviso.place(relx=0.3, rely=0.9) 
+            self.aviso.place(relx=0.35, rely=0.9) 
             
         # Cria e posiciona o botão Atualizar
         self.botaoAtualizar = Button(self.telaReclamacao, command=self.atualizaRecBD, image=self.cambotaoAtualizar, bd=0, relief=GROOVE)
@@ -384,7 +391,7 @@ class Reclamacao():
         lb6.grid(row=0, column=0, padx=0, sticky=E) 
 
         # Cria e posiciona a combobox que irá filtrar os clientes
-        self.clienteCombobox = ttk.Combobox(self.clienteframe, value=self.opcoesClientes, width=10, state="readonly")
+        self.clienteCombobox = ttk.Combobox(self.clienteframe, value=self.nomecliente, width=10, state="readonly")
         self.clienteCombobox.current(0)
         self.clienteCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
@@ -429,11 +436,12 @@ class Reclamacao():
     def ApagaTelaReclamacao(self):
         self.telaReclamacao.destroy()
 
-''' 
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+
+#OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
-
+'''
 x9 = Reclamacao()
 x9.selecionaCRUDReclamacao()
+
 '''

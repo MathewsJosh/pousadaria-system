@@ -20,6 +20,8 @@ class BD_cadCliente():
         c.execute(sql)
         c.execute("INSERT OR IGNORE INTO dados (nome, cpf, telefone, email, tipo, endereco) VALUES ('Yudi', '000.000.000-00', '4002-8922', 'yudiplaystation@sbt.com.br', 'Pessoa Física', 'Rodovia Anhanguera, Km 19, Industrial Anhanguera Av. das Comunicações, 4 Osasco - SP')")
         c.execute("INSERT OR IGNORE INTO dados (nome, cpf, telefone, email, tipo, endereco) VALUES ('Priscila', '111.111.111-11', '4002-8922', 'pribomdia@sbt.com.br', 'Pessoa Física', 'Rodovia Anhanguera, Km 19, Industrial Anhanguera Av. das Comunicações, 4 Osasco - SP')")
+        c.execute("INSERT OR IGNORE INTO dados (nome, cpf, telefone, email, tipo, endereco) VALUES ('Elon-Musk', '222.222.222-22', '+(1)(425) 555-0100', 'musketeiro@spacex.com', 'Pessoa Física', 'Los Angeles, em Hawthorne, Califórnia')")
+        c.execute("INSERT OR IGNORE INTO dados (nome, cpf, telefone, email, tipo, endereco) VALUES ('Faustão', '333.333.333-33', '4003-8000', 'faustosilva@globo.com', 'Pessoa Física', 'Los Angeles, em Hawthorne, Califórnia')")
         connection.commit()
     
     # Método de entrada dos dados do usuário para o cadastramento

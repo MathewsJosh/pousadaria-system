@@ -17,7 +17,8 @@ class BD_ReclamaSugest():
     # Método que cria o banco de dados
     def criar_tabela(self):
         c.execute("CREATE TABLE IF NOT EXISTS dados (idrec INTEGER PRIMARY KEY AUTOINCREMENT, cliente text, textoReclamacao text, datetime text, status text, UNIQUE(cliente))")
-        c.execute("INSERT OR IGNORE INTO dados (cliente, textoReclamacao, datetime, status) VALUES ('ADMIN', 'Esse software é incrivel, obrigado!', '16/02/2021', 'Outros')")
+        c.execute("INSERT OR IGNORE INTO dados (cliente, textoReclamacao, datetime, status) VALUES ('Elon-Musk', 'Vou te contratar, rapaz!', '18/02/2021', 'Outros')")
+        c.execute("INSERT OR IGNORE INTO dados (cliente, textoReclamacao, datetime, status) VALUES ('Faustão', 'É essa fera aí, meu!', '20/02/2021', 'Outros')")
         connection.commit()
     
     # Método de entrada dos dados de Reclamacao
