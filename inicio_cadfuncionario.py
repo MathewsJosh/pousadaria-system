@@ -81,7 +81,7 @@ class cadastrarWindow():
     def formataTelaCadastro(self):
         # Cria uma janela e define suas principais configurações
         self.cadastrarJanela = Toplevel()
-        self.cadastrarJanela.title("Início - Cadastro de funcionário")
+        self.cadastrarJanela.title("Início - Cadastro de funcionários")
         self.cadastrarJanela.wm_iconbitmap(camIco)
         self.cadastrarJanela.focus_force()
         self.cadastrarJanela.geometry(tam)

@@ -69,7 +69,7 @@ class ContEstoque():
     def selecionaCRUDEstoque(self):
         # Cria uma janela e define suas principais configurações
         self.telaEstoque = Toplevel()
-        self.telaEstoque.title("Administração - Estoque")
+        self.telaEstoque.title("Administração - Controle de Estoque")
         self.telaEstoque.wm_iconbitmap(camIco)
         self.telaEstoque.focus_force()
         self.telaEstoque.geometry(tam)

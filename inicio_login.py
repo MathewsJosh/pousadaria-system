@@ -86,7 +86,7 @@ class loginWindow():
     def formataTelaLogin(self):
         # Cria uma janela e define suas principais configurações
         self.loginJanela = Toplevel()
-        self.loginJanela.title("Início - Login de Funcionário!")
+        self.loginJanela.title("Início - Login de Funcionário")
         self.loginJanela.wm_iconbitmap(camIco)
         self.loginJanela.focus_force()
         self.loginJanela.geometry(tam)

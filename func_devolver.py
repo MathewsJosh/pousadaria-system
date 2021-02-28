@@ -71,7 +71,7 @@ class DevolverWindow():
     def formataTelaDevolver(self):
         # Cria uma janela e define suas principais configurações
         self.DevolverJanela = Toplevel()
-        self.DevolverJanela.title("Recepção - Devolver quartos e áreas de lazer")
+        self.DevolverJanela.title("Recepção - Devoluções")
         self.DevolverJanela.wm_iconbitmap(camIco)
         self.DevolverJanela.focus_force()
         self.DevolverJanela.geometry(tam)

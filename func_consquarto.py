@@ -58,6 +58,7 @@ class consultaQuartoWindow():
 
     # Método que consulta os bancos de dados e exibe na tela suas informações
     def consultaExibe(self):
+        self.iniciaBDs()
         self.aviso = Label(self.consultaQuartoJanela, foreground='red')
         self.aviso.place(relx=0.5, rely=0.9, anchor="n")
         self.aviso.destroy()

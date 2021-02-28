@@ -86,7 +86,7 @@ class ReservarWindow():
     def formataTelaReservar(self):
         # Cria uma janela e define suas principais configurações
         self.ReservarJanela = Toplevel()
-        self.ReservarJanela.title("Recepção - Reservar quartos e áreas de lazer")
+        self.ReservarJanela.title("Recepção - Reservar quartos e/ou áreas de lazer")
         self.ReservarJanela.wm_iconbitmap(camIco)
         self.ReservarJanela.focus_force()
         self.ReservarJanela.geometry(tam)

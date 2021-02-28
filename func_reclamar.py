@@ -77,7 +77,7 @@ class Reclamacao():
     def selecionaCRUDReclamacao(self):
         # Cria uma janela e define suas principais configurações
         self.telaReclamacao = Toplevel()
-        self.telaReclamacao.title("Administração - Reclamações ou Sugestões")
+        self.telaReclamacao.title("Recepção - Reclamações, Sugestões ou Avaliações")
         self.telaReclamacao.wm_iconbitmap(camIco)
         self.telaReclamacao.focus_force()
         self.telaReclamacao.geometry(tam)
