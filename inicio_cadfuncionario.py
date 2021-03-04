@@ -75,7 +75,7 @@ class cadastrarWindow():
             self.aviso = Label(self.cadastrarJanela, text="Cadastro efetuado com sucesso!", foreground='green', font=self.fontStyle)
         
         # Posiciona a label de aviso
-        self.aviso.place(relx=0.5, rely=0.7, anchor="n", font=self.fontStyle)
+        self.aviso.place(relx=0.5, rely=0.7, anchor="n")
 
     # Método que Formata a tela de cadastro
     def formataTelaCadastro(self):
