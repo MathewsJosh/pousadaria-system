@@ -15,7 +15,7 @@ from BD_cadcliente import *
 tam = "1200x720"
 camIco = "Images\Icones\Pousadaria.ico"
 
-if not os.path.exists(caminho):
+if not os.path.exists("NotasDevolucao"):
     os.makedirs("NotasDevolucao")
 
 class DevolverWindow():
