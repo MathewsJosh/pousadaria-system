@@ -1,8 +1,11 @@
 import sqlite3
+import os
 from datetime import datetime
 
 # Caminho do arquivo .db
 caminho = "BancosdeDados//lazerDisponiveis.db"
+if not os.path.exists(caminho):
+    os.makedirs("BancosdeDados")
 
 # Cria o arquivo
 connection = sqlite3.connect(caminho)

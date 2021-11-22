@@ -3,6 +3,7 @@ from tkinter import ttk
 import tkinter.font as tkFont
 from datetime import datetime
 from tkcalendar import *
+import os
 
 #Importações de arquivos locais
 from BD_quartosdisp import *
@@ -12,6 +13,9 @@ from BD_cadcliente import *
 #Variaveis Globais
 tam = "1200x720"
 camIco = "Images\Icones\Pousadaria.ico"
+
+if not os.path.exists(caminho):
+    os.makedirs("NotasFiscais")
 
 class ReservarWindow():
     # Construtor da Classe

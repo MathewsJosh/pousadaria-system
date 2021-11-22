@@ -1,7 +1,10 @@
 import sqlite3
+import os
 
 # Caminho do arquivo .db
 caminho = "BancosdeDados//cadFuncionarios.db"
+if not os.path.exists(caminho):
+    os.makedirs("BancosdeDados")
 
 # Cria o arquivo
 connection = sqlite3.connect(caminho)
