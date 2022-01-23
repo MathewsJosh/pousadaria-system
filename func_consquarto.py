@@ -5,8 +5,7 @@ import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
 
 # Importações de outras classes locais
-from BD_quartosdisp import *
-from BD_lazerdisp import *
+from BD_pousadaria import *
 
 #Variaveis Globais
 tam = "1200x720"

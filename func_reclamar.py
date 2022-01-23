@@ -3,10 +3,9 @@ from tkinter import ttk
 import tkinter.scrolledtext as scrolledtext
 import tkinter.font as tkFont
 from datetime import datetime
-from BD_cadcliente import *
 
 # Importações de outras classes locais
-from BD_reclamacoes import *
+from BD_pousadaria import *
 
 #Variaveis Globais
 tam = "1200x720"

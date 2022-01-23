@@ -4,7 +4,7 @@ import tkinter.font as tkFont
 import re 
 
 # Importações locais
-from BD_cadcliente import *
+from BD_pousadaria import *
 
 #Variaveis Globais
 tam = "1200x720"
@@ -89,7 +89,10 @@ class cadastrarWindow():
             self.aviso = Label(self.cadastrarJanela, text="Dados cadastrados com sucesso!", foreground='green', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             self.enderecoEntry = str(self.RuaEntry.get()) + ", " + str(self.NumEntry.get()) + " - " + str(self.bairroEntry.get()) + " - " + str(self.cidadeEntry.get()) + ", " + str(self.estadoEntry.get())
-            self.bdcadCliente.entradaDados(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.tipoEntry.get(), self.enderecoEntry)
+            if self.tipoEntry.get() == "Pessoa Física":
+                self.bdcadCliente.entradaDadosPF(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.enderecoEntry)
+            else:
+                self.bdcadCliente.entradaDadosPJ(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.enderecoEntry)
             
     # Método de formatação da tela de cadastro de clientes
     def formataTelaCadastro(self):
@@ -118,7 +121,7 @@ class cadastrarWindow():
 
         # Cria os campos necessários para o cadastro
         lb1 = Label(self.cadastrarFrame, text="Nome:", font=self.fontStyle)
-        lb2 = Label(self.cadastrarFrame, text="CPF:", font=self.fontStyle)
+        lb2 = Label(self.cadastrarFrame, text="CPF/CNPJ:", font=self.fontStyle)
         lb3 = Label(self.cadastrarFrame, text="E-mail:", font=self.fontStyle)
         lb4 = Label(self.cadastrarFrame, text="Telefone:", font=self.fontStyle)
         lb5 = Label(self.cadastrarFrame, text="Tipo:", font=self.fontStyle)

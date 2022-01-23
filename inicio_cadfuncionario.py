@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter.font as tkFont
-from BD_cadfuncionario import *
+from BD_pousadaria import *
 
 
 #Variaveis Globais

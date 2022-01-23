@@ -7,9 +7,7 @@ import os
 
 
 #Importações de arquivos locais
-from BD_quartosdisp import *
-from BD_lazerdisp import *
-from BD_cadcliente import *
+from BD_pousadaria import *
 
 #Variaveis Globais
 tam = "1200x720"

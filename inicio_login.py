@@ -2,7 +2,7 @@ from tkinter import *
 import tkinter.font as tkFont
 
 # Importações locais
-from BD_cadfuncionario import *
+from BD_pousadaria import *
 from func_menu import *
 
 #Variaveis Globais

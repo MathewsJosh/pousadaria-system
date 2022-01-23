@@ -6,9 +6,7 @@ from tkcalendar import *
 import os
 
 #Importações de arquivos locais
-from BD_quartosdisp import *
-from BD_lazerdisp import *
-from BD_cadcliente import *
+from BD_pousadaria import *
 
 #Variaveis Globais
 tam = "1200x720"
@@ -293,7 +291,7 @@ class ReservarWindow():
                 
         now = datetime.now().date()
         #Textos Nota Fiscal
-        titulo = "#---------------------------------------------------Nota De Fiscal------------------------------------------------------# \n\n"
+        titulo = "#---------------------------------------------------Nota Fiscal------------------------------------------------------# \n\n"
         dadosPousadaria = "DADOS DO EMITENTE:\nNome: Pousadaria \nTelefone: (xx) xxxx-xxxx\nEndereço: Rua dos bobos, 0\nCNPJ: xx.xxx.xxx/xxxx-xx"
         separador = " \n_______________________________________________________________________________________________________________________\n\n"
         dadoscliente = "DADOS DO CLIENTE:\nNome: " + str(tudoCliente[0][0]) + "\nCPF: " + str(tudoCliente[0][1]) + "\nTelefone: " + str(tudoCliente[0][2]) + "\nE-mail: " + str(tudoCliente[0][3]) + "\nTipo: " + str(tudoCliente[0][4]) + "\nEndereço: " + str(tudoCliente[0][5]) + "\nQuartos Alugados: " + str(tudoCliente[0][6]) + "\nÁreas de lazer alugadas:" + str(tudoCliente[0][7]) + "\nTempo de estadia: " + str(tudoCliente[0][8]) + "\nData de Entrada: " + str(tudoCliente[0][9]) + "\nData de Saída: " + str(tudoCliente[0][10])

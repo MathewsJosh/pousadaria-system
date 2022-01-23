@@ -5,7 +5,7 @@ import tkinter.font as tkFont
 from tkcalendar import *
 
 # Importações de outras classes locais
-from BD_contestoque import *
+from BD_pousadaria import *
 
 #Variaveis Globais
 tam = "1200x720"
