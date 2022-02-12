@@ -14,7 +14,7 @@ camIco = "Images\Icones\Pousadaria.ico"
 # Tela que da a opção de Logar ou cadastrar antes de entrar no chat
 class ContEstoque():
     # Inicializadores
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.telaEstoque = 0
         # Auxiliares das conversões de imagem
@@ -49,7 +49,7 @@ class ContEstoque():
         self.textboxAtualiza = 0
         self.textboxConsulta = 0
         # Instancia de Estoque
-        self.bdEstoque = BD_EstoqueCRUD() 
+        self.bdEstoque = BD_EstoqueCRUD()
         # Booleanos
         self.inseresim = 0
         self.consultasim = 0
@@ -63,8 +63,9 @@ class ContEstoque():
         self.textEstoque = 0
         self.opcaoLocais = ["Recepção", "Cozinha", "Administração", "Banheiros", "Quartos", "Chalés", "Áreas de lazer"]
         self.qtdEntry = 0
-        
+        self.funcionarioID = funcionarioID
 
+        
     # Método de controle da tela Estoque
     def selecionaCRUDEstoque(self):
         # Cria uma janela e define suas principais configurações
@@ -123,41 +124,49 @@ class ContEstoque():
         self.telaEstoque.mainloop()
         
     def controleCRUD(self):
+        if not isinstance(self.insereframe, int):
+            self.apagaInsercao()
+        if not isinstance(self.consultaframe, int):
+            self.apagaConsulta()
+        if not isinstance(self.atualizaframe, int):
+            self.apagaAtualiza()
+        if not isinstance(self.deletaframe, int):
+            self.apagaDelete()
+
         if self.crudCombobox.get() == "Inserir":
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.inseresim = 1
             self.formataInsereEstoque()
+
         if self.crudCombobox.get() == "Consultar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.consultasim = 1
             self.formataConsultaEstoque()
+
         if self.crudCombobox.get() == "Atualizar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.atualizasim = 1
             self.atualizaEstoque()
+
         if self.crudCombobox.get() == "Deletar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            self.deletasim = 1
             self.deletaEstoque()
 
     #---------------------------------------------------Insere Estoque------------------------------------------------------#
@@ -196,7 +205,7 @@ class ContEstoque():
             self.aviso.place(relx=0.4, rely=0.9)
         else:
             # Salva todas as informações no banco de dados
-            self.bdEstoque.insereDadosEst(str(self.localCombobox.get()), self.textEstoque)
+            self.bdEstoque.insereDadosEst(str(self.localCombobox.get()), self.textEstoque, self.funcionarioID)
             # Cria e posiciona uma label de aviso
             self.textboxInsere.delete(1.0, 'end')
             self.aviso = Label(self.telaEstoque,text="Estoque registrado!", foreground='green', font=12)
@@ -246,7 +255,7 @@ class ContEstoque():
         for x in self.dadosLidosEstoque:
             if (x[0] == str(self.localCombobox.get())):
                 cont+=1
-                self.textboxConsulta.insert(INSERT, str(x[1]))
+                self.textboxConsulta.insert(INSERT, str(x[1]) + "\n")
         
         if(cont>=1):
             # Cria e posiciona uma label de aviso
@@ -319,16 +328,16 @@ class ContEstoque():
             self.aviso.place(relx=0.3, rely=0.9) 
             
         # Cria e posiciona o botão Atualizar
-        self.botaoAtualizar = Button(self.telaEstoque, command=lambda: self.atualizaCarBD(cont), image=self.cambotaoAtualizar, bd=0, relief=GROOVE)
+        self.botaoAtualizar = Button(self.telaEstoque, command=lambda: self.atualizaest(cont), image=self.cambotaoAtualizar, bd=0, relief=GROOVE)
         self.botaoAtualizar.place(relx=0.9, rely=0.9, anchor="n")   
     
     # Método que atualiza a Estoque do Locai no banco de dados
-    def atualizaCarBD(self, cont):
+    def atualizaest(self, cont):
         self.aviso.destroy()
         if(cont==0):
             self.aviso.destroy()
             # Cria e posiciona uma label de aviso
-            self.aviso = Label(self.telaEstoque,text="Esse local não pode ser atualizado, tente reconsulta-lo!", foreground='red', font=12)
+            self.aviso = Label(self.telaEstoque,text="Não há dados para serem atualizados, tente inserir algo primeiro!", foreground='red', font=12)
             self.aviso.place(relx=0.3, rely=0.9) 
             return
         if self.textboxAtualiza.get(1.0, END) == "":
@@ -338,7 +347,7 @@ class ContEstoque():
             self.aviso.place(relx=0.3, rely=0.9) 
         else:
             self.aviso.destroy()
-            self.bdEstoque.atualizaEst(str(self.localCombobox.get()), str(self.textboxAtualiza.get(1.0, END)))
+            self.bdEstoque.atualizaEst(str(self.localCombobox.get()), str(self.textboxAtualiza.get(1.0, END)), self.funcionarioID)
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaEstoque,text="Estoque atualizado no banco de dados!", foreground='Green', font=12)
             self.aviso.place(relx=0.3, rely=0.9) 
@@ -350,8 +359,8 @@ class ContEstoque():
         self.aviso.destroy()
         
         
-    #---------------------------------------------------Deleta reclamações------------------------------------------------------#     
-    # Deleta reclamações
+    #---------------------------------------------------Deleta Estoque------------------------------------------------------#     
+    # Deleta Estoque
     def deletaEstoque(self):
             
         #---------------------------------------------------Frame - Seleciona Locais------------------------------------------------------#
@@ -384,7 +393,7 @@ class ContEstoque():
         self.aviso.destroy()
         if(contador==0):
             # Cria e posiciona uma label de aviso
-            self.aviso = Label(self.telaEstoque,text="Não há nenhuma refeição para essa data no banco de dados!", foreground='red', font=12)
+            self.aviso = Label(self.telaEstoque,text="Não há nenhuma item para esse local no banco de dados!", foreground='red', font=12)
             self.aviso.place(relx=0.4, rely=0.9) 
         else:
             # Cria e posiciona uma label de aviso
@@ -404,10 +413,11 @@ class ContEstoque():
         self.telaEstoque.destroy()
         
 '''
-OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
+#OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.telaEstoque.mainloop()
 
-x11 = ContEstoque()
+instancia_tabelas()
+x11 = ContEstoque(1)
 x11.selecionaCRUDEstoque()
-''' 
+'''

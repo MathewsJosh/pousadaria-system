@@ -24,7 +24,6 @@ class loginWindow():
         self.botaoVoltar = 0
         # Instanciamento de classes
         self.dadosFunc = BD_cadFunc()
-        self.chamMenu = MenuRecepcaoWindow()
         # Entradas de dados
         self.userEntry = 0
         self.passEntry = 0
@@ -72,11 +71,21 @@ class loginWindow():
         self.aviso.forget()
 
         if self.userEntry.get() == '' or self.passEntry.get() == '':
-        # Avisa que faltam dados para fazer o login
+            if self.aviso != None:
+                self.aviso.destroy()
+
+            # Avisa que faltam dados para fazer o login
             self.aviso = Label(self.loginJanela, text="Digite um nome de usuário e/ou senha!", foreground='red', font=self.fontStyle)
         
-        elif self.dadosFunc.leDados(self.userEntry.get(), self.passEntry.get()):
-        # Avisa sobre o sucesso no login
+        #elif self.dadosFunc.leDados(self.userEntry.get(), self.passEntry.get()):
+        elif self.dadosFunc.leDados(self.userEntry.get(), self.passEntry.get()) != None:
+            if self.aviso != None:
+                self.aviso.destroy()
+            global funcionarioID 
+            funcionarioID = self.dadosFunc.leDados(self.userEntry.get(), self.passEntry.get())[0][0]
+            self.chamMenu = MenuRecepcaoWindow(funcionarioID)
+
+            # Avisa sobre o sucesso no login
             self.aviso = Label(self.loginJanela, text="Usuario Logado! Você já pode usar o sistema!", foreground='green', font=self.fontStyle)
             self.botaoEntrar.destroy()
             self.botaoEntrar.forget()
@@ -86,6 +95,8 @@ class loginWindow():
             self.botaoAbrir.place(relx=0.9, rely=0.9, anchor="n")
                        
         else:
+            if self.aviso != None:
+                self.aviso.destroy()
             # Avisa ao usuário que ele errou a senha ou nome
             self.aviso = Label(self.loginJanela, text="Usuário e/ou senha inválidos!\nRealize o cadastro antes do login!", foreground='red', font=self.fontStyle)
             

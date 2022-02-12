@@ -14,7 +14,7 @@ camIco = "Images\Icones\Pousadaria.ico"
 # Tela que da a opção de Logar ou cadastrar antes de entrar no chat
 class Reclamacao():
     # Inicializadores
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.telaReclamacao = 0
         # Auxiliares das conversões de imagem
@@ -70,6 +70,8 @@ class Reclamacao():
         self.IDsRecs = []
         self.opcoesFiltros = ["Inserir", "Consultar", "Atualizar", "Deletar"]
         self.opcoesStatus = ["Resolvida", "Em aberto", "Outros"]
+        self.funcionarioID = funcionarioID
+
         
 
     # Método de seleção do Crud reclamações

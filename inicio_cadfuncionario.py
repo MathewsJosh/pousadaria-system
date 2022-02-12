@@ -35,6 +35,7 @@ class cadastrarWindow():
         self.aviso = 0
         self.dadosCadFunc = 0
         self.funcoes = ["Recepção", "Administração", "Limpeza", "Cozinha" , "Outros"]
+
         
     # Criar a janela principal de inserção de dados cadastrais
     def cadastrarTela(self):

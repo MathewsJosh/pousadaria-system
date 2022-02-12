@@ -14,7 +14,7 @@ camIco = "Images\Icones\Pousadaria.ico"
 # Tela que da a opção de Logar ou cadastrar antes de entrar no chat
 class consultaQuartoWindow():
     # Inicializadores
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.consultaQuartoJanela = 0
         # Auxiliares das conversões de imagem
@@ -67,17 +67,12 @@ class consultaQuartoWindow():
         self.textboxQuarto.delete(1.0, END)
         self.textboxLazer.delete(1.0, END)
 
-        print(self.dadosQuarto)
-
-        contador=len(self.dadosQuarto)
-        print(self.filtrobox.get())
         # Consulta os Status do quartos e os imprime
         if self.filtrobox.get() == "Disponível":
             for comodo in self.dadosQuarto:
                 if comodo[3] != 'Área de Lazer' and comodo[3] != None:
                     self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + str(comodo[0]) + "<====\nNome: " + str(comodo[1]) + "\nPreço: " + str(comodo[2]) + "\nTipo: " + str(comodo[3]) + "\nQTD Camas: " + str(comodo[4]) + "\nQTD Cômodos: " + str(comodo[5]) + "\n\n")
                     self.textboxQuarto.insert(INSERT, "\n\n")
-                    contador-=1
                 else:
                     self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(comodo[3])+ "\nDiária: " + str(comodo[2]) + "\n\n")
         else:
@@ -85,7 +80,6 @@ class consultaQuartoWindow():
                     if comodo[3] != 'Área de Lazer' and comodo[3] != None:
                         self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + str(comodo[0]) + "<====\nNome: " + str(comodo[1]) + "\nPreço: " + str(comodo[2]) + "\nTipo: " + str(comodo[3]) + "\nQTD Camas: " + str(comodo[4]) + "\nQTD Cômodos: " + str(comodo[5]) + "\n\n")
                         self.textboxQuarto.insert(INSERT, "\n\n")
-                        contador-=1
                     else:
                         self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(comodo[3])+ "\nDiária: " + str(comodo[2]) + "\n\n")
 
@@ -161,10 +155,12 @@ class consultaQuartoWindow():
     def ApagaTelaConsulta(self):
         self.consultaQuartoJanela.destroy()
 
-
+'''
 #OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
+
 instancia_tabelas()
 x6 = consultaQuartoWindow()
 x6.consultaQuarto()
+'''

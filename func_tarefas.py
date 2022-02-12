@@ -14,7 +14,7 @@ camIco = "Images\Icones\Pousadaria.ico"
 # Classe de Controle de Tarefas
 class Tarefas():
     # Inicializadores
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.telaTarefas = 0
         # Auxiliares das conversões de imagem
@@ -60,7 +60,7 @@ class Tarefas():
         self.fontStyle = 0
         self.textTarefas = 0
         self.opcaoPrioridades = ["Urgente", "Alta", "Média", "Baixa"]
-        
+        self.funcionarioID = funcionarioID
 
     # Método de controle da tela Tarefas
     def selecionaCRUDTarefas(self):
@@ -120,42 +120,51 @@ class Tarefas():
     
     # Método de controle do Crud da tela Tarefas
     def controleCRUD(self):
+        if not isinstance(self.insereframe, int):
+            self.apagaInsercao()
+        if not isinstance(self.consultaframe, int):
+            self.apagaConsulta()
+        if not isinstance(self.atualizaframe, int):
+            self.apagaAtualiza()
+        if not isinstance(self.deletaframe, int):
+            self.apagaDelete()
+
         if self.crudCombobox.get() == "Inserir":
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.inseresim = 1
             self.formataInsereTarefas()
+            
         if self.crudCombobox.get() == "Consultar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.consultasim = 1
             self.formataConsultaTarefas()
+
         if self.crudCombobox.get() == "Atualizar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.atualizasim = 1
             self.atualizaTarefas()
+
         if self.crudCombobox.get() == "Deletar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            self.deletasim = 1
             self.deletaTarefas()
+ 
 
     #---------------------------------------------------Insere Tarefas------------------------------------------------------#
     # Formata a tela de Tarefas
@@ -193,7 +202,7 @@ class Tarefas():
             self.aviso.place(relx=0.4, rely=0.9)
         else:
             # Salva todas as informações no banco de dados
-            self.bdTarefas.insereDadosEst(str(self.prioridadeCombobox.get()), self.textTarefas)
+            self.bdTarefas.insereDadosTarefa(str(self.prioridadeCombobox.get()), self.textTarefas, self.funcionarioID)
             # Cria e posiciona uma label de aviso
             self.textboxInsere.delete(1.0, 'end')
             self.aviso = Label(self.telaTarefas,text="Tarefa registrada!", foreground='green', font=12)
@@ -216,7 +225,7 @@ class Tarefas():
         self.consultaframe.place(relx=0.5, rely=0.25, anchor="n")
 
         # Cria e posiciona Labels
-        lb2 = Label(self.consultaframe, text="prioridade: ", width=8)
+        lb2 = Label(self.consultaframe, text="Prioridade: ", width=8)
         lb2.grid(row=0, column=0, padx=0, sticky=E)
         
         # Cria e posiciona a combobox que irá filtrar o prioridade
@@ -232,18 +241,18 @@ class Tarefas():
         self.textboxConsulta.bind("<Key>", lambda e: "break")
         
         # Cria e posiciona o botão Consultar
-        self.botaoConsultar = Button(self.telaTarefas, command=self.consultaEst, image=self.cambotaoConsulta, bd=0, relief=GROOVE)
+        self.botaoConsultar = Button(self.telaTarefas, command=self.consultaTarefas, image=self.cambotaoConsulta, bd=0, relief=GROOVE)
         self.botaoConsultar.place(relx=0.9, rely=0.9, anchor="n")
     
     # Busca o Tarefas no banco de dados
-    def consultaEst(self):
-        self.dadosLidosTarefas = self.bdTarefas.leDadosEst() 
+    def consultaTarefas(self):
+        self.dadosLidosTarefas = self.bdTarefas.leDadosTarefa() 
         self.textboxConsulta.delete(1.0, 'end')
         cont=0
         for x in self.dadosLidosTarefas:
             if (x[0] == str(self.prioridadeCombobox.get())):
                 cont+=1
-                self.textboxConsulta.insert(INSERT, str(x[1]))
+                self.textboxConsulta.insert(INSERT, str(x[1]) + "\n")
         
         if(cont>=1):
             # Cria e posiciona uma label de aviso
@@ -274,7 +283,7 @@ class Tarefas():
         self.prioridadeFrame.place(relx=0.3, rely=0.25, anchor="n")    
             
         # Cria e posiciona Labels
-        lb3 = Label(self.prioridadeFrame, text="prioridade: ", width=8)
+        lb3 = Label(self.prioridadeFrame, text="Prioridade: ", width=8)
         lb3.grid(row=0, column=0, padx=0, sticky=E) 
 
         # Cria e posiciona a combobox que irá filtrar o prioridade
@@ -283,7 +292,7 @@ class Tarefas():
         self.prioridadeCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
         # Cria e posiciona o botão Consultar
-        self.botaoConsultar = Button(self.prioridadeFrame, command=self.consAtualizaEst, image=self.cambotaoConsulta, bd=0, relief=GROOVE)
+        self.botaoConsultar = Button(self.prioridadeFrame, command=self.consAtualizaTarefas, image=self.cambotaoConsulta, bd=0, relief=GROOVE)
         self.botaoConsultar.grid(row=1, column=0, padx=5, pady= 10, columnspan = 2)
         
         #---------------------------------------------------Frame - Atualiza Tarefas------------------------------------------------------#
@@ -299,16 +308,16 @@ class Tarefas():
         self.botaoAtualizar = Button(self.telaTarefas, image=self.cambotaoAtualizar, bd=0, relief=GROOVE)
         
     
-    # Busca as reclamações do Locai no banco de dados
-    def consAtualizaEst(self):
-        self.dadosLidosTarefas = self.bdTarefas.leDadosEst()
-        cont=0
+    # Busca as tarefas de determinada prioridade no banco de dados
+    def consAtualizaTarefas(self):
+        self.dadosLidosTarefas = self.bdTarefas.leDadosTarefa()
         self.textboxAtualiza.delete(1.0, 'end')
+        cont=0
         for x in self.dadosLidosTarefas:
             if x[0] == self.prioridadeCombobox.get():
                 cont+=1
-                self.textboxAtualiza.insert(INSERT, x[1])
-                break
+                self.textboxAtualiza.insert(INSERT, x[1] + "\n")
+                #break
         
         if(cont==0):
             self.aviso.destroy()
@@ -336,7 +345,7 @@ class Tarefas():
             self.aviso.place(relx=0.3, rely=0.9) 
         else:
             self.aviso.destroy()
-            self.bdTarefas.atualizaEst(str(self.prioridadeCombobox.get()), str(self.textboxAtualiza.get(1.0, END)))
+            self.bdTarefas.atualizaTarefa(str(self.prioridadeCombobox.get()), str(self.textboxAtualiza.get(1.0, END)), self.funcionarioID)
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaTarefas,text="Tarefas atualizadas no banco de dados!", foreground='Green', font=12)
             self.aviso.place(relx=0.3, rely=0.9) 
@@ -349,17 +358,17 @@ class Tarefas():
         self.aviso.destroy()
         
         
-    #---------------------------------------------------Deleta reclamações------------------------------------------------------#     
-    # Deleta reclamações
+    #---------------------------------------------------Deleta Tarefas------------------------------------------------------#     
+    # Deleta Tarefas
     def deletaTarefas(self):
             
         #---------------------------------------------------Frame - Seleciona Prioridades------------------------------------------------------#
         # Cria um frame de seleção de Prioridades
         self.prioridadeFrame = LabelFrame(self.telaTarefas, text = "Selecione um prioridade", padx=10)
         self.prioridadeFrame.place(relx=0.5, rely=0.4, anchor="n")    
-            
+        
         # Cria e posiciona Labels
-        lb4 = Label(self.prioridadeFrame, text="prioridade: ", width=8)
+        lb4 = Label(self.prioridadeFrame, text="Prioridade: ", width=8)
         lb4.grid(row=0, column=0, padx=0, sticky=E) 
 
         # Cria e posiciona a combobox que irá filtrar o prioridade
@@ -367,17 +376,17 @@ class Tarefas():
         self.prioridadeCombobox.current(0)
         self.prioridadeCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
-        # Cria e posiciona o botão Consultar
-        self.botaoDeletar = Button(self.prioridadeFrame, command=self.deletaEstBD, image=self.cambotaoDeletar, bd=0, relief=GROOVE)
+        # Cria e posiciona o botão Deletar
+        self.botaoDeletar = Button(self.prioridadeFrame, command=self.deletaTelaTarefas, image=self.cambotaoDeletar, bd=0, relief=GROOVE)
         self.botaoDeletar.grid(row=1, column=0, padx=5, pady= 10, columnspan = 2)
         
     # Deleta o Tarefas daquela data do banco de dados
-    def deletaEstBD(self):
-        self.dadosLidosTarefas = self.bdTarefas.leDadosEst()
+    def deletaTelaTarefas(self):
+        self.dadosLidosTarefas = self.bdTarefas.leDadosTarefa()
         contador=0
         for x in self.dadosLidosTarefas:
             if x[0] == self.prioridadeCombobox.get():
-                self.bdTarefas.deletaEst(str(self.prioridadeCombobox.get()))
+                self.bdTarefas.deletaTarefa(str(self.prioridadeCombobox.get()))
                 contador+=1
         
         self.aviso.destroy()
@@ -404,7 +413,8 @@ class Tarefas():
 OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.telaEstoque.mainloop()
-      
-x11 = Tarefas()
+
+instancia_tabelas()  
+x11 = Tarefas(1)
 x11.selecionaCRUDTarefas()
 '''

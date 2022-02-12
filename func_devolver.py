@@ -18,7 +18,7 @@ if not os.path.exists("NotasDevolucao"):
 
 class DevolverWindow():
     # Construtor da Classe
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.DevolverJanela = 0
         # Auxiliares das conversões de imagem
@@ -58,6 +58,8 @@ class DevolverWindow():
         self.quartosMarcados = []
         self.lazerMarcados = []
         self.cont = 0
+        self.funcionarioID = funcionarioID
+
         
         
     # Método de Gerencia da tela Devolver cliente

@@ -123,12 +123,10 @@ class BD_cadFunc():
 
     # Método que valida o login com os dados armazenados no BD
     def leDados(self, login, senha):
-        sql = 'SELECT * FROM Funcionario WHERE login=? and senha=?'
-        for linha in c.execute(sql, (login,senha,)):
-            if linha == "":
-                return False
-            else:
-                return True
+        sql = 'SELECT id FROM Funcionario WHERE login=? and senha=?'
+        c.execute(sql,(login,senha))
+        data = c.fetchall()
+        return data
 
 class BD_CardapioCRUD():
     # Inicializadores
@@ -172,8 +170,13 @@ class BD_CardapioCRUD():
     
     # Método de atualização dos dados do cardapio
     def atualizaCar(self, dia_semana, descricao, cadastrado_por):
-        sql = "UPDATE Cardapio SET descricao=?, cadastrado_por=? WHERE dia_semana=?"
-        dado = (dia_semana, cadastrado_por, descricao)
+        sql = "DELETE FROM Cardapio WHERE dia_semana=?"
+        dado = (dia_semana,)
+        c.execute(sql,dado)
+        connection.commit()
+
+        sql = "INSERT OR REPLACE INTO Cardapio (dia_semana, descricao, cadastrado_por) VALUES (?, ?, ?)"
+        dado = (dia_semana, descricao, cadastrado_por)
         c.execute(sql,dado)
         connection.commit()
     
@@ -227,15 +230,20 @@ class BD_EstoqueCRUD():
     
     # Método de atualização dos dados de estoque no bd
     def atualizaEst(self, local, descricao, cadastrado_por):
-        sql = "UPDATE Estoque SET descricao=?, cadastrado_por=? WHERE local=?"
-        dado = (descricao, cadastrado_por, local)
+        sql = "DELETE FROM Estoque WHERE local=?"
+        dado = (local,)
+        c.execute(sql,dado)
+        connection.commit()
+        
+        sql = "INSERT OR REPLACE INTO Estoque (local, descricao, cadastrado_por) VALUES (?, ?, ?)"
+        dado = (local, descricao, cadastrado_por)
         c.execute(sql,dado)
         connection.commit()
         
     # Método de remoção dos dados de estoque no bd
-    def deletaEst(self, id):
-        sql = "DELETE FROM Estoque WHERE id=?"
-        dado = (id,)
+    def deletaEst(self, local):
+        sql = "DELETE FROM Estoque WHERE local=?"
+        dado = (local,)
         c.execute(sql,dado)
         connection.commit()
 
@@ -324,8 +332,6 @@ class BD_TarefasCRUD():
     
     # Método de escrita no banco de dados
     def insereDadosTarefa(self, prioridade, descricao, cadastrado_por):
-        #self.criartabela() conferir se isso é necessario
-        #c.execute("INSERT OR REPLACE INTO dados (prioridade, listaTarefas) VALUES ('"+prioridade+"','"+texto+"')")
         sql ="INSERT OR REPLACE INTO Tarefas (descricao, prioridade, cadastrado_por) VALUES (?, ?, ?)"
         dados = (descricao, prioridade, cadastrado_por)
 
@@ -339,16 +345,22 @@ class BD_TarefasCRUD():
         return data
     
     # Método de atualização do banco de dados
-    def atualizaTarefa(self, prioridade, descricao):
-        sql = "UPDATE Tarefas SET descricao=? WHERE prioridade=?"
-        dado = (descricao, prioridade)
+    def atualizaTarefa(self, prioridade, descricao, cadastrado_por):
+        #sql = "UPDATE Tarefas SET descricao=? WHERE prioridade=?"
+        sql = "DELETE FROM Tarefas WHERE prioridade=?"
+        dado = (prioridade,)
         c.execute(sql,dado)
+        connection.commit()
+
+        sql ="INSERT OR REPLACE INTO Tarefas (descricao, prioridade, cadastrado_por) VALUES (?, ?, ?)"
+        dados = (descricao, prioridade, cadastrado_por,)
+        c.execute(sql, dados)
         connection.commit()
         
     # Método de exclusão do banco de dados
-    def deletaTarefa(self, numero):
-        sql = "DELETE FROM Tarefas WHERE numero=?"
-        dado = (numero)
+    def deletaTarefa(self, prioridade):
+        sql = "DELETE FROM Tarefas WHERE prioridade=?"
+        dado = (prioridade,)
         c.execute(sql,dado)
         connection.commit()
 

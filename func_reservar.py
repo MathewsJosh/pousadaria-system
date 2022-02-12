@@ -17,7 +17,7 @@ if not os.path.exists("NotasFiscais"):
 
 class ReservarWindow():
     # Construtor da Classe
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.ReservarJanela = 0
         # Auxiliares das conversões de imagem
@@ -72,6 +72,8 @@ class ReservarWindow():
         self.fontStyle = 0
         self.quartosMarcados = []
         self.lazerMarcados = []
+        self.funcionarioID = funcionarioID
+
         
         
     # Método de Gerencia da tela Reservar cliente

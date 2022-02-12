@@ -12,7 +12,7 @@ camIco = "Images\Icones\Pousadaria.ico"
 
 class cadastrarWindow():
     # Construtor da Classe
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.cadastrarJanela = 0
         # Auxiliares das conversões de imagem
@@ -42,6 +42,8 @@ class cadastrarWindow():
         # Outros
         self.aviso = 0
         self.dadosCadCliente = 0
+        self.funcionarioID = funcionarioID
+
         
         
     # Método de Gerência da tela cadastrar cliente

@@ -17,7 +17,7 @@ camIco = "Images\Icones\Pousadaria.ico"
 # Tela que da a opção de Logar ou cadastrar antes de entrar no chat
 class MenuRecepcaoWindow():
     # Inicializadores
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.menuJanela = 0
         # Instanciamentos de classes
@@ -51,6 +51,7 @@ class MenuRecepcaoWindow():
         # Frames
         self.recepframe = 0
         self.outrosframe = 0
+        self.funcionarioID = funcionarioID
 
     # Método de exibição do menu principal
     def menuRecepcao(self):
@@ -83,14 +84,14 @@ class MenuRecepcaoWindow():
         self.recepframe = LabelFrame(self.menuJanela, text = "Recepção", padx=50)
         self.recepframe.place(relx=0.3, rely=0.3, anchor="n")
 
-        self.chamaCad = cadastrarWindow()
-        self.chamaCons = consultaQuartoWindow()
-        self.chamaDev = DevolverWindow()
-        self.chamaRec = Reclamacao()
-        self.chamaRes = ReservarWindow()
-        self.chamaCard = Cardapio()
-        self.chamaCont = ContEstoque()
-        self.chamaTar = Tarefas()
+        self.chamaCad = cadastrarWindow(self.funcionarioID)
+        self.chamaCons = consultaQuartoWindow(self.funcionarioID)
+        self.chamaDev = DevolverWindow(self.funcionarioID)
+        self.chamaRec = Reclamacao(self.funcionarioID)
+        self.chamaRes = ReservarWindow(self.funcionarioID)
+        self.chamaCard = Cardapio(self.funcionarioID)
+        self.chamaCont = ContEstoque(self.funcionarioID)
+        self.chamaTar = Tarefas(self.funcionarioID)
         
         #, command=,
         # Cria os Botões e os posiciona

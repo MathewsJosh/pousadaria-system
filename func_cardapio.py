@@ -14,7 +14,7 @@ camIco = "Images\Icones\Pousadaria.ico"
 # Tela que da a opção de Logar ou cadastrar antes de entrar no chat
 class Cardapio():
     # Inicializadores
-    def __init__(self):
+    def __init__(self, funcionarioID):
         # Janela
         self.telaCardapio = 0
         # Auxiliares das conversões de imagem
@@ -64,6 +64,8 @@ class Cardapio():
         self.opcoesClientes = []
         self.IDsRecs = []
         self.DateEntry = 0
+        self.funcionarioID = funcionarioID
+
         
 
     # Método de controle da tela cardapio
@@ -124,41 +126,49 @@ class Cardapio():
         
     # Método de controle do CRUD Cardapio
     def controleCRUD(self):
+        if not isinstance(self.insereframe, int):
+            self.apagaInsercao()
+        if not isinstance(self.consultaframe, int):
+            self.apagaConsulta()
+        if not isinstance(self.atualizaframe, int):
+            self.apagaAtualiza()
+        if not isinstance(self.deletaframe, int):
+            self.apagaDelete()
+
         if self.crudCombobox.get() == "Inserir":
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.inseresim = 1
             self.formataInsereCardapio()
+
         if self.crudCombobox.get() == "Consultar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.consultasim = 1
             self.formataConsultaCardapio()
+
         if self.crudCombobox.get() == "Atualizar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.deletasim == 1:
+            if not isinstance(self.deletaframe, int):
                 self.apagaDelete()
-            self.atualizasim = 1
             self.atualizaCardapio()
+
         if self.crudCombobox.get() == "Deletar":
-            if self.inseresim == 1:
+            if not isinstance(self.insereframe, int):
                 self.apagaInsercao()
-            if self.consultasim == 1:
+            if not isinstance(self.consultaframe, int):
                 self.apagaConsulta()
-            if self.atualizasim == 1:
+            if not isinstance(self.atualizaframe, int):
                 self.apagaAtualiza()
-            self.deletasim = 1
             self.deletaCardapio()
 
     #---------------------------------------------------Insere Cardapio------------------------------------------------------#
@@ -202,7 +212,7 @@ class Cardapio():
             self.aviso.place(relx=0.4, rely=0.9)
         else:
             # Salva todas as informações no banco de dados
-            self.bdcardapio.insereDadosCar(str(self.DateEntry.get()), self.textCardapio)
+            self.bdcardapio.insereDadosCar(str(self.DateEntry.get()), self.textCardapio, self.funcionarioID)
             # Cria e posiciona uma label de aviso
             self.textboxInsere.delete(1.0, 'end')
             self.aviso = Label(self.telaCardapio,text="Cardapio registrado!", foreground='green', font=12)
@@ -259,7 +269,7 @@ class Cardapio():
         for x in self.dadosLidosCardapio:
             if (x[0] == str(self.DateEntry.get())):
                 cont+=1
-                self.textboxConsulta.insert(INSERT, str(x[1]))
+                self.textboxConsulta.insert(INSERT, str(x[1]) + "\n")
         
         if(cont>=1):
             # Cria e posiciona uma label de aviso
@@ -349,7 +359,7 @@ class Cardapio():
             self.aviso = Label(self.telaCardapio,text="Caixa de refeições vazia, tente novamente!", foreground='red', font=12)
             self.aviso.place(relx=0.3, rely=0.9) 
         else:
-            self.bdcardapio.atualizaCar(str(self.DateEntry.get()), str(self.textboxAtualiza.get(1.0, END)))
+            self.bdcardapio.atualizaCar(str(self.DateEntry.get()), str(self.textboxAtualiza.get(1.0, END)), self.funcionarioID)
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaCardapio,text="Cardápio atualizado no banco de dados!", foreground='Green', font=12)
             self.aviso.place(relx=0.4, rely=0.9) 
@@ -375,7 +385,7 @@ class Cardapio():
             
         #---------------------------------------------------Frame - Seleciona Cliente------------------------------------------------------#
         # Cria um frame de seleção de clientes e ids
-        self.dataFrame = LabelFrame(self.telaCardapio, text = "Selecione um cliente", padx=10)
+        self.dataFrame = LabelFrame(self.telaCardapio, text = "Selecione uma data", padx=10)
         self.dataFrame.place(relx=0.5, rely=0.4, anchor="n")    
             
         # Cria e posiciona Labels
@@ -413,6 +423,7 @@ class Cardapio():
     # Destroy a tela de Delete
     def apagaDelete(self):
         self.dataFrame.destroy()
+        self.botaoDeletar.destroy()
         self.aviso.destroy()
     
     # Método que apaga a janela atual
@@ -423,7 +434,8 @@ class Cardapio():
 OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
-  
-x10 = Cardapio()
+
+instancia_tabelas()
+x10 = Cardapio(1)
 x10.selecionaCRUDCardapio()
 '''
