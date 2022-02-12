@@ -36,7 +36,9 @@ class consultaQuartoWindow():
         self.filtrobox = 0
         # Dados importados do BD
         self.dadosQuarto = 0
-        self.dadosLazer = 0
+        #self.dadosLazer = 0
+        self.dadosReservas = 0
+        self.dadosDevolucoes = 0
 
 
     # Método inicial e gerenciador da tela de consulta
@@ -64,57 +66,34 @@ class consultaQuartoWindow():
         self.aviso.forget()
         self.textboxQuarto.delete(1.0, END)
         self.textboxLazer.delete(1.0, END)
-        
+
+        print(self.dadosQuarto)
+
         contador=len(self.dadosQuarto)
-        # Consulta os Status do quartos e os imprime 
-        for x in self.dadosQuarto:
-        
-            if x[2] == self.filtrobox.get() and self.filtrobox.get() == "Disponível":
-                self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + x[0] + "<====\nNome: " + x[1] + "\nStatus: " + x[2] + "\nTipo: " + x[3] + "\nQTD Camas: " + x[4]+ "\nQTD Cômodos: " + x[5] + "\nDiária: " + str(x[6]))
-                self.textboxQuarto.insert(INSERT, "\n\n")
-                contador-=1
-              
-            elif x[2] == self.filtrobox.get() and self.filtrobox.get() == "Ocupado":
-                self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + x[0] + "<====\nNome: " + x[1] + "\nStatus: " + x[2] + "\nTipo: " + x[3] + "\nQTD Camas: " + x[4]+ "\nQTD Cômodos: " + x[5] + "\nDiária: "+ str(x[6]))
-                self.textboxQuarto.insert(INSERT, "\nTempo de Locação: " + str(x[7]) + "\nData de Entrada: " + str(x[8]) + "\nData de Saída: " + str(x[9]) + "\nLocador: " + str(x[10]) + "\n\n")
-                contador-=1
-                
-            else:
-                self.textboxQuarto.insert(INSERT, "")
-                     
-        if contador == len(self.dadosQuarto):
-                self.textboxQuarto.insert(INSERT, "Nenhum quarto disponível para o filtro selecionado!")
-                
-               
-        contador2=len(self.dadosLazer)
-        # Consulta os Status do quartos e os imprime 
-        for x in self.dadosLazer:
-        
-            if x[1] == self.filtrobox.get() and self.filtrobox.get() == "Disponível":
-                self.textboxLazer.insert(INSERT, "====>IDArea: " + x[0] + " - " + x[2] + "<====\nTipo: " + x[1]+ "\nDiária: " + str(x[3]) + "\n\n")
-                contador2-=1
-              
-            elif x[1] == self.filtrobox.get() and self.filtrobox.get() == "Ocupado":
-                self.textboxLazer.insert(INSERT, "====>IDArea: " + x[0] + " - " + x[2] + "<====\nTipo: " + x[1]+ "\nDiária: " + str(x[3]) + "\nTempo de Reserva: " + str(x[4]))
-                self.textboxLazer.insert(INSERT, "\nData de Entrada: " + str(x[5]) + "\nData de Saída: " + str(x[6]) + "\nLocador: " + str(x[7]) + "\n\n")
-                contador2-=1
-                
-            else:
-                self.textboxLazer.insert(INSERT, "")
-                     
-        if contador2 == len(self.dadosLazer):
-                self.textboxLazer.insert(INSERT, "Nenhuma Área de Lazer disponível para o filtro selecionado!")
-                
+        print(self.filtrobox.get())
+        # Consulta os Status do quartos e os imprime
+        if self.filtrobox.get() == "Disponível":
+            for comodo in self.dadosQuarto:
+                if comodo[3] != 'Área de Lazer' and comodo[3] != None:
+                    self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + str(comodo[0]) + "<====\nNome: " + str(comodo[1]) + "\nPreço: " + str(comodo[2]) + "\nTipo: " + str(comodo[3]) + "\nQTD Camas: " + str(comodo[4]) + "\nQTD Cômodos: " + str(comodo[5]) + "\n\n")
+                    self.textboxQuarto.insert(INSERT, "\n\n")
+                    contador-=1
+                else:
+                    self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(comodo[3])+ "\nDiária: " + str(comodo[2]) + "\n\n")
+        else:
+            for comodo in self.dadosComodoOcupado:
+                    if comodo[3] != 'Área de Lazer' and comodo[3] != None:
+                        self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + str(comodo[0]) + "<====\nNome: " + str(comodo[1]) + "\nPreço: " + str(comodo[2]) + "\nTipo: " + str(comodo[3]) + "\nQTD Camas: " + str(comodo[4]) + "\nQTD Cômodos: " + str(comodo[5]) + "\n\n")
+                        self.textboxQuarto.insert(INSERT, "\n\n")
+                        contador-=1
+                    else:
+                        self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(comodo[3])+ "\nDiária: " + str(comodo[2]) + "\n\n")
+
                             
     # Método para instanciar os bancos de dados e receber seus dados
     def iniciaBDs(self):
-        # Importa banco de dados
-        auxConsulta = BD_Quartos()
-        self.dadosQuarto = auxConsulta.leDadosCompletosQuarto()
-        
-        auxConsultaLazer = BD_Lazer()
-        self.dadosLazer = auxConsultaLazer.leDadosCompletosArea()
-        
+        self.dadosQuarto = BD_Comodo().consultaComodosDisponiveis()
+        self.dadosComodoOcupado = BD_Comodo().consultaComodosOcupados()
         
     # Método para formatar a tela principal de consulta    
     def formataTelaConsultaQuarto(self):
@@ -186,7 +165,6 @@ class consultaQuartoWindow():
 #OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
-"""
+instancia_tabelas()
 x6 = consultaQuartoWindow()
 x6.consultaQuarto()
-"""

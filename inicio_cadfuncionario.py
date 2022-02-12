@@ -28,7 +28,7 @@ class cadastrarWindow():
         self.botaoCadastrar = 0
         self.botaoVoltar = 0
         # Instanciamentos de classes
-        self.CadFunc = BD_cadFunc(True)
+        self.CadFunc = BD_cadFunc()
         # Frames
         self.cadastrarFrame = 0
         # Outros

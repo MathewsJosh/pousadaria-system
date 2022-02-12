@@ -44,8 +44,8 @@ class ReservarWindow():
         self.lazerCheck = 0
         # Instanciamento de classes
         self.bdClientes = BD_cadCliente()
-        self.bdQuartos = BD_Quartos()
-        self.bdLazer = BD_Lazer()
+        self.bdQuartos = BD_Comodo()
+        self.bdLazer = BD_Comodo()
         # Dados das classes
         self.nomecliente = 0
         self.dadosQuartos = 0

@@ -23,7 +23,7 @@ class loginWindow():
         self.botaoEntrar = 0
         self.botaoVoltar = 0
         # Instanciamento de classes
-        self.dadosFunc = BD_cadFunc(False)
+        self.dadosFunc = BD_cadFunc()
         self.chamMenu = MenuRecepcaoWindow()
         # Entradas de dados
         self.userEntry = 0
@@ -34,6 +34,7 @@ class loginWindow():
         self.aviso = 0
         self.botaoEntrar = 0
         self.fontStyle = 0
+        self.contaENTER = 0
 
     # Método de gerenciamento da tela de login
     def entrarTela(self):
@@ -46,6 +47,9 @@ class loginWindow():
         
         # Cria o botão entrar e chama o método para fazer o login
         self.botaoEntrar = Button(self.loginJanela, command=self.logarMetodo, image=self.camLoginButton, bd=0, relief=GROOVE)
+        #self.loginJanela.bind('<Return>', lambda event=None: self.botaoEntrar.invoke())
+        self.loginJanela.bind('<Return>', self.enterClicado)
+
         self.botaoEntrar.place(relx=0.9, rely=0.9, anchor="n")
         
         # Cria um botão Voltar para voltar para a tela de início
@@ -54,6 +58,12 @@ class loginWindow():
         
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.loginJanela.mainloop()
+    
+    def enterClicado(self, event):
+        self.botaoEntrar.invoke()
+        if self.botaoEntrar.winfo_exists()==0:
+            self.botaoAbrir.invoke()
+        self.contaENTER += 1
 
     # Verifica se os dados digitados pelo usuário batem com o que está cadastrado no BD
     def logarMetodo(self):
@@ -101,6 +111,7 @@ class loginWindow():
         lb2 = Label(self.loginFrame, text="Senha: ", width=5, font=self.fontStyle)
         self.aviso = Label(self.loginFrame, font=self.fontStyle)
         self.userEntry = Entry(self.loginFrame, width=15, font=self.fontStyle)
+        self.userEntry.focus()
         self.passEntry = Entry(self.loginFrame, width=15, show='*', font=self.fontStyle)
 
         # Posicionamento dos elementos

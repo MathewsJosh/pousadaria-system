@@ -1,6 +1,7 @@
 from tkinter import *
 from inicio_login import *
 from inicio_cadfuncionario import *
+from BD_pousadaria import *
 
 #####################TELA PRINCIPAL DA APLICAÇÃO######################
 #Execute esse arquivo
@@ -60,7 +61,7 @@ class telaInicialWindow():
     def ApagaInicial(self):
         self.tela_inicial.destroy()
         
-
+instancia_tabelas()
 x1 = telaInicialWindow()
 x1.telaInicial()
 

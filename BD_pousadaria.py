@@ -3,7 +3,7 @@ import os
 
 # Caminho do arquivo .db
 caminho = "BancosdeDados//pousadaria.db"
-if not os.path.exists(caminho):
+if not os.path.exists("BancosdeDados"):
     os.makedirs("BancosdeDados")
 
 # Cria o arquivo
@@ -12,7 +12,7 @@ connection = sqlite3.connect(caminho)
 # Navega pelo arquivo
 c = connection.cursor()
 
-#Cliente
+
 class BD_cadCliente():
     # Construtor
     def __init__(self):
@@ -22,7 +22,7 @@ class BD_cadCliente():
     def criartabela(self):
         #sql = "CREATE TABLE IF NOT EXISTS dados (nome text, cpf text, telefone text, email text, tipo text, endereco text, quartosReservados text, AreasReservadas text, tempoDeLocacao INTEGER, dataDeEntrada text, dataDeSaida text, UNIQUE(nome))"
         sql = """CREATE TABLE IF NOT EXISTS Cliente (
-            id SERIAL primary key,
+            id INTEGER PRIMARY KEY,
             nome varchar(100) not null,
             telefone varchar(20),
             email varchar,
@@ -84,18 +84,16 @@ class BD_cadCliente():
         c.execute(sql,dado)
         connection.commit()
 
-
-#Funcionario
 class BD_cadFunc():
     # Construtor
-    def __init__(self,controle):
+    def __init__(self): #controle
         self.criartabela()
         
     # Método de criação da tabela do banco de dados
     def criartabela(self):
         #sql ="CREATE TABLE IF NOT EXISTS dados (nome text, cpf text, funcao text, salario text, login text, senha text, UNIQUE(nome, login))"
         sql = """CREATE TABLE IF NOT EXISTS Funcionario (
-            id SERIAL primary key, 
+            id INTEGER PRIMARY KEY,
             nome varchar(100) not null, 
             cpf varchar unique, 
             funcao varchar, 
@@ -109,8 +107,8 @@ class BD_cadFunc():
         c.execute("SELECT * FROM Funcionario")
         data = c.fetchall()
         if len(data) == 0:
-            c.execute("INSERT INTO Funcionario (nome, login, senha) VALUES ('admin', 'admin', 'admin')")
-            c.execute("INSERT INTO Funcionario (nome, login, senha) VALUES ('adm', 'adm', 'adm')")
+            c.execute("INSERT INTO Funcionario (nome, cpf, funcao, salario, login, senha) VALUES ('admin', '111222333', 'admin', 2300, 'admin', 'admin')")
+            c.execute("INSERT INTO Funcionario (nome, cpf, funcao, salario, login, senha) VALUES ('adm', '111222334', 'adm', 2300, 'adm', 'adm')")
             c.execute("INSERT INTO Funcionario (nome, cpf, funcao, salario, login, senha) VALUES ('Sebastiao Maia', '12345678910', 'admin', '1050.12', 'tim', 'admin')")
             c.execute("INSERT INTO Funcionario (nome, cpf, funcao, salario, login, senha) VALUES ('Caetanto Veloso', '12345678912', 'recepcionista', '215.51', 'caet', 'veloz')")
             c.execute("INSERT INTO Funcionario (nome, cpf, funcao, salario, login, senha) VALUES ('Zé Ramalho', '12345678913', 'cantor', '4215.51', 'zezin', 'marralho')")
@@ -132,7 +130,6 @@ class BD_cadFunc():
             else:
                 return True
 
-#Cardápio
 class BD_CardapioCRUD():
     # Inicializadores
     def __init__(self):
@@ -142,7 +139,7 @@ class BD_CardapioCRUD():
     def criar_tabela(self):
         #sql = "CREATE TABLE IF NOT EXISTS dados (dia text, textoCardapio text, UNIQUE(dia))"
         sql = """CREATE TABLE IF NOT EXISTS Cardapio (
-            numero SERIAL primary key, 
+            numero INTEGER PRIMARY KEY, 
             dia_semana int not null, 
             descricao varchar,
             cadastrado_por INTEGER not null REFERENCES Funcionario(id),
@@ -187,7 +184,6 @@ class BD_CardapioCRUD():
         c.execute(sql,dado)
         connection.commit()
 
-#Estoque
 class BD_EstoqueCRUD():
     # Inicializadores
     def __init__(self):
@@ -197,7 +193,7 @@ class BD_EstoqueCRUD():
     def criar_tabela(self):
         #sql = "CREATE TABLE IF NOT EXISTS dados (local text, listaItens text, UNIQUE(local))"
         sql = """CREATE TABLE IF NOT EXISTS Estoque (
-            id SERIAL primary key, 
+            id INTEGER PRIMARY KEY, 
             descricao varchar(60) not null, 
             local varchar,
             cadastrado_por INTEGER not null REFERENCES Funcionario(id))"""
@@ -243,7 +239,6 @@ class BD_EstoqueCRUD():
         c.execute(sql,dado)
         connection.commit()
 
-#Reclamações
 class BD_ReclamaSugest():
     # Inicializadores
     def __init__(self):
@@ -253,7 +248,7 @@ class BD_ReclamaSugest():
     def criar_tabela(self):
         #sql = "CREATE TABLE IF NOT EXISTS dados (idrec INTEGER PRIMARY KEY AUTOINCREMENT, cliente text, textoReclamacao text, datetime text, status text, UNIQUE(cliente))"
         sql = """CREATE TABLE IF NOT EXISTS Reclamacoes (
-            id SERIAL PRIMARY KEY, 
+            id INTEGER PRIMARY KEY, 
             id_cliente integer References Cliente(id), 
             descricao varchar, 
             data date, 
@@ -300,7 +295,6 @@ class BD_ReclamaSugest():
         c.execute(sql,data)
         connection.commit()
         
-#Tarefas
 class BD_TarefasCRUD():
     # Construtor
     def __init__(self):
@@ -310,7 +304,7 @@ class BD_TarefasCRUD():
     def criartabela(self):
         #sql = "CREATE TABLE IF NOT EXISTS dados (prioridade text, listaTarefas text, UNIQUE(prioridade))"
         sql = """CREATE TABLE IF NOT EXISTS Tarefas (
-            numero SERIAL primary key, 
+            numero INTEGER PRIMARY KEY, 
             descricao varchar(100) not null, 
             prioridade varchar,
             cadastrado_por INTEGER not null REFERENCES Funcionario(id))"""
@@ -358,7 +352,6 @@ class BD_TarefasCRUD():
         c.execute(sql,dado)
         connection.commit()
 
-
 class BD_Reserva():
     # Construtor
     def __init__(self):
@@ -367,7 +360,7 @@ class BD_Reserva():
     # Método de criação da tabela do banco de dados
     def criartabela(self):
         sql = """CREATE TABLE IF NOT EXISTS Reserva (
-            numero SERIAL primary key, 
+            numero INTEGER PRIMARY KEY, 
             valor numeric check(valor>0), 
             dataEntrada date, 
             dataSaida date CHECK(dataSaida>dataEntrada), 
@@ -380,13 +373,18 @@ class BD_Reserva():
         c.execute("SELECT * FROM Reserva")
         data = c.fetchall()
         if len(data) == 0:
-            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (250, '2022/01/01', '2022/01/05', 1, 1, 1)")
+            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (250, '2022/01/01', '2023/01/05', 1, 1, 1)")
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (2400, '2021/12/12', '2021/12/26', 2, 2, 2)")
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (1723, '2021/02/25', '2021/03/19', 3, 3, 3)")
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (123, '2022/05/01', '2022/06/01', 1, 4, 4)")
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (579, '2022/07/07', '2022/07/15', 2, 4, 1)")
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (687, '2020/12/29', '2021/01/15', 3, 3, 4)")
         connection.commit()
+    
+    def consultaReservas(self):
+        c.execute("SELECT * FROM Reserva")
+        data = c.fetchall()
+        return data
 
 class BD_Devolucao():
     # Construtor
@@ -396,7 +394,7 @@ class BD_Devolucao():
     # Método de criação da tabela do banco de dados
     def criartabela(self):
         sql = """CREATE TABLE IF NOT EXISTS Devolucao (
-            numero INTEGER primary key REFERENCES Reserva(numero),
+            numero INTEGER PRIMARY KEY REFERENCES Reserva(numero),
             valor numeric check(valor>0),
             dataDevolucao date)"""
         c.execute(sql)
@@ -405,12 +403,16 @@ class BD_Devolucao():
         c.execute("SELECT * FROM Devolucao")
         data = c.fetchall()
         if len(data) == 0:
-            c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (1, 259, '2022/01/04')")
+            #c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (1, 259, '2022/01/04')")
             c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (2, 1521, '2021/02/23')")
             c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (3, 432, '2022/05/08')")
             c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (5, 725, '2021/01/14')")
         connection.commit()
-
+    
+    def consultaDevolucoes(self):
+        c.execute('SELECT * FROM Reserva')
+        data = c.fetchall()
+        return data
 
 class BD_Comodo():
     # Construtor
@@ -420,7 +422,7 @@ class BD_Comodo():
     # Método de criação da tabela do banco de dados
     def criartabela(self):
         sql = """CREATE TABLE IF NOT EXISTS Comodo (
-            id SERIAL primary key, 
+            id INTEGER PRIMARY KEY, 
             nome varchar, 
             preco_dia numeric check(preco_dia>0), 
             tipo_quarto varchar,
@@ -436,9 +438,39 @@ class BD_Comodo():
             c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Suíte 01', '150.00', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro')")
             c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Solteiro 01', '100.00', 'Solteiro', '1 Cama de solteiro', '2 Cômodos - Quarto e Banheiro')")
             c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Chalé 01', '250.00', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro')")
-            c.execute("INSERT INTO Comodo (nome, preco_dia) VALUES ('Churrasqueira', '95.00')")
-            c.execute("INSERT INTO Comodo (nome, preco_dia) VALUES ('Sauna', '87.00');")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto) VALUES ('Churrasqueira', '95.00', 'Área de Lazer')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto) VALUES ('Sauna', '87.00', 'Área de Lazer')")
         connection.commit()
+
+    def leDadosCompletosQuarto(self):
+        c.execute("SELECT * FROM Comodo")
+        return c.fetchall()
+
+    def consultaComodosDisponiveis(self):
+        c.execute("""
+                    SELECT *
+                    FROM Comodo c
+                    WHERE c.id NOT IN (
+                    SELECT r.idComodo
+                    FROM Reserva r
+                    WHERE (r.dataEntrada > DATE() OR r.dataSaida < DATE())
+                        AND r.numero NOT IN (
+                        SELECT d.numero
+                        FROM Devolucao d));""")
+        return c.fetchall()
+
+    def consultaComodosOcupados(self):
+        c.execute("""
+                    SELECT *
+                    FROM Comodo c
+                    WHERE c.id IN (
+                    SELECT r.idComodo
+                    FROM Reserva r
+                    WHERE (r.dataEntrada > DATE() OR r.dataSaida < DATE())
+                        AND r.numero NOT IN (
+                        SELECT d.numero
+                        FROM Devolucao d));""")
+        return c.fetchall()
 
 class BD_NotaFiscal():
     # Construtor
@@ -448,7 +480,7 @@ class BD_NotaFiscal():
     # Método de criação da tabela do banco de dados
     def criartabela(self):
         sql = """CREATE TABLE IF NOT EXISTS NotaFiscal (
-            id integer primary key REFERENCES Reserva(numero), 
+            id INTEGER PRIMARY KEY REFERENCES Reserva(numero), 
             data_emissao varchar
             )"""
         c.execute(sql)
@@ -465,7 +497,6 @@ class BD_NotaFiscal():
             c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (6, '2020/12/29')")
         connection.commit()
 
-
 class BD_NotaDevolucao():
     # Construtor
     def __init__(self):
@@ -474,7 +505,7 @@ class BD_NotaDevolucao():
     # Método de criação da tabela do banco de dados
     def criartabela(self):
         sql = """CREATE TABLE IF NOT EXISTS NotaDevolucao (
-            id integer primary key REFERENCES Reserva(numero), 
+            id INTEGER PRIMARY KEY REFERENCES Reserva(numero), 
             data_emissao varchar
             )"""
         c.execute(sql)
@@ -503,7 +534,7 @@ class BD_Pousadaria():
     # Método de criação da tabela do banco de dados
     def criartabela(self):
         sql = """CREATE TABLE IF NOT EXISTS Pousadaria (
-            id SERIAL primary key, 
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
             nome varchar UNIQUE, 
             telefone varchar(20),
             cnpj varchar,
@@ -523,6 +554,19 @@ class BD_Pousadaria():
         data = c.fetchall()
         return data
 
+def instancia_tabelas():
+    BD_cadCliente()
+    BD_cadFunc()
+    BD_CardapioCRUD()
+    BD_EstoqueCRUD()
+    BD_ReclamaSugest()
+    BD_TarefasCRUD()
+    BD_Reserva()
+    BD_Devolucao()
+    BD_Comodo()
+    BD_NotaFiscal()
+    BD_NotaDevolucao()
+    BD_Pousadaria()
 
 
 
