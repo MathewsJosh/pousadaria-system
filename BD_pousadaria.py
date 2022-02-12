@@ -43,15 +43,15 @@ class BD_cadCliente():
         connection.commit()
     
     # Método de entrada dos dados do usuário para o cadastramento
-    def entradaDadosPF(self, nome, cpf, telefone, email, endereco):  
-        sql ="INSERT OR REPLACE INTO Cliente (nome, cpf, telefone, email, endereco) VALUES (?, ?, ?, ?, ?)"
-        dados = (nome, cpf, telefone, email, endereco)
+    def entradaDadosPF(self, nome, cpf, telefone, email, endereco, cadastrado_por):  
+        sql ="INSERT OR REPLACE INTO Cliente (nome, cpf, telefone, email, endereco, cadastrado_por) VALUES (?, ?, ?, ?, ?, ?)"
+        dados = (nome, cpf, telefone, email, endereco, cadastrado_por)
         c.execute(sql, dados)
         connection.commit()
 
-    def entradaDadosPJ(self, nome, cnpj, telefone, email, endereco):  
-        sql ="INSERT OR REPLACE INTO Cliente (nome, cnpj, telefone, email, endereco) VALUES (?, ?, ?, ?, ?)"
-        dados = (nome, cnpj, telefone, email, endereco)
+    def entradaDadosPJ(self, nome, cnpj, telefone, email, endereco, cadastrado_por):  
+        sql ="INSERT OR REPLACE INTO Cliente (nome, cnpj, telefone, email, endereco, cadastrado_por) VALUES (?, ?, ?, ?, ?, ?)"
+        dados = (nome, cnpj, telefone, email, endereco, cadastrado_por)
         c.execute(sql, dados)
         connection.commit()
 
@@ -83,6 +83,14 @@ class BD_cadCliente():
         dado = (None, None, None, None, None, nome)
         c.execute(sql,dado)
         connection.commit()
+    
+    def consultaId(self, nome):
+        sql = 'SELECT id FROM Cliente where nome=?'
+        dados = (nome, )
+        c.execute(sql,dados)
+        data = c.fetchall()
+        return data 
+
 
 class BD_cadFunc():
     # Construtor
@@ -234,7 +242,7 @@ class BD_EstoqueCRUD():
         dado = (local,)
         c.execute(sql,dado)
         connection.commit()
-        
+
         sql = "INSERT OR REPLACE INTO Estoque (local, descricao, cadastrado_por) VALUES (?, ?, ?)"
         dado = (local, descricao, cadastrado_por)
         c.execute(sql,dado)
@@ -257,9 +265,9 @@ class BD_ReclamaSugest():
         #sql = "CREATE TABLE IF NOT EXISTS dados (idrec INTEGER PRIMARY KEY AUTOINCREMENT, cliente text, textoReclamacao text, datetime text, status text, UNIQUE(cliente))"
         sql = """CREATE TABLE IF NOT EXISTS Reclamacoes (
             id INTEGER PRIMARY KEY, 
-            id_cliente integer References Cliente(id), 
+            id_cliente INTEGER UNIQUE References Cliente(id), 
             descricao varchar, 
-            data date, 
+            data varchar, 
             status varchar)"""
         c.execute(sql)
         #c.execute("INSERT OR IGNORE INTO dados (cliente, textoReclamacao, datetime, status) VALUES ('Elon-Musk', 'Vou te contratar, rapaz!', '18/02/2021', 'Outros')")
@@ -268,11 +276,10 @@ class BD_ReclamaSugest():
         c.execute("SELECT * FROM Reclamacoes")
         data = c.fetchall()
         if len(data) == 0:
-            c.execute("INSERT INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (2,'Vazamento da torneira', '2020/11/03', 'Em aberto')")
-            c.execute("INSERT INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (1,'Barulho', '2020/12/03', 'Resolvido')")
-            c.execute("INSERT INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (2,'TV Pifou', '2021/03/13', 'Resolvido')")
-            c.execute("INSERT INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (3,'Luz piscando', '2021/07/19', 'Em aberto')")
-            c.execute("INSERT INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (4,'Vazamento da torneira', '2021/11/11', 'Em aberto')")
+            c.execute("INSERT OR REPLACE INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (2,'Vazamento da torneira', '2020/11/03', 'Em aberto')")
+            c.execute("INSERT OR REPLACE INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (1,'Barulho', '2020/12/03', 'Resolvido')")
+            c.execute("INSERT OR REPLACE INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (3,'Luz piscando', '2021/07/19', 'Em aberto')")
+            c.execute("INSERT OR REPLACE INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (4,'Vazamento da torneira', '2021/11/11', 'Em aberto')")
         connection.commit()
     
     # Método de entrada dos dados de Reclamacao
@@ -283,23 +290,43 @@ class BD_ReclamaSugest():
         c.execute(sql,data)
         connection.commit()
     
-    # Método de leitura dos dados de Reclamacao
     def leDadosRec(self):
         c.execute('SELECT id_cliente, descricao, data, status FROM Reclamacoes')
         data = c.fetchall()
         return data
+
+    # Método de leitura dos dados de Reclamacao
+    def leDadosRecIDCliente(self, id_cliente):
+        sql = 'SELECT * FROM Reclamacoes where id_cliente=?'
+        dado = (id_cliente,)
+        c.execute(sql, dado)
+        data = c.fetchall()
+        return data
     
     # Método de atualização dos dados de Reclamacao
-    def atualizaRec(self, id_cliente, status, descricao):
+    def atualizaRec(self, id_cliente, status, data, descricao):
+        sql = "DELETE FROM Reclamacoes WHERE id_cliente=?"
+        dados = (id_cliente,)
+        c.execute(sql, dados)
+
+        self.criar_tabela()
+        sql = "INSERT OR REPLACE INTO Reclamacoes (id_cliente, descricao, data, status) VALUES (?, ?, ?, ?)"
+        dados = (id_cliente, descricao, data, status)
+        c.execute(sql, dados)
+        
+        connection.commit()
+
+        '''
         sql = "UPDATE Reclamacoes SET descricao=?, status=? WHERE id_cliente=?"
         data = (descricao, status, id_cliente)
         c.execute(sql,data)
         connection.commit()
-    
+        '''
+
     # Método de remoção dos dados de Reclamacao
-    def deletaRec(self, id):
-        sql = "DELETE FROM Reclamacoes WHERE id=?"
-        data = (id,)
+    def deletaRec(self, id_cliente):
+        sql = "DELETE FROM Reclamacoes WHERE id_cliente=?"
+        data = (id_cliente,)
         c.execute(sql,data)
         connection.commit()
         
@@ -334,7 +361,6 @@ class BD_TarefasCRUD():
     def insereDadosTarefa(self, prioridade, descricao, cadastrado_por):
         sql ="INSERT OR REPLACE INTO Tarefas (descricao, prioridade, cadastrado_por) VALUES (?, ?, ?)"
         dados = (descricao, prioridade, cadastrado_por)
-
         c.execute(sql, dados)
         connection.commit()
     

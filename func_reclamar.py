@@ -54,7 +54,7 @@ class Reclamacao():
         self.rec = BD_ReclamaSugest() 
         self.bdclientes = BD_cadCliente()
         # Armazena BD
-        self.nomecliente = ""
+        self.nomecliente = []
         # Booleanos
         self.inseresim = 0
         self.consultasim = 0
@@ -131,7 +131,10 @@ class Reclamacao():
     
     # Método de controle de opções de filtragem do crud reclamações
     def controleCRUD(self):
-        self.nomecliente = self.bdclientes.leNomeCliente()
+        if len(self.nomecliente) == 0:
+            for nome in self.bdclientes.leNomeCliente():
+                self.nomecliente.append(nome[0])
+
         if self.aviso!= 0:
             self.aviso.destroy()
         self.opcoesClientes = []
@@ -175,7 +178,7 @@ class Reclamacao():
         lb3.grid(row=1, column=2, padx=0, sticky=E)
         
         # Cria e posiciona a combobox que irá permitir filtrar os quartos
-        self.clienteCombobox = ttk.Combobox(self.insereframe, value=self.nomecliente, width=20, state="readonly")
+        self.clienteCombobox = ttk.Combobox(self.insereframe, value=self.nomecliente, width=15, state="readonly")
         self.clienteCombobox.current(0)
         self.clienteCombobox.grid(row=1, column=1, padx=5, pady=10, sticky=W, )
         
@@ -193,6 +196,8 @@ class Reclamacao():
     def insereReclamacao(self):
         self.textReclamacao = self.textboxInsere.get("1.0",'end-1c')
         # Verifica se algo escrito antes de salvar no banco de dados
+        if self.aviso!= 0:
+            self.aviso.destroy()
         if self.textReclamacao == "":
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Caixa de texto vazia!", foreground='red', font=12)
@@ -202,7 +207,8 @@ class Reclamacao():
             dateTimeObj = datetime.now()
             ts = dateTimeObj.strftime("%d/%m/%Y (%H:%M:%S)")
             # Salva todas as informações no banco de dados
-            self.rec.insereDadosRec(self.clienteCombobox.get(), self.textReclamacao, ts, self.statusCombobox.get())
+            clienteID = self.bdclientes.consultaId(self.clienteCombobox.get())[0][0]
+            self.rec.insereDadosRec(clienteID, self.textReclamacao, ts, self.statusCombobox.get())
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Reclamação/Sugestão registrada!", foreground='green', font=12)
             self.aviso.place(relx=0.4, rely=0.9)
@@ -236,7 +242,7 @@ class Reclamacao():
         
         
         # Cria e posiciona a combobox que irá permitir filtrar os clientes
-        self.clienteCombobox = ttk.Combobox(self.consultaframe, value=self.nomecliente, width=10, state="readonly")
+        self.clienteCombobox = ttk.Combobox(self.consultaframe, value=self.nomecliente, width=15, state="readonly")
         self.clienteCombobox.current(0)
         self.clienteCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
@@ -253,13 +259,17 @@ class Reclamacao():
     
     # Busca as reclamações do cliente no banco de dados
     def consultaRec(self):
-        self.dadosLidosRec = self.rec.leDadosRec()
+        clienteID = self.bdclientes.consultaId(self.clienteCombobox.get())[0][0]
+        self.dadosLidosRec = self.rec.leDadosRecIDCliente(clienteID)
         cont=0
+        if self.aviso!= 0:
+            self.aviso.destroy()
+
         self.textboxConsulta.delete(1.0, 'end')
         for x in self.dadosLidosRec:
-            if x[1] == self.clienteCombobox.get():
+            if x[1] == clienteID:
                 cont+=1
-                self.textboxConsulta.insert(INSERT, "IdReclamação: " + str(x[0]) + "\nCliente: " + x[1] + "\nStatus: " + x[4] + "\nData e hora: " + x[3] + "\n\nMensagem: " + x[2] + "\n\n====================X====================\n")
+                self.textboxConsulta.insert(INSERT, "IdReclamação: " + str(x[0]) + "\nCliente: " + str(x[1]) + "\nStatus: " + x[4] + "\nData e hora: " + x[3] + "\n\nMensagem: " + x[2] + "\n\n====================X====================\n")
         
         if(cont>=1):
             # Cria e posiciona uma label de aviso
@@ -300,7 +310,7 @@ class Reclamacao():
         lb5.grid(row=0, column=0, padx=0, sticky=E) 
 
         # Cria e posiciona a combobox que irá filtrar os clientes
-        self.clienteCombobox = ttk.Combobox(self.clienteframe, value=self.nomecliente, width=10, state="readonly")
+        self.clienteCombobox = ttk.Combobox(self.clienteframe, value=self.nomecliente, width=15, state="readonly")
         self.clienteCombobox.current(0)
         self.clienteCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
@@ -332,14 +342,18 @@ class Reclamacao():
     
     # Busca as reclamações do cliente no banco de dados
     def consultaRecAtualiza(self):
-        self.dadosLidosRec = self.rec.leDadosRec()
+        clienteID = self.bdclientes.consultaId(self.clienteCombobox.get())[0][0]
+        self.dadosLidosRec = self.rec.leDadosRecIDCliente(clienteID)
+        #self.dadosLidosRec = self.rec.leDadosRec()
         cont=0
         self.textboxAtualiza.delete(1.0, 'end')
         for x in self.dadosLidosRec:
-            if x[1] == self.clienteCombobox.get():
+            if x[1] == clienteID:
                 cont+=1
                 self.textboxAtualiza.insert(INSERT, x[2])
-                break
+                #self.textboxAtualiza.insert(INSERT, "IdReclamação: " + str(x[0]) + "\nCliente: " + str(x[1]) + "\nStatus: " + x[4] + "\nData e hora: " + x[3] + "\n\nMensagem: " + x[2] + "\n\n====================X====================\n")
+
+                #break
         
         if(cont==0):
             # Cria e posiciona uma label de aviso
@@ -352,12 +366,17 @@ class Reclamacao():
     
     # Método que atualiza a reclamação do cliente no banco de dados
     def atualizaRecBD(self):
+        if self.aviso!= 0:
+            self.aviso.destroy()
+        clienteID = self.bdclientes.consultaId(self.clienteCombobox.get())[0][0]
         if self.textboxAtualiza.get(1.0, END)=="":
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Caixa de reclamação vazia, tente novamente!", foreground='red', font=12)
             self.aviso.place(relx=0.3, rely=0.9) 
         else:
-            self.rec.atualizaRec(str(self.clienteCombobox.get()), str(self.statusCombobox.get()),str(self.textboxAtualiza.get(1.0, END)))
+            dateTimeObj = datetime.now()
+            ts = dateTimeObj.strftime("%d/%m/%Y (%H:%M:%S)")
+            self.rec.atualizaRec(clienteID, str(self.statusCombobox.get()), ts, str(self.textboxAtualiza.get(1.0, END)))
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Reclamação atualizada no banco de dados!", foreground='Green', font=12)
             self.aviso.place(relx=0.4, rely=0.9) 
@@ -392,7 +411,7 @@ class Reclamacao():
         lb6.grid(row=0, column=0, padx=0, sticky=E) 
 
         # Cria e posiciona a combobox que irá filtrar os clientes
-        self.clienteCombobox = ttk.Combobox(self.clienteframe, value=self.nomecliente, width=10, state="readonly")
+        self.clienteCombobox = ttk.Combobox(self.clienteframe, value=self.nomecliente, width=15, state="readonly")
         self.clienteCombobox.current(0)
         self.clienteCombobox.grid(row=0, column=1, padx=5, pady=10, sticky=W)
         
@@ -402,14 +421,16 @@ class Reclamacao():
     
     # Deleta a reclamação do cliente do banco de dados
     def deletaRecBD(self):
-        self.dadosLidosRec = self.rec.leDadosRec()
+        if self.aviso!= 0:
+            self.aviso.destroy()
+        clienteID = self.bdclientes.consultaId(self.clienteCombobox.get())[0][0]
+        self.dadosLidosRec = self.rec.leDadosRecIDCliente(clienteID)
         contador=0
         for x in self.dadosLidosRec:
-            if x[1] == self.clienteCombobox.get():
-                self.rec.deletaRec(str(self.clienteCombobox.get()))
+            if x[1] == clienteID:
+                self.rec.deletaRec(clienteID)
                 contador+=1
         
-        self.aviso.destroy()
         if(contador==0):
             # Cria e posiciona uma label de aviso
             self.aviso = Label(self.telaReclamacao,text="Não há nenhuma reclamação desse cliente no banco de dados!", foreground='red', font=12)
@@ -428,6 +449,8 @@ class Reclamacao():
     #---------------------------------------------------Funções Auxiliares------------------------------------------------------# 
     # Método que atualiza as opções de nomes de clientes
     def auxOpcClientes(self):
+        if self.aviso!= 0:
+            self.aviso.destroy()
         dadosLidosRec = self.rec.leDadosRec()
         for x in dadosLidosRec:
             self.opcoesClientes.append(x[1])
@@ -437,12 +460,11 @@ class Reclamacao():
     def ApagaTelaReclamacao(self):
         self.telaReclamacao.destroy()
 
-
+'''
 #OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
 '''
-x9 = Reclamacao()
+x9 = Reclamacao(1)
 x9.selecionaCRUDReclamacao()
 
-'''

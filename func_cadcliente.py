@@ -92,9 +92,9 @@ class cadastrarWindow():
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             self.enderecoEntry = str(self.RuaEntry.get()) + ", " + str(self.NumEntry.get()) + " - " + str(self.bairroEntry.get()) + " - " + str(self.cidadeEntry.get()) + ", " + str(self.estadoEntry.get())
             if self.tipoEntry.get() == "Pessoa Física":
-                self.bdcadCliente.entradaDadosPF(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.enderecoEntry)
+                self.bdcadCliente.entradaDadosPF(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.enderecoEntry, self.funcionarioID)
             else:
-                self.bdcadCliente.entradaDadosPJ(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.enderecoEntry)
+                self.bdcadCliente.entradaDadosPJ(self.nomeEntry.get(), self.cpfEntry.get(), self.telefoneEntry.get(), self.emailEntry.get(), self.enderecoEntry, self.funcionarioID)
             
     # Método de formatação da tela de cadastro de clientes
     def formataTelaCadastro(self):

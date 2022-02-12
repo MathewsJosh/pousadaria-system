@@ -74,6 +74,7 @@ class cadastrarWindow():
 
             # Avisa que o cadastro deu certo
             self.aviso = Label(self.cadastrarJanela, text="Cadastro efetuado com sucesso!", foreground='green', font=self.fontStyle)
+            self.botaoCadastrar.destroy()
         
         # Posiciona a label de aviso
         self.aviso.place(relx=0.5, rely=0.7, anchor="n")
