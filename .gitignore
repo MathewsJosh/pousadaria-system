@@ -2,3 +2,6 @@ __pycache__
 *.db
 *.txt
 *.pyc
+BancosdeDados
+NotasFiscais
+NotasDevolucao
