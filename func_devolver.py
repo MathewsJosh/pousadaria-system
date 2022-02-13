@@ -38,10 +38,13 @@ class DevolverWindow():
         self.lazerCheck = 0
         # Instanciamento de classes
         self.bdClientes = BD_cadCliente()
-        self.bdQuartos = BD_Comodo()
-        self.bdLazer = BD_Comodo()
+        self.bdComodo = BD_Comodo()
+        self.bdPousadaria = BD_Pousadaria()
+        self.bdNotaDevolucao = BD_NotaDevolucao()
+        self.bdReserva = BD_Reserva()
+        self.bdDevolucao = BD_Devolucao()
         # Dados das classes
-        self.nomecliente = 0
+        self.nomecliente = []
         self.dadosQuartos = 0
         self.dadosLazer = 0
         # Frames
@@ -59,6 +62,8 @@ class DevolverWindow():
         self.lazerMarcados = []
         self.cont = 0
         self.funcionarioID = funcionarioID
+        self.id = 0
+        self.now = 0
 
         
         
@@ -92,11 +97,13 @@ class DevolverWindow():
         fontindex = 20
         self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
         
-        self.nomecliente = self.bdClientes.leNomeCliente()
+        for nome in self.bdClientes.leNomeCliente():
+            self.nomecliente.append(nome[0])
+
         if len(self.nomecliente)>0:
             #---------------------------------------------------Frame - Seleciona Cliente------------------------------------------------------#
             # Cria o Frame de selecao de clientes
-            self.clienteFrame = LabelFrame(self.DevolverJanela, text = "Selecione um cliente", padx=20, pady=20)
+            self.clienteFrame = LabelFrame(self.DevolverJanela, text = "Selecione um cliente", padx=40, pady=20)
             self.clienteFrame.place(relx=0.15, rely=0.15, anchor="n")
             
             # Cria e posiciona os campos necessários para a devolução
@@ -104,7 +111,7 @@ class DevolverWindow():
             lb1.grid(row=0, column=0, pady=5, sticky=W)
 
             # Cria e posiciona a combobox de seleção de clientes cadastrados
-            self.clienteCombobox = ttk.Combobox(self.clienteFrame, value=self.nomecliente, width=15, state="readonly")
+            self.clienteCombobox = ttk.Combobox(self.clienteFrame, value=self.nomecliente, width=25, state="readonly")
             self.clienteCombobox.current(0)
             self.clienteCombobox.grid(row=0, column=1, pady=5, sticky=W)
             
@@ -113,8 +120,8 @@ class DevolverWindow():
             self.botaoSelecionar.grid(row=3, column=0, pady=10, columnspan = 2)
             
             # Cria e posiciona uma Label de Aviso
-            self.aviso = Label()
-            self.aviso.place(relx=0.5, rely=0.7, anchor="n")
+            #self.aviso = Label()
+            #self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             
         else:
             self.aviso = Label(self.DevolverJanela, text="ERRO - Não há clientes cadastrados no BD, tente novamente!",foreground='red', font=self.fontStyle)
@@ -146,7 +153,7 @@ class DevolverWindow():
         for x in range(len(self.dadosQuartos)):
             self.listaQuartos.append(StringVar())
             self.listaQuartos[-1].set(0)
-            self.quartoCheck = Checkbutton(self.quartoframe, text=self.dadosQuartos[x][0], command=lambda x=x: self.criaLista(x), variable=self.listaQuartos[-1], onvalue=self.dadosQuartos[x][0], offvalue=0)
+            self.quartoCheck = Checkbutton(self.quartoframe, text=self.dadosQuartos[x][-1], command=lambda x=x: self.criaLista(x), variable=self.listaQuartos[-1], onvalue=self.dadosQuartos[x][0], offvalue=0)
             self.quartoCheck.grid(row=x, column=0, sticky=W)
         
         #---------------------------------------------------Frame - Seleciona Areas de Lazer------------------------------------------------------#
@@ -158,61 +165,93 @@ class DevolverWindow():
         for x in range(len(self.dadosLazer)):
             self.listAreas.append(StringVar())
             self.listAreas[-1].set(0)
-            self.lazerCheck = Checkbutton(self.areaFrame,text=self.dadosLazer[x][0], command=lambda x=x: self.criaListaLazer(x), variable=self.listAreas[-1], onvalue = self.dadosLazer[x][0], offvalue=0)
+            self.lazerCheck = Checkbutton(self.areaFrame,text=self.dadosLazer[x][-1], command=lambda x=x: self.criaListaLazer(x), variable=self.listAreas[-1], onvalue = self.dadosLazer[x][0], offvalue=0)
             self.lazerCheck.grid(row=x, column=0, sticky=W)
         
-        self.aviso = Label()
-        self.aviso.destroy()
+
+        if self.aviso != 0:
+            self.aviso.destroy()
         # Cria um botão Devolver nessa tela e realizadevolucao
         self.botaoDevolver = Button(self.DevolverJanela, command=self.realizadevolucao, image=self.camDevolverButton, bd=0, relief=GROOVE)
         self.botaoDevolver.place(relx=0.9, rely=0.9, anchor="n")
+        self.now = datetime.now().date()
         
         
     # Método de "Update" da tela devolucao, nesse momento que finalmente será efetuado o salvamento das informações de devolucao no banco de dados 
     def realizadevolucao(self):
-        self.aviso.destroy()
-        #Atualizar status dos quartos/areas de lazer no banco de dados
-        if len(self.quartosMarcados) > 0:
-            for x in range(len(self.quartosMarcados)):
-                self.bdQuartos.atualizaStatusQuarto(self.quartosMarcados[x])
-            
-            self.aviso = Label(self.DevolverJanela, text = "Quartos devolvidos com sucesso!", foreground='green', font=self.fontStyle)
-            self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
-            
-        if len(self.lazerMarcados) > 0:
-            for x in range(len(self.lazerMarcados)):
-                self.bdLazer.atualizaStatusArea(self.lazerMarcados[x])
-                
-            self.aviso = Label(self.DevolverJanela, text = "Áreas de lazer devolvidas com sucesso!", foreground='green', font=self.fontStyle)
-            self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
-
-        if len(self.quartosMarcados) > 0 and len(self.lazerMarcados) > 0:
-            self.aviso = Label(self.DevolverJanela, text = "Quartos e dependências devolvidas com sucesso!", foreground='green', font=self.fontStyle)
-            self.aviso.place(relx=0.5, rely=0.9, anchor="n")    
-        
-        #Atualiza dados cliente
+        if self.aviso != 0:
+                self.aviso.destroy()
         if len(self.quartosMarcados) > 0 or len(self.lazerMarcados) > 0:
-            self.bdClientes.desfazReserva(self.clienteCombobox.get())
+            #Atualizar status dos quartos/areas de lazer no banco de dados
+            if len(self.quartosMarcados) > 0:
+                for x in range(len(self.quartosMarcados)):
+                    valor = self.bdComodo.valorComodo(self.quartosMarcados[x][0])[0][0]
+                    numeroreserva = self.quartosMarcados[x]
+                    self.bdDevolucao.realizaDevolucao(numeroreserva, valor, self.now)
+                    self.bdNotaDevolucao.insereNotaDevolucao(numeroreserva, self.now)
+
+            if len(self.lazerMarcados) > 0:
+                for x in range(len(self.lazerMarcados)):
+                    valor = self.bdComodo.valorComodo(self.lazerMarcados[x][0])[0][0]
+                    numeroreserva = self.lazerMarcados[x]
+                    self.bdDevolucao.realizaDevolucao(numeroreserva, valor, self.now)
+                    self.bdNotaDevolucao.insereNotaDevolucao(numeroreserva, self.now)
+
+            if len(self.quartosMarcados) > 0:
+                self.aviso = Label(self.DevolverJanela, text = "Quartos devolvidos com sucesso!", foreground='green', font=self.fontStyle)
+                self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
+
+            elif len(self.lazerMarcados) > 0:
+                self.aviso = Label(self.DevolverJanela, text = "Áreas de lazer devolvidas com sucesso!", foreground='green', font=self.fontStyle)
+                self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
+
+            elif len(self.quartosMarcados) > 0 and len(self.lazerMarcados) > 0:
+                self.aviso = Label(self.DevolverJanela, text = "Quartos e dependências devolvidas com sucesso!", foreground='green', font=self.fontStyle)
+                self.aviso.place(relx=0.5, rely=0.9, anchor="n")    
+            
+            
+            #self.bdClientes.desfazReserva(self.clienteCombobox.get())
             
             # Destroi o botão Devolver e cria o botao emitir nota de devolução
             self.botaoDevolver.destroy()
             self.botaoNota = Button(self.DevolverJanela, command=self.emiteNotaFiscal, image=self.camNotaFiscal, bd=0, relief=GROOVE)
             self.botaoNota.place(relx=0.9, rely=0.9, anchor="n")
-            
+        
+        else:
+            self.aviso = Label(self.DevolverJanela, text="ERRO - Selecione algum quarto a ser devolvido!",foreground='red', font=self.fontStyle)
+            self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
+
     # Escreve em um arquivo txt os dados da devolucao, servindo assim de nota fiscal
     def emiteNotaFiscal(self):
-        tudoCliente = self.bdClientes.leTudoCliente(self.clienteCombobox.get())
-                
+        tudoCliente = self.bdClientes.leTudoCliente(self.clienteCombobox.get())[0]
+        tudoPousadaria = self.bdPousadaria.leDadosPousadaria()[0]
+        tudoNotaDevolucao = self.bdNotaDevolucao.leNotaDevolucao()
+
+
         now = datetime.now().date()
-        titulo = "#---------------------------------------------------Nota De Devolução------------------------------------------------------# \n\n"
-        dadosPousadaria = "DADOS DO EMITENTE:\nNome: Pousadaria \nTelefone: (xx) xxxx-xxxx\nEndereço: Rua dos bobos, 0\nCNPJ: xx.xxx.xxx/xxxx-xx"
-        separador = " \n_______________________________________________________________________________________________________________________\n\n"
-        dadoscliente = "DADOS DO CLIENTE:\nNome: " + str(tudoCliente[0][0]) + "\nCPF: " + str(tudoCliente[0][1]) + "\nTelefone: " + str(tudoCliente[0][2]) + "\nE-mail: " + str(tudoCliente[0][3]) + "\nTipo: " + str(tudoCliente[0][4]) + "\nEndereço: " + str(tudoCliente[0][5]) + "\nQuartos Devolvidos: " + str(self.quartosMarcados) + "\nÁreas de lazer devolvidas:" + str(self.lazerMarcados)
-        dadosNota = "Data de emissão: " + str(now) + "                       "
+        titulo = "#-----------------------------------------Nota De Devolução--------------------------------------------# \n\n"
+        dadosPousadaria = """DADOS DO EMITENTE:
+\nNome: {} 
+Telefone: {}
+Endereço: {}
+CNPJ: {}""".format(tudoPousadaria[1], tudoPousadaria[2], tudoPousadaria[4], tudoPousadaria[3])
+        
+        separador = " \n________________________________________________________________________________________________\n\n"
+
+        dadoscliente = """DADOS DO CLIENTE:
+\nNome: {}
+CPF: {}
+CNPJ: {}
+Telefone: {}
+E-mail: {}
+Endereço: {}
+Quartos Devolvidos: {}
+Áreas de lazer devolvidas: {}""".format(tudoCliente[1], tudoCliente[5], tudoCliente[6], tudoCliente[2], tudoCliente[3], tudoCliente[4], self.quartosMarcados, self.lazerMarcados)
+        dadosNota = "Data da devolução: " + str(now) + "\n\n\n"
         
         # Abre o arquivo e escreve as linhas no mesmo
         caminhoNota = "NotasDevolucao/" + self.clienteCombobox.get() + ".txt."
-        arquivo = open(caminhoNota, "w")
+        arquivo = open(caminhoNota, "a")
         arquivo.writelines(titulo)
         arquivo.writelines(dadosPousadaria)
         arquivo.writelines(separador)
@@ -229,7 +268,6 @@ class DevolverWindow():
     #---------------------------------------------------Funções Auxiliares------------------------------------------------------#    
     # Criar uma lista de elementos marcados na checkbutton, no caso, uma lista de quartos selecionados
     def criaLista(self,i):
-        #print("")
         if self.quartosMarcados.count(self.listaQuartos[i].get())==0 and self.listaQuartos[i].get() != "0":
             self.quartosMarcados.append(self.listaQuartos[i].get())  
         else:
@@ -237,7 +275,6 @@ class DevolverWindow():
                 
     # Criar uma lista de elementos marcados na checkbutton, no caso, uma lista de areas de lazer selecionadas
     def criaListaLazer(self, i): 
-        #print("")  
         if self.lazerMarcados.count(self.listAreas[i].get())==0 and self.listAreas[i].get() != "0":
             self.lazerMarcados.append(self.listAreas[i].get())  
         else:
@@ -246,16 +283,22 @@ class DevolverWindow():
     # Busca o nome dos quartos e areas disponiveis no BD para criar os checkbuttons
     def buscaValidaBD(self):
         # Busca os nomes dos quartos no BD
-        self.dadosQuartos = self.bdQuartos.buscaQuartosOcupadosCliente(str(self.clienteCombobox.get()))
-        self.dadosLazer = self.bdLazer.buscaAreasOcupadasCliente(str(self.clienteCombobox.get()))
-        
+        self.id = int(self.bdClientes.consultaId(self.clienteCombobox.get())[0][0])
+        self.dadosQuartos = self.bdDevolucao.consultaDevolucoesQuartosPendentes(self.id)
+        self.dadosLazer = self.bdDevolucao.consultaDevolucoesAreasPendentes(self.id)
+
         if len(self.dadosQuartos) == 0 and len(self.dadosLazer) == 0 and self.DevolverFrame!=0:
             self.DevolverFrame.destroy()
-            self.aviso.destroy()
-            self.aviso = Label(self.DevolverJanela, text = "Não há Quartos nem Áreas de lazer a serem devolvidas!", foreground='red', font=self.fontStyle)
+            if self.botaoDevolver!=0:
+                self.botaoDevolver.destroy()
+            if self.aviso!=0:
+                self.aviso.destroy()
+            self.aviso = Label(self.DevolverJanela, text = "Não há dependências a serem devolvidas!", foreground='red', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.9, anchor="n")
             return
-        self.aviso.destroy()
+        
+        if self.aviso != 0:
+            self.aviso.destroy()
         
             
     # Método necessário para zerar os dados das listas todas as vezes que o botão selecionar for clicado
@@ -263,7 +306,8 @@ class DevolverWindow():
         if self.cont>0:
             self.DevolverFrame.destroy()
         else:
-            self.aviso.destroy()
+            if self.aviso != 0:
+                self.aviso.destroy()
             self.cont += 1
             self.quartosMarcados = 0
             self.quartosMarcados = []
@@ -284,6 +328,7 @@ OBS: Para testar uma tela especifica, coloque esse comando ao final da função 
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
 
-x8 = DevolverWindow()
+instancia_tabelas()
+x8 = DevolverWindow(1)
 x8.DevolverTela()
 '''

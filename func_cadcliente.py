@@ -88,6 +88,7 @@ class cadastrarWindow():
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
                  
         else:
+            self.botaoCadastrar.destroy()
             self.aviso = Label(self.cadastrarJanela, text="Dados cadastrados com sucesso!", foreground='green', font=self.fontStyle)
             self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             self.enderecoEntry = str(self.RuaEntry.get()) + ", " + str(self.NumEntry.get()) + " - " + str(self.bairroEntry.get()) + " - " + str(self.cidadeEntry.get()) + ", " + str(self.estadoEntry.get())
