@@ -35,7 +35,7 @@ class consultaQuartoWindow():
         self.textboxLazer = 0
         self.filtrobox = 0
         # Dados importados do BD
-        self.dadosQuarto = 0
+        self.dadosComodoDisponivel = 0
         #self.dadosLazer = 0
         self.dadosReservas = 0
         self.dadosDevolucoes = 0
@@ -69,7 +69,7 @@ class consultaQuartoWindow():
 
         # Consulta os Status do quartos e os imprime
         if self.filtrobox.get() == "Disponível":
-            for comodo in self.dadosQuarto:
+            for comodo in self.dadosComodoDisponivel:
                 if comodo[3] != 'Área de Lazer' and comodo[3] != None:
                     self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + str(comodo[0]) + "<====\nNome: " + str(comodo[1]) + "\nPreço: " + str(comodo[2]) + "\nTipo: " + str(comodo[3]) + "\nQTD Camas: " + str(comodo[4]) + "\nQTD Cômodos: " + str(comodo[5]) + "\n\n")
                     self.textboxQuarto.insert(INSERT, "\n\n")
@@ -86,7 +86,7 @@ class consultaQuartoWindow():
                             
     # Método para instanciar os bancos de dados e receber seus dados
     def iniciaBDs(self):
-        self.dadosQuarto = BD_Comodo().consultaComodosDisponiveis()
+        self.dadosComodoDisponivel = BD_Comodo().consultaComodosDisponiveis()
         self.dadosComodoOcupado = BD_Comodo().consultaComodosOcupados()
         
     # Método para formatar a tela principal de consulta    
@@ -161,6 +161,6 @@ class consultaQuartoWindow():
 #self.tela_inicial.mainloop()
 
 instancia_tabelas()
-x6 = consultaQuartoWindow()
+x6 = consultaQuartoWindow(1)
 x6.consultaQuarto()
 '''
