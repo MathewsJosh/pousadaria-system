@@ -464,7 +464,8 @@ class Reclamacao():
 #OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
-'''
+
+instancia_tabelas()
 x9 = Reclamacao(1)
 x9.selecionaCRUDReclamacao()
-
+'''

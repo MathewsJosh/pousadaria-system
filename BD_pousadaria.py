@@ -61,10 +61,10 @@ class BD_cadCliente():
         c.execute(sql)
         data = c.fetchall()
         return data    
-    
+        
     # Método de leitura de todos os dados dos clientes
     def leTudoCliente(self, nome): 
-        sql = 'SELECT nome, cpf, cnpj, telefone, email, endereco, quartosReservados, AreasReservadas, tempoDeLocacao, dataDeEntrada, dataDeSaida FROM Cliente where nome=?'
+        sql = 'SELECT * FROM Cliente where nome=?'
         dados = (nome, )
         c.execute(sql,dados)
         data = c.fetchall()
@@ -90,7 +90,6 @@ class BD_cadCliente():
         c.execute(sql,dados)
         data = c.fetchall()
         return data 
-
 
 class BD_cadFunc():
     # Construtor
@@ -411,18 +410,66 @@ class BD_Reserva():
         c.execute("SELECT * FROM Reserva")
         data = c.fetchall()
         if len(data) == 0:
-            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (250, '2022/01/01', '2023/01/05', 1, 1, 1)")
-            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (2400, '2021/12/12', '2021/12/26', 2, 2, 2)")
-            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (1723, '2021/02/25', '2021/03/19', 3, 3, 3)")
-            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (123, '2022/05/01', '2022/06/01', 1, 4, 4)")
-            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (579, '2022/07/07', '2022/07/15', 2, 4, 1)")
-            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (687, '2020/12/29', '2021/01/15', 3, 3, 4)")
+            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (250, '2022-01-01', '2023-01-05', 1, 1, 1)")
+            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (2400, '2021-12-12', '2021-12-26', 2, 2, 2)")
+            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (1723, '2021-02-25', '2021-03-19', 3, 3, 3)")
+            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (123, '2022-05-01', '2022-06-01', 1, 4, 4)")
+            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (579, '2022-07-07', '2022-07-15', 2, 4, 1)")
+            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (687, '2020-12-29', '2021-01-15', 3, 3, 4)")
         connection.commit()
     
     def consultaReservas(self):
         c.execute("SELECT * FROM Reserva")
         data = c.fetchall()
         return data
+
+    def consultaReservasQuartosDisponiveis(self, data_entrada_input, data_saida_input):
+        sql = '''SELECT *
+        FROM Comodo c
+        WHERE (c.tipo_quarto IS NOT NULL)
+        AND c.id NOT IN (
+            SELECT r.idComodo
+            FROM Reserva r
+            WHERE ((DATE(r.dataEntrada) >= DATE(?) AND DATE(r.dataSaida) <= DATE(?) )
+                    OR (DATE(r.dataEntrada) >= DATE(?) AND DATE(r.dataSaida) <= DATE(?))
+                    OR (DATE(r.dataEntrada) >= DATE(?) AND DATE(r.dataSaida) <= DATE(?)))
+                        AND r.numero NOT IN (
+                            SELECT d.numero
+                            FROM Devolucao d));'''
+        dados = (data_entrada_input, data_entrada_input, data_saida_input, data_saida_input, data_entrada_input, data_saida_input)
+        c.execute(sql, dados)
+        data = c.fetchall()
+        return data
+
+    def consultaReservasAreasDisponiveis(self, data_entrada_input, data_saida_input):
+        sql = '''SELECT *
+        FROM Comodo c
+        WHERE (c.tipo_quarto IS NULL)
+        AND c.id NOT IN (
+            SELECT r.idComodo
+            FROM Reserva r
+            WHERE ((DATE(r.dataEntrada) >= DATE(?) AND DATE(r.dataSaida) <= DATE(?) )
+                    OR (DATE(r.dataEntrada) >= DATE(?) AND DATE(r.dataSaida) <= DATE(?))
+                    OR (DATE(r.dataEntrada) >= DATE(?)  AND DATE(r.dataSaida) <= DATE(?)))
+                    AND r.numero NOT IN (
+                        SELECT d.numero
+                        FROM Devolucao d));'''
+        dados = (data_entrada_input, data_entrada_input, data_saida_input, data_saida_input, data_entrada_input, data_saida_input,)
+        c.execute(sql, dados,)
+        data = c.fetchall()
+        return data
+
+    def realizaReserva(self, valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo):
+        sql = "INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (?, ?, ?, ?, ?, ?)"
+        dados = (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo,)
+        c.execute(sql, dados)
+        connection.commit()
+
+    def ultimaReserva(self):
+        sql = 'SELECT MAX(numero) FROM Reserva'
+        c.execute(sql)
+        data = c.fetchall()
+        return data 
 
 class BD_Devolucao():
     # Construtor
@@ -473,15 +520,30 @@ class BD_Comodo():
         c.execute("SELECT * FROM Comodo")
         data = c.fetchall()
         if len(data) == 0:
-            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Suíte 01', '150.00', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro')")
-            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Solteiro 01', '100.00', 'Solteiro', '1 Cama de solteiro', '2 Cômodos - Quarto e Banheiro')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Suíte 01', '150.62', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Suíte 02', '155.15', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Suíte 03', '153.21', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Solteiro 01', '100.91', 'Solteiro', '1 Cama de solteiro', '2 Cômodos - Quarto e Banheiro')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Solteiro 02', '59.27', 'Solteiro', '1 Cama de solteiro', '2 Cômodos - Quarto e Banheiro')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Solteiro 03', '63.85', 'Solteiro', '1 Cama de solteiro', '2 Cômodos - Quarto e Banheiro')")
             c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Chalé 01', '250.00', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro')")
-            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto) VALUES ('Churrasqueira', '95.00', 'Área de Lazer')")
-            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto) VALUES ('Sauna', '87.00', 'Área de Lazer')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia, tipo_quarto, qtd_camas, qtd_comodos) VALUES ('Chalé 02', '325.10', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro')")
+
+            c.execute("INSERT INTO Comodo (nome, preco_dia) VALUES ('Churrasqueira', '95.60')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia) VALUES ('Sauna', '87.41')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia) VALUES ('Piscina', '53.37')")
+            c.execute("INSERT INTO Comodo (nome, preco_dia) VALUES ('Salão de Festas', '125.72')")
+
         connection.commit()
 
     def leDadosCompletosQuarto(self):
         c.execute("SELECT * FROM Comodo")
+        return c.fetchall()
+
+    def valorComodo(self, id):
+        sql = "SELECT preco_dia FROM Comodo WHERE id = ?"
+        dados = (id,)
+        c.execute(sql, dados)
         return c.fetchall()
 
     def consultaComodosDisponiveis(self):
@@ -519,7 +581,7 @@ class BD_NotaFiscal():
     def criartabela(self):
         sql = """CREATE TABLE IF NOT EXISTS NotaFiscal (
             id INTEGER PRIMARY KEY REFERENCES Reserva(numero), 
-            data_emissao varchar
+            data_emissao TIMESTAMP
             )"""
         c.execute(sql)
 
@@ -527,13 +589,24 @@ class BD_NotaFiscal():
         c.execute("SELECT * FROM NotaFiscal")
         data = c.fetchall()
         if len(data) == 0:
-            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (1, '2022/01/01')")
-            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (2, '2021/12/12')")
-            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (3, '2021/02/25')")
-            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (4, '2022/05/01')")
-            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (5, '2022/07/07')")
-            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (6, '2020/12/29')")
+            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (1, '2022-01-01')")
+            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (2, '2021-12-12')")
+            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (3, '2021-02-25')")
+            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (4, '2022-05-01')")
+            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (5, '2022-07-07')")
+            c.execute("INSERT INTO NotaFiscal (id, data_emissao) VALUES (6, '2020-12-29')")
         connection.commit()
+
+    def insereNota(self, id, data):
+        sql = "INSERT INTO NotaFiscal (id, data_emissao) VALUES (?, ?)"
+        dado = (id, data,)
+        c.execute(sql,dado)
+        connection.commit()
+
+    def leDadosNotaFiscal(self):
+        c.execute('SELECT * FROM NotaFiscal')
+        data = c.fetchall()
+        return data
 
 class BD_NotaDevolucao():
     # Construtor
@@ -544,7 +617,7 @@ class BD_NotaDevolucao():
     def criartabela(self):
         sql = """CREATE TABLE IF NOT EXISTS NotaDevolucao (
             id INTEGER PRIMARY KEY REFERENCES Reserva(numero), 
-            data_emissao varchar
+            data_emissao TIMESTAMP
             )"""
         c.execute(sql)
 

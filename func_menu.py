@@ -131,11 +131,12 @@ class MenuRecepcaoWindow():
     def ApagaMenu(self):
         self.menuJanela.destroy()
         
-
+'''
 #OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
-'''
-x4 = MenuRecepcaoWindow()
+
+instancia_tabelas()
+x4 = MenuRecepcaoWindow(1)
 x4.menuRecepcao()
 '''
