@@ -8,7 +8,7 @@ from BD_pousadaria import *
 tam = "800x600"
 camIco = "Images\Icones\Pousadaria.ico"
 
-class cadastrarWindow():
+class cadastrarWindowFunc():
     # Construtor da Classe
     def __init__(self):
         # Janela

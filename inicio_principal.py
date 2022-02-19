@@ -1,6 +1,5 @@
 from tkinter import *
 from inicio_login import *
-from inicio_cadfuncionario import *
 from BD_pousadaria import *
 
 #####################TELA PRINCIPAL DA APLICAÇÃO######################
@@ -41,7 +40,6 @@ class telaInicialWindow():
 
         #Instanciamento de classes
         self.LoginTela = loginWindow(self.tela_inicial)
-        self.CadastrarTela = cadastrarWindow()
         
         # Cria botões para Logar e Cadastrar
         botaoLogar = Button(command=lambda:[self.LoginTela.entrarTela()], image=self.camLoginButton, bd=0, relief=GROOVE)
