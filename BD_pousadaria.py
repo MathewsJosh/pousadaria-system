@@ -83,7 +83,6 @@ class BD_cadFunc():
         
     # Método de criação da tabela do banco de dados
     def criartabela(self):
-        #sql ="CREATE TABLE IF NOT EXISTS dados (nome text, cpf text, funcao text, salario text, login text, senha text, UNIQUE(nome, login))"
         sql = """CREATE TABLE IF NOT EXISTS Funcionario (
             id INTEGER PRIMARY KEY,
             nome varchar(100) not null, 
@@ -92,7 +91,7 @@ class BD_cadFunc():
             salario numeric not null check(salario > 0),
             login varchar(30) not null unique,
             senha varchar(30) not null,
-            UNIQUE(nome, login))"""
+            UNIQUE(login))"""
         c.execute(sql)
         
         # seed
