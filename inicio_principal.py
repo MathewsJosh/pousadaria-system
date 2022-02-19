@@ -49,10 +49,6 @@ class telaInicialWindow():
         # Posicionamento dos botões
         botaoLogar.place(relx=0.5, rely=0.9, anchor="s")
 
-        #self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png", master=self.tela_inicial)
-        #botaoCadastrar = Button(command=lambda:[self.CadastrarTela.cadastrarTela()], image=self.camCadastrarButton, bd=0, relief=GROOVE)
-        #botaoCadastrar.place(relx=0.7, rely=0.9, anchor="s")
-
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.tela_inicial.mainloop()
 
