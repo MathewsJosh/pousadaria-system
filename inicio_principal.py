@@ -22,7 +22,6 @@ class telaInicialWindow():
         self.camLoginButton = 0
         self.camCadastrarButton = 0
         self.pousadaria = 0
-        
         #self.ApagaInicial
 
 

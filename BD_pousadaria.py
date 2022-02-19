@@ -596,7 +596,7 @@ class BD_Comodo():
 
     def consultaComodosOcupados(self):
         c.execute("""
-                    SELECT c.id, c.nome, c.preco_dia, c.tipo_quarto, c.qtd_camas, c.qtd_comodos, r.dataSaida
+                    SELECT c.id, c.nome, c.preco_dia, c.tipo_quarto, c.qtd_camas, c.qtd_comodos
                     FROM Comodo c
                     WHERE c.id IN (
                     SELECT r.idComodo

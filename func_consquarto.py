@@ -74,14 +74,18 @@ class consultaQuartoWindow():
                     self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + str(comodo[0]) + "<====\nNome: " + str(comodo[1]) + "\nPreço: " + str(comodo[2]) + "\nTipo: " + str(comodo[3]) + "\nQTD Camas: " + str(comodo[4]) + "\nQTD Cômodos: " + str(comodo[5]) + "\n\n")
                     self.textboxQuarto.insert(INSERT, "\n\n")
                 else:
-                    self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(comodo[3])+ "\nDiária: " + str(comodo[2]) + "\n\n")
+                    if comodo[3] ==None:
+                        tipo = "Área de Lazer"
+                    self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(tipo)+ "\nDiária: " + str(comodo[2]) + "\n\n")
         else:
             for comodo in self.dadosComodoOcupado:
                     if comodo[3] != 'Área de Lazer' and comodo[3] != None:
                         self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + str(comodo[0]) + "<====\nNome: " + str(comodo[1]) + "\nPreço: " + str(comodo[2]) + "\nTipo: " + str(comodo[3]) + "\nQTD Camas: " + str(comodo[4]) + "\nQTD Cômodos: " + str(comodo[5]) + "\n\n")
                         self.textboxQuarto.insert(INSERT, "\n\n")
                     else:
-                        self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(comodo[3])+ "\nDiária: " + str(comodo[2]) + "\n\n")
+                        if comodo[3] ==None:
+                            tipo = "Área de Lazer"
+                        self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(tipo)+ "\nDiária: " + str(comodo[2]) + "\n\n")
 
                             
     # Método para instanciar os bancos de dados e receber seus dados
@@ -159,7 +163,6 @@ class consultaQuartoWindow():
 #OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
 #self.tela_inicial.mainloop()
-
 instancia_tabelas()
 x6 = consultaQuartoWindow(1)
 x6.consultaQuarto()
