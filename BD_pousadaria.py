@@ -387,7 +387,7 @@ class BD_Reserva():
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (1723, '2021-02-25', '2021-03-19', 3, 3, 3)")
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (123, '2022-05-01', '2022-06-01', 1, 4, 4)")
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (579, '2022-07-07', '2022-07-15', 2, 4, 1)")
-            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (687, '2020-12-29', '2021-01-15', 3, 3, 4)")
+            c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (687, '2020-12-29', '2021-01-15', 3, 3, 5)")
         connection.commit()
     
     def consultaReservas(self):
@@ -463,7 +463,10 @@ class BD_Devolucao():
             c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (1, 259, '2022/01/04')")
             c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (2, 1521, '2021/02/23')")
             c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (3, 432, '2022/05/08')")
+            c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (4, 321, '2022/05/08')")
             c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (5, 725, '2021/01/14')")
+            c.execute("INSERT INTO Devolucao (numero, valor, dataDevolucao) VALUES (6, 554, '2021/01/14')")
+
         connection.commit()
     
     def consultaDevolucoes(self):
@@ -561,7 +564,9 @@ class BD_Comodo():
                     WHERE c.id NOT IN (
                     SELECT r.idComodo
                     FROM Reserva r
-                    WHERE (r.dataEntrada > DATE() OR r.dataSaida < DATE())
+                    WHERE ((r.dataEntrada >= DATE() OR r.dataSaida <= DATE())
+                        OR (DATE(r.dataEntrada) >= DATE() AND DATE(r.dataSaida) <= DATE())
+                        OR (DATE(r.dataEntrada) >= DATE()  AND DATE(r.dataSaida) <= DATE()))
                         AND r.numero NOT IN (
                         SELECT d.numero
                         FROM Devolucao d));""")

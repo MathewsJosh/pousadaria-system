@@ -19,6 +19,7 @@ class consultaQuartoWindow():
         self.consultaQuartoJanela = 0
         # Auxiliares das conversões de imagem
         self.camConsultarQuarto = 0
+        self.aviso = 0
         self.camVoltar = 0
         # Botões
         self.botaoConsultarQuarto = 0
@@ -30,7 +31,6 @@ class consultaQuartoWindow():
         # Outros
         self.Date2Entry = 0
         self.Date1Entry = 0
-        self.aviso = 0
         self.textboxQuarto = 0
         self.textboxLazer = 0
         self.filtrobox = 0
@@ -48,6 +48,11 @@ class consultaQuartoWindow():
         
         # Função que formata a tela
         self.formataTelaConsultaQuarto()
+
+        # Define as fontes para caixas de texto
+        fontfamilylist = list(tkFont.families())
+        fontindex = 20
+        self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
         
         # Cria os Botões e os posiciona
         botaoConsultarQuarto = Button(self.consultaQuartoJanela,command=self.consultaExibe, image=self.camConsultarQuarto, bd=0, relief=GROOVE)
@@ -60,12 +65,15 @@ class consultaQuartoWindow():
     # Método que consulta os bancos de dados e exibe na tela suas informações
     def consultaExibe(self):
         self.iniciaBDs()
-        self.aviso = Label(self.consultaQuartoJanela, foreground='red')
-        self.aviso.place(relx=0.5, rely=0.9, anchor="n")
-        self.aviso.destroy()
-        self.aviso.forget()
+        #self.aviso = Label(self.consultaQuartoJanela, foreground='red')
+        #self.aviso.place(relx=0.5, rely=0.9, anchor="n")
+        #self.aviso.destroy()
+        #self.aviso.forget()
         self.textboxQuarto.delete(1.0, END)
         self.textboxLazer.delete(1.0, END)
+
+        if self.aviso != 0:
+            self.aviso.destroy()
 
         # Consulta os Status do quartos e os imprime
         if self.filtrobox.get() == "Disponível":
@@ -77,7 +85,12 @@ class consultaQuartoWindow():
                     if comodo[3] ==None:
                         tipo = "Área de Lazer"
                     self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(tipo)+ "\nDiária: " + str(comodo[2]) + "\n\n")
-        else:
+            
+            if len(self.dadosComodoDisponivel)==0:
+                self.aviso = Label(self.consultaQuartoJanela, text="Não há dependências para esse filtro!", foreground='red', font=self.fontStyle)
+                self.aviso.place(relx=0.5, rely=0.9, anchor="n")
+
+        elif  self.filtrobox.get() == "Ocupado":
             for comodo in self.dadosComodoOcupado:
                     if comodo[3] != 'Área de Lazer' and comodo[3] != None:
                         self.textboxQuarto.insert(INSERT, "====>IDQuarto: " + str(comodo[0]) + "<====\nNome: " + str(comodo[1]) + "\nPreço: " + str(comodo[2]) + "\nTipo: " + str(comodo[3]) + "\nQTD Camas: " + str(comodo[4]) + "\nQTD Cômodos: " + str(comodo[5]) + "\n\n")
@@ -86,6 +99,9 @@ class consultaQuartoWindow():
                         if comodo[3] ==None:
                             tipo = "Área de Lazer"
                         self.textboxLazer.insert(INSERT, "====>IDArea: " + str(comodo[0]) + " - " + str(comodo[1]) + "<====\nTipo: " + str(tipo)+ "\nDiária: " + str(comodo[2]) + "\n\n")
+            if len(self.dadosComodoOcupado)==0:
+                self.aviso = Label(self.consultaQuartoJanela, text="Não há dependências para esse filtro!", foreground='red', font=self.fontStyle)
+                self.aviso.place(relx=0.5, rely=0.9, anchor="n")
 
                             
     # Método para instanciar os bancos de dados e receber seus dados
@@ -162,8 +178,9 @@ class consultaQuartoWindow():
 '''
 #OBS: Para testar uma tela especifica, coloque esse comando ao final da função "definidora" daquela tela
 # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
+'''
+
 #self.tela_inicial.mainloop()
 instancia_tabelas()
 x6 = consultaQuartoWindow(1)
 x6.consultaQuarto()
-'''
