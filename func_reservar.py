@@ -49,7 +49,7 @@ class ReservarWindow():
         self.bdNotaFiscal = BD_NotaFiscal()
         self.bdReserva = BD_Reserva()
         # Dados das classes
-        self.nomecliente = []
+        self.nomecliente = 0
         self.dadosQuartos = []
         self.dadosReserva = []
         self.dadosLazer = []
@@ -110,6 +110,7 @@ class ReservarWindow():
         fontindex = 20
         self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
         
+        self.nomecliente=[]
         for nome in self.bdClientes.leNomeCliente():
             self.nomecliente.append(nome[0])
 

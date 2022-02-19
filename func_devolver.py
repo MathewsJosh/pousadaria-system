@@ -44,7 +44,7 @@ class DevolverWindow():
         self.bdReserva = BD_Reserva()
         self.bdDevolucao = BD_Devolucao()
         # Dados das classes
-        self.nomecliente = []
+        self.nomecliente = 0
         self.dadosQuartos = 0
         self.dadosLazer = 0
         # Frames
@@ -97,6 +97,7 @@ class DevolverWindow():
         fontindex = 20
         self.fontStyle = tkFont.Font(family=fontfamilylist[fontindex])
         
+        self.nomecliente = []
         for nome in self.bdClientes.leNomeCliente():
             self.nomecliente.append(nome[0])
 
@@ -118,10 +119,6 @@ class DevolverWindow():
             # Cria um botão Devolver nessa tela e verifica se é possivel Devolver o usuario
             self.botaoSelecionar = Button(self.clienteFrame,command=self.DevolverMetodo, image=self.camSelecionarButton, bd=0, relief=GROOVE)
             self.botaoSelecionar.grid(row=3, column=0, pady=10, columnspan = 2)
-            
-            # Cria e posiciona uma Label de Aviso
-            #self.aviso = Label()
-            #self.aviso.place(relx=0.5, rely=0.7, anchor="n")
             
         else:
             self.aviso = Label(self.DevolverJanela, text="ERRO - Não há clientes cadastrados no BD, tente novamente!",foreground='red', font=self.fontStyle)
@@ -274,8 +271,8 @@ Quartos Devolvidos: {}
     def criaListaLazer(self, i): 
         if self.lazerMarcados.count(self.listAreas[i].get())==0 and self.listAreas[i].get() != "0":
             self.lazerMarcados.append(self.listAreas[i].get())  
-        else:
-            self.lazerMarcados.remove(str(self.dadosLazer[i][0]))
+        #else:
+        #    self.lazerMarcados.remove(str(self.dadosLazer[i][0]))
     
     # Busca o nome dos quartos e areas disponiveis no BD para criar os checkbuttons
     def buscaValidaBD(self):
