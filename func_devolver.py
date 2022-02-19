@@ -209,9 +209,6 @@ class DevolverWindow():
                 self.aviso = Label(self.DevolverJanela, text = "Quartos e dependências devolvidas com sucesso!", foreground='green', font=self.fontStyle)
                 self.aviso.place(relx=0.5, rely=0.9, anchor="n")    
             
-            
-            #self.bdClientes.desfazReserva(self.clienteCombobox.get())
-            
             # Destroi o botão Devolver e cria o botao emitir nota de devolução
             self.botaoDevolver.destroy()
             self.botaoNota = Button(self.DevolverJanela, command=self.emiteNotaFiscal, image=self.camNotaFiscal, bd=0, relief=GROOVE)

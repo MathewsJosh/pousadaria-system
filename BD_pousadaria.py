@@ -20,7 +20,6 @@ class BD_cadCliente():
         
     # Método de criação da tabela do banco de dados    
     def criartabela(self):
-        #sql = "CREATE TABLE IF NOT EXISTS dados (nome text, cpf text, telefone text, email text, tipo text, endereco text, quartosReservados text, AreasReservadas text, tempoDeLocacao INTEGER, dataDeEntrada text, dataDeSaida text, UNIQUE(nome))"
         sql = """CREATE TABLE IF NOT EXISTS Cliente (
             id INTEGER PRIMARY KEY,
             nome varchar(100) not null,
@@ -69,20 +68,6 @@ class BD_cadCliente():
         c.execute(sql,dados)
         data = c.fetchall()
         return data   
-    
-    # Método de Update do cliente, quando ele faz a reserva, salva alguns dados no bd
-    def atualizaReserva(self, quartosReservados, AreasReservadas, tempoDeLocacao, dataDeEntrada, dataDeSaida, nome):
-        sql = "UPDATE Cliente SET quartosReservados=?, AreasReservadas=?, tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=? WHERE nome=?"
-        dado = (quartosReservados, AreasReservadas, tempoDeLocacao, dataDeEntrada, dataDeSaida, nome)
-        c.execute(sql,dado)
-        connection.commit()
-    
-    # Método de Update do cliente, quando ele faz a reserva, apaga os dados que ele armazenou quando reservou o quarto
-    def desfazReserva(self, nome):
-        sql = "UPDATE Cliente SET quartosReservados=?, AreasReservadas=?, tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=? WHERE nome=?"
-        dado = (None, None, None, None, None, nome)
-        c.execute(sql,dado)
-        connection.commit()
     
     def consultaId(self, nome):
         sql = 'SELECT id FROM Cliente where nome=?'
@@ -201,14 +186,12 @@ class BD_EstoqueCRUD():
 
     # Método que cria o banco de dados
     def criar_tabela(self):
-        #sql = "CREATE TABLE IF NOT EXISTS dados (local text, listaItens text, UNIQUE(local))"
         sql = """CREATE TABLE IF NOT EXISTS Estoque (
             id INTEGER PRIMARY KEY, 
             descricao varchar(60) not null, 
             local varchar UNIQUE,
             cadastrado_por INTEGER not null REFERENCES Funcionario(id))"""
         c.execute(sql)
-        #c.execute("INSERT OR REPLACE INTO dados (local, listaItens) VALUES ('Recepção', 'Telefone, Bloco de notas e Canetas')")
 
         # seed
         c.execute("SELECT * FROM Estoque")
@@ -260,7 +243,6 @@ class BD_ReclamaSugest():
 
     # Método que cria o banco de dados
     def criar_tabela(self):
-        #sql = "CREATE TABLE IF NOT EXISTS dados (idrec INTEGER PRIMARY KEY AUTOINCREMENT, cliente text, textoReclamacao text, datetime text, status text, UNIQUE(cliente))"
         sql = """CREATE TABLE IF NOT EXISTS Reclamacoes (
             id INTEGER PRIMARY KEY, 
             id_cliente INTEGER UNIQUE References Cliente(id), 
@@ -268,7 +250,6 @@ class BD_ReclamaSugest():
             data varchar, 
             status varchar)"""
         c.execute(sql)
-        #c.execute("INSERT OR IGNORE INTO dados (cliente, textoReclamacao, datetime, status) VALUES ('Elon-Musk', 'Vou te contratar, rapaz!', '18/02/2021', 'Outros')")
         
         # seed
         c.execute("SELECT * FROM Reclamacoes")
@@ -313,13 +294,6 @@ class BD_ReclamaSugest():
         c.execute(sql, dados)
         
         connection.commit()
-
-        '''
-        sql = "UPDATE Reclamacoes SET descricao=?, status=? WHERE id_cliente=?"
-        data = (descricao, status, id_cliente)
-        c.execute(sql,data)
-        connection.commit()
-        '''
 
     # Método de remoção dos dados de Reclamacao
     def deletaRec(self, id_cliente):
@@ -720,171 +694,3 @@ def instancia_tabelas():
     BD_NotaDevolucao()
     BD_Pousadaria()
 
-
-
-
-
-
-
-
-
-
-'''
-#Lazer
-class BD_Lazer():
-    # Inicializadores
-    def __init__(self):
-        self.criar_tabela()
-
-    # Método que cria o banco de dados
-    def criar_tabela(self):
-        #sql = "CREATE TABLE IF NOT EXISTS dados (idArea text, status text, nome text, precoDia REAL, tempoDeLocacao INTEGER, dataDeEntrada text, dataDeSaida text, cliente text, UNIQUE(idArea))"
-        c.execute(sql)
-        c.execute("INSERT OR IGNORE INTO dados (idArea, status, nome, precoDia) VALUES ('01', 'Disponível', 'Churrasqueira ', '90.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idArea, status, nome, precoDia) VALUES ('02', 'Disponível', 'Sauna', '50.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idArea, status, nome, precoDia) VALUES ('03', 'Disponível', 'Campo de Futebol', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idArea, status, nome, precoDia) VALUES ('04', 'Disponível', 'Salão de Festas', '500.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idArea, status, nome, precoDia) VALUES ('05', 'Disponível', 'Piscina', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idArea, status, nome, precoDia) VALUES ('06', 'Disponível', 'Quadra', '50.00')")
-        connection.commit()
-
-    # Método de leitura dos dados da area de lazer
-    def leDadosBasicosArea(self):
-        c.execute('SELECT idArea, status, nome, precoDia FROM dados')
-        data = c.fetchall()
-        return data
-    
-    # Método de leitura de todos os dados da area de lazer
-    def leDadosCompletosArea(self):
-        c.execute('SELECT idArea, status, nome, precoDia, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente FROM dados')
-        data = c.fetchall()
-        return data
-    
-    # Método de atualização de status da area de lazer
-    def atualizaStatusArea(self, nome):
-        sql = "UPDATE dados SET status=?,tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=?, cliente=? WHERE nome=?"
-        dado = (None, None, None, None, None, nome)
-        c.execute(sql,dado)
-        connection.commit()
-    
-    # Método de busca das areas disponiveis para datas especificas da area de lazer
-    def buscaAreasDisponiveis(self, entrada, saida):
-        sql='SELECT nome, precoDia, dataDeEntrada, dataDeSaida FROM dados'
-        c.execute(sql)
-        data = c.fetchall()
-        entrada = datetime.strptime(entrada, '%d/%m/%Y').date()
-        saida = datetime.strptime(saida, '%d/%m/%Y').date()
-        aux=[]
-        for x in range(len(data)):
-            if(data[x][2] is None and data[x][3] is None):
-                aux.append(data[x])
-            else:
-                entradaBD = datetime.strptime(data[x][2], '%d/%m/%Y').date()
-                saidaBD = datetime.strptime(data[x][3], '%d/%m/%Y').date()
-                if entradaBD<entrada and entradaBD<saida and saidaBD<entrada and saidaBD<saida:
-                    aux.append(data[x])
-                if entradaBD>entrada and entradaBD>saida and saidaBD>entrada and saidaBD>saida:
-                    aux.append(data[x])
-        return aux
-    
-    # Método de busca das areas ocupadas para clientes especificos da area de lazer
-    def buscaAreasOcupadasCliente(self, cliente):
-        sql='SELECT nome FROM dados WHERE cliente=?'
-        dado = (cliente,)
-        c.execute(sql,dado)
-        data = c.fetchall()
-        return data
-    
-    # Método de busca de preços das areas de lazer
-    def buscaPrecosLazer(self):
-        sql='SELECT nome, precoDia FROM dados'
-        c.execute(sql)
-        data = c.fetchall()
-        return data
-    
-    # Método de atualização de status e datas das areas de lazer
-    def atualizaReservaLazer(self, nome, status, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente):
-        sql = "UPDATE dados SET status=?, tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=?, cliente=? WHERE nome=?"
-        dado = (status, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente, nome)
-        c.execute(sql,dado)
-        connection.commit()
-'''
-'''
-#Quarto
-class BD_Quartos():
-    # Inicializadores
-    def __init__(self):
-        self.criar_tabela()
-
-    # Método que cria o banco de dados
-    def criar_tabela(self):
-        sql = "CREATE TABLE IF NOT EXISTS dados (idQuarto text, nome text, status text, tipo text, qtdCamas INTEGER, qtdComodos INTEGER, precoDia REAL, tempoDeLocacao INTEGER, dataDeEntrada text, dataDeSaida text, cliente text, UNIQUE(idQuarto))"
-        c.execute(sql)
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('01', 'Suíte 01', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('02', 'Suíte 02', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('03', 'Suíte 03', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('04', 'Suíte 04', 'Disponível', 'Suíte', '1 Cama de casal', '2 Cômodos - Quarto e Banheiro', '150.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('05', 'Solteiro 01', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('06', 'Solteiro 02', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('07', 'Solteiro 03', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('08', 'Solteiro 04', 'Disponível', 'Solteiro', '1 Cama de solteiro', '1 Cômodo - Quarto', '100.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('09', 'Chalé 01', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('10', 'Chalé 02', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
-        c.execute("INSERT OR IGNORE INTO dados (idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia) VALUES ('11', 'Chalé 03', 'Disponível', 'Chalé', '1 Cama de casal', '3 Cômodos - Quarto, Cozinha e Banheiro', '250.00')")
-        connection.commit()
-
-    # Método de leitura basica dos quartos
-    def leDadosBasicosQuarto(self):
-        c.execute('SELECT idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia FROM dados')
-        data = c.fetchall()
-        return data
-    
-    # Método de leitura completa dos quartos
-    def leDadosCompletosQuarto(self):
-        c.execute('SELECT idQuarto, nome, status, tipo, qtdCamas, qtdComodos, precoDia, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente FROM dados')
-        data = c.fetchall()
-        return data
-    
-    # Método de atualização de status do quarto
-    def atualizaStatusQuarto(self, nome):
-        sql = "UPDATE dados SET status=?,tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=?, cliente=? WHERE nome=?"
-        dado = (None, None, None, None, None, nome)
-        c.execute(sql,dado)
-        connection.commit()
-    
-    # Método de busca das quartos disponiveis para datas especificas
-    def buscaQuartosDisponiveis(self, entrada, saida):
-        sql='SELECT nome, precoDia, dataDeEntrada, dataDeSaida FROM dados'
-        c.execute(sql)
-        data = c.fetchall()
-        entrada = datetime.strptime(entrada, '%d/%m/%Y').date()
-        saida = datetime.strptime(saida, '%d/%m/%Y').date()
-        aux=[]
-        for x in range(len(data)):
-            if(data[x][2] is None and data[x][3] is None):
-                aux.append(data[x])
-            else:
-                entradaBD = datetime.strptime(data[x][2], '%d/%m/%Y').date()
-                saidaBD = datetime.strptime(data[x][3], '%d/%m/%Y').date()
-                if entradaBD<entrada and entradaBD<saida and saidaBD<entrada and saidaBD<saida:
-                    aux.append(data[x])
-                if entradaBD>entrada and entradaBD>saida and saidaBD>entrada and saidaBD>saida:
-                    aux.append(data[x])
-        return aux
-    
-    # Método de atualização de status e outros dados dos quartos
-    def atualizaReservaQuarto(self, nome, status, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente):
-        sql = "UPDATE dados SET status=?, tempoDeLocacao=?, dataDeEntrada=?, dataDeSaida=?, cliente=? WHERE nome=?"
-        dado = (status, tempoDeLocacao, dataDeEntrada, dataDeSaida, cliente, nome)
-        c.execute(sql,dado)
-        connection.commit()
-    
-    # Método de busca dos quartos ocupados para clientes especificos
-    def buscaQuartosOcupadosCliente(self, cliente):
-        sql='SELECT nome FROM dados WHERE cliente=?'
-        dado = (cliente,)
-        c.execute(sql,dado)
-        data = c.fetchall()
-        return data
-
-'''
