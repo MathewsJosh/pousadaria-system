@@ -9,6 +9,8 @@ from func_devolver import *
 from func_reclamar import *
 from func_reservar import *
 from func_tarefas import *
+from inicio_cadfuncionario import *
+
 
 #Variaveis Globais
 tam = "1200x720"
@@ -73,7 +75,7 @@ class MenuRecepcaoWindow():
         self.camTarefas =  PhotoImage(file="Images\Botões\menu_tarefas.png", master=self.menuJanela)
         self.campousadaria = PhotoImage(file="Images\Pousadaria-Logo2.png", master=self.menuJanela)
         
-        self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png")
+        self.camCadastrarButton = PhotoImage(file="Images\Botões\menu_cadastrarFunc.png")
 
         # Coloca uma imagem em cima dos botões
         l1 = Label(image=self.campousadaria)
@@ -84,7 +86,7 @@ class MenuRecepcaoWindow():
         self.recepframe = LabelFrame(self.menuJanela, text = "Recepção", padx=50)
         self.recepframe.place(relx=0.3, rely=0.3, anchor="n")
 
-        self.chamaCad = cadastrarWindow(self.funcionarioID)
+        self.chamaCad = cadastrarWindow()
         self.chamaCons = consultaQuartoWindow(self.funcionarioID)
         self.chamaDev = DevolverWindow(self.funcionarioID)
         self.chamaRec = Reclamacao(self.funcionarioID)
@@ -106,6 +108,7 @@ class MenuRecepcaoWindow():
         self.botaoReclamar = Button(self.recepframe, command=self.chamaRec.selecionaCRUDReclamacao, image=self.camReclamacao, bd=0, relief=GROOVE)
         self.botaoReclamar.grid(row=5, column=0, pady=20)
         
+        
         #---------------------------------------------------Frame - Outros Botões------------------------------------------------------#
         # Cria um frame só para os botões do menu
         self.outrosframe = LabelFrame(self.menuJanela, text = "Administração - Selecione uma opção", padx=50)
@@ -115,9 +118,11 @@ class MenuRecepcaoWindow():
         self.botaoCardapio = Button(self.outrosframe, command=self.chamaCard.selecionaCRUDCardapio, image=self.camCardapio, bd=0, relief=GROOVE)
         self.botaoEstoque = Button(self.outrosframe, command=self.chamaCont.selecionaCRUDEstoque, image=self.camEstoque, bd=0, relief=GROOVE)
         self.botaoTarefas = Button(self.outrosframe, command=self.chamaTar.selecionaCRUDTarefas, image=self.camTarefas, bd=0, relief=GROOVE)
+        self.botaoCadastrar = Button(self.outrosframe, command=lambda:[self.chamaCad.cadastrarTela()], image=self.camCadastrarButton, bd=0, relief=GROOVE)
         self.botaoCardapio.grid(row=0, column=0, pady=20)
         self.botaoEstoque.grid(row=1, column=0, pady=20)
         self.botaoTarefas.grid(row=2, column=0, pady=20)
+        self.botaoCadastrar.grid(row=3, column= 0, pady=20)
 
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.menuJanela.mainloop()

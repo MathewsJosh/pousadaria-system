@@ -288,11 +288,11 @@ class ReservarWindow():
                     numeroReserva = int(self.bdReserva.ultimaReserva()[0][0])
                     self.bdNotaFiscal.insereNota(numeroReserva, self.now)
 
-            if len(self.quartosMarcados) > 0:
-                self.aviso = Label(self.ReservarJanela, text = "Quartos reservados com sucesso!", foreground='green', font=self.fontStyle)
+            if len(self.quartosMarcados) > 0 and len(self.lazerMarcados) == 0:
+                self.aviso = Label(self.ReservarJanela, text = "Dependências reservadas com sucesso!", foreground='green', font=self.fontStyle)
                 self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
 
-            elif len(self.lazerMarcados) > 0:
+            elif len(self.lazerMarcados) > 0 and len(self.quartosMarcados) == 0 :
                 self.aviso = Label(self.ReservarJanela, text = "Áreas de lazer reservadas com sucesso!", foreground='green', font=self.fontStyle)
                 self.aviso.place(relx=0.5, rely=0.9, anchor="n") 
 

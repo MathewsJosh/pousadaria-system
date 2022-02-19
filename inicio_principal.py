@@ -22,8 +22,6 @@ class telaInicialWindow():
         self.camLoginButton = 0
         self.camCadastrarButton = 0
         self.pousadaria = 0
-        #self.ApagaInicial
-
 
     def telaInicial(self):
         # Cria uma janela e define suas principais configurações
@@ -35,7 +33,6 @@ class telaInicialWindow():
 
         # Converte os pngs dos botões para imagem
         self.camLoginButton = PhotoImage(file="Images\Botões\inicio_login.png", master=self.tela_inicial)
-        self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png", master=self.tela_inicial)
         self.pousadaria = PhotoImage(file="Images\Pousadaria-Logo.png", master=self.tela_inicial)
 
         # Coloca uma imagem em cima dos botões
@@ -48,11 +45,13 @@ class telaInicialWindow():
         
         # Cria botões para Logar e Cadastrar
         botaoLogar = Button(command=lambda:[self.LoginTela.entrarTela()], image=self.camLoginButton, bd=0, relief=GROOVE)
-        botaoCadastrar = Button(command=lambda:[self.CadastrarTela.cadastrarTela()], image=self.camCadastrarButton, bd=0, relief=GROOVE)
 
         # Posicionamento dos botões
-        botaoLogar.place(relx=0.3, rely=0.9, anchor="s")
-        botaoCadastrar.place(relx=0.7, rely=0.9, anchor="s")
+        botaoLogar.place(relx=0.5, rely=0.9, anchor="s")
+
+        #self.camCadastrarButton = PhotoImage(file="Images\Botões\inicio_cadastrar.png", master=self.tela_inicial)
+        #botaoCadastrar = Button(command=lambda:[self.CadastrarTela.cadastrarTela()], image=self.camCadastrarButton, bd=0, relief=GROOVE)
+        #botaoCadastrar.place(relx=0.7, rely=0.9, anchor="s")
 
         # Indica que a tela atual sempre estará em loop (comando obrigatório do Tkinter para a tela funcionar)
         self.tela_inicial.mainloop()
