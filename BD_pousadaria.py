@@ -1,5 +1,5 @@
-import sqlite3
 import os
+import sqlite3
 
 # Caminho do arquivo .db
 caminho = "BancosdeDados//pousadaria.db"
@@ -11,7 +11,6 @@ connection = sqlite3.connect(caminho)
 
 # Navega pelo arquivo
 c = connection.cursor()
-
 
 class BD_cadCliente():
     # Construtor
@@ -31,7 +30,7 @@ class BD_cadCliente():
             cadastrado_por INTEGER not null REFERENCES Funcionario(id_func))"""
         c.execute(sql)
 
-        # seed
+        # Inserções iniciais
         c.execute("SELECT * FROM Cliente")
         data = c.fetchall()
         if len(data) == 0:
@@ -41,13 +40,14 @@ class BD_cadCliente():
             c.execute("INSERT INTO Cliente (nome, cpf, telefone, email, endereco, cadastrado_por) VALUES ('Faustão', '33333333333', '4003-8000', 'faustosilva@globo.com', 'Los Angeles, em Hawthorne, Califórnia', 1)")
         connection.commit()
     
-    # Método de entrada dos dados do usuário para o cadastramento
+    # Método de entrada dos dados do cliente Pessoa Física para o cadastramento
     def entradaDadosPF(self, nome, cpf, telefone, email, endereco, cadastrado_por):  
         sql ="INSERT OR REPLACE INTO Cliente (nome, cpf, telefone, email, endereco, cadastrado_por) VALUES (?, ?, ?, ?, ?, ?)"
         dados = (nome, cpf, telefone, email, endereco, cadastrado_por)
         c.execute(sql, dados)
         connection.commit()
 
+    # Método de entrada dos dados do cliente Pessoa Juridica para o cadastramento
     def entradaDadosPJ(self, nome, cnpj, telefone, email, endereco, cadastrado_por):  
         sql ="INSERT OR REPLACE INTO Cliente (nome, cnpj, telefone, email, endereco, cadastrado_por) VALUES (?, ?, ?, ?, ?, ?)"
         dados = (nome, cnpj, telefone, email, endereco, cadastrado_por)
@@ -69,6 +69,7 @@ class BD_cadCliente():
         data = c.fetchall()
         return data   
     
+    # Método de consulta do id do cliente
     def consultaId(self, nome):
         sql = 'SELECT id FROM Cliente where nome=?'
         dados = (nome, )
@@ -378,7 +379,7 @@ class BD_Reserva():
             idComodo INTEGER REFERENCES Comodo(id))"""
         c.execute(sql)
 
-        # seed
+        # Inserções iniciais
         c.execute("SELECT * FROM Reserva")
         data = c.fetchall()
         if len(data) == 0:
@@ -390,11 +391,13 @@ class BD_Reserva():
             c.execute("INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (687, '2020-12-29', '2021-01-15', 3, 3, 5)")
         connection.commit()
     
+    #Método para consultar reservas
     def consultaReservas(self):
         c.execute("SELECT * FROM Reserva")
         data = c.fetchall()
         return data
 
+    #Método para consultar quartos disponíveis em determinada data de entrada e saída
     def consultaReservasQuartosDisponiveis(self, data_entrada_input, data_saida_input):
         sql = '''SELECT *
         FROM Comodo c
@@ -413,6 +416,7 @@ class BD_Reserva():
         data = c.fetchall()
         return data
 
+    #Método para consultar Areas de lazer disponíveis em determinada data de entrada e saída
     def consultaReservasAreasDisponiveis(self, data_entrada_input, data_saida_input):
         sql = '''SELECT *
         FROM Comodo c
@@ -431,12 +435,14 @@ class BD_Reserva():
         data = c.fetchall()
         return data
 
+    #Método de inserção de reservas
     def realizaReserva(self, valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo):
         sql = "INSERT INTO Reserva (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo) VALUES (?, ?, ?, ?, ?, ?)"
         dados = (valor, dataEntrada, dataSaida, cadastrado_por, reservado_por, idComodo,)
         c.execute(sql, dados)
         connection.commit()
-
+    
+    #Método que busca a quantidade máxima de reservas do BD
     def ultimaReserva(self):
         sql = 'SELECT MAX(numero) FROM Reserva'
         c.execute(sql)
@@ -527,7 +533,7 @@ class BD_Comodo():
             )"""
         c.execute(sql)
 
-        # seed
+        # Inserções iniciais
         c.execute("SELECT * FROM Comodo")
         data = c.fetchall()
         if len(data) == 0:
@@ -547,16 +553,19 @@ class BD_Comodo():
 
         connection.commit()
 
+    # Método para buscar todos os dados de um cômodos
     def leDadosCompletosQuarto(self):
         c.execute("SELECT * FROM Comodo")
         return c.fetchall()
 
+    # Método que busta todos os preços dos cômodos
     def valorComodo(self, id):
         sql = "SELECT preco_dia FROM Comodo WHERE id = ?"
         dados = (id,)
         c.execute(sql, dados)
         return c.fetchall()
 
+    # Método que consulta todos os cômodos disponíveis
     def consultaComodosDisponiveis(self):
         c.execute("""
                     SELECT *
@@ -572,6 +581,7 @@ class BD_Comodo():
                         FROM Devolucao d));""")
         return c.fetchall()
 
+    # Método que consulta todos os cômodos ocupados
     def consultaComodosOcupados(self):
         c.execute("""
                     SELECT c.id, c.nome, c.preco_dia, c.tipo_quarto, c.qtd_camas, c.qtd_comodos
